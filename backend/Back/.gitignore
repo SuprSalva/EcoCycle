@@ -1,0 +1,36 @@
+# ── .NET / C# ─────────────────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+.vs/
+*.csproj.user
+
+# ── Publicación ───────────────────────────────────────────────────────────────
+publish/
+out/
+
+# ── Secretos y configuración local (NUNCA al repo) ───────────────────────────
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+secrets.json
+*.pfx
+*.pem
+*.key
+
+# ── Logs de Serilog ───────────────────────────────────────────────────────────
+Logs/
+*.log
+
+# ── Rider / Rider.Plugins ─────────────────────────────────────────────────────
+.idea/
+*.DotSettings.user
+
+# ── Visual Studio Code ────────────────────────────────────────────────────────
+.vscode/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
