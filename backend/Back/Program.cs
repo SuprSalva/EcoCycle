@@ -1,12 +1,57 @@
+using Google.Cloud.Firestore;
+using Back.Infrastructure;
+using Back.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configurar Autenticación (Firebase JWT)
+var firebaseProjectId = builder.Configuration["Firestore:ProjectId"];
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{firebaseProjectId}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{firebaseProjectId}",
+            ValidateAudience = true,
+            ValidAudience = firebaseProjectId,
+            ValidateLifetime = true
+        };
+    });
+
+// Agregar Controladores
+builder.Services.AddControllers();
+
+// Configurar Firestore
+var firestoreKeyPath = builder.Configuration["Firestore:KeyPath"];
+if (!string.IsNullOrEmpty(firebaseProjectId) && !string.IsNullOrEmpty(firestoreKeyPath))
+{
+    var credentialsPath = Path.Combine(AppContext.BaseDirectory, firestoreKeyPath);
+    if (!File.Exists(credentialsPath))
+    {
+        credentialsPath = Path.GetFullPath(firestoreKeyPath);
+    }
+    
+    // Método oficial para evitar warnings
+    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
+    var firestoreDb = FirestoreDb.Create(firebaseProjectId);
+    builder.Services.AddSingleton(firestoreDb);
+}
+
+// Configurar Infraestructura (Repositorios, Servicios)
+builder.Services.AddInfrastructure(builder.Configuration);
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -14,28 +59,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -5,5 +5,14 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:5000/api'   // sobreescribe en cada environment real
+  apiUrl: 'http://localhost:5000/api',
+  firebase: {
+    apiKey: "AIzaSyCi4xX5rjXyk_M-jtCVv-amtpijTb9LCsY",
+    authDomain: "ecocycle-e9c04.firebaseapp.com",
+    projectId: "ecocycle-e9c04",
+    storageBucket: "ecocycle-e9c04.firebasestorage.app",
+    messagingSenderId: "830444566996",
+    appId: "1:830444566996:web:e6c7bd68c49d7572d77e41",
+    measurementId: "G-BJDSCGBF7Y"
+  }
 };
