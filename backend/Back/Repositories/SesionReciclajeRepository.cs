@@ -17,7 +17,7 @@ public class SesionReciclajeRepository(FirestoreDb firestoreDb) : ISesionRecicla
 
     public async Task<List<SesionReciclaje>> ObtenerPorUsuarioAsync(string usuarioId)
     {
-        var query = _collection.WhereEqualTo("usuario_id", usuarioId).OrderByDescending("fecha");
+        var query = _collection.WhereEqualTo("usuario_id", usuarioId);
         var snapshot = await query.GetSnapshotAsync();
         
         return snapshot.Documents.Select(d => d.ConvertTo<SesionReciclaje>()).ToList();

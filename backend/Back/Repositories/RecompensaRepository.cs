@@ -35,4 +35,11 @@ public class RecompensaRepository(FirestoreDb firestoreDb) : IRecompensaReposito
         canje.Id = docRef.Id;
         await docRef.SetAsync(canje);
     }
+
+    public async Task<List<Canje>> ObtenerCanjesPorUsuarioAsync(string userId)
+    {
+        var query = _canjes.WhereEqualTo("usuario_id", userId);
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Canje>()).ToList();
+    }
 }

@@ -42,15 +42,5 @@ public class SesionReciclajeController(ISesionReciclajeRepository sesionReposito
         return Ok(ApiResponse<object>.Ok(new { id = sesion.Id, puntos = sesion.Puntos }, "Sesión registrada correctamente."));
     }
 
-    [HttpGet("historial")]
-    [Authorize]
-    public async Task<IActionResult> GetHistorial()
-    {
-        var userId = GetUserId();
-        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-        var historial = await sesionRepository.ObtenerPorUsuarioAsync(userId);
-
-        return Ok(ApiResponse<List<SesionReciclaje>>.Ok(historial));
-    }
+    // El historial unificado ahora se encuentra en UsuarioController.
 }

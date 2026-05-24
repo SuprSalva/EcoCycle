@@ -11,7 +11,7 @@ namespace Back.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class UsuarioController(IUsuarioRepository usuarioRepository) : ControllerBase
+public class UsuarioController(IUsuarioRepository usuarioRepository, ISesionReciclajeRepository sesionRepository, IRecompensaRepository recompensaRepository) : ControllerBase
 {
     private string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value ?? string.Empty;
 
@@ -37,6 +37,51 @@ public class UsuarioController(IUsuarioRepository usuarioRepository) : Controlle
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
+    }
+
+    [HttpGet("historial")]
+    public async Task<IActionResult> GetHistorial()
+    {
+        var userId = GetUserId();
+        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+        var sesiones = await sesionRepository.ObtenerPorUsuarioAsync(userId);
+        var canjes = await recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
+
+        var historial = new List<HistorialItemResponse>();
+
+        foreach (var sesion in sesiones)
+        {
+            historial.Add(new HistorialItemResponse
+            {
+                Id = sesion.Id,
+                Titulo = $"{sesion.Botellas} botellas",
+                Subtitulo = $"{sesion.Fecha:dd MMM yyyy} • Reciclaje",
+                Puntos = $"+{sesion.Puntos} pts",
+                EsPositivo = true,
+                Fecha = sesion.Fecha
+            });
+        }
+
+        foreach (var canje in canjes)
+        {
+            var recompensa = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
+            var titulo = recompensa != null ? recompensa.Nombre : "Premio Canjeado";
+            
+            historial.Add(new HistorialItemResponse
+            {
+                Id = canje.Id,
+                Titulo = titulo,
+                Subtitulo = $"{canje.Fecha:dd MMM yyyy} • Canje",
+                Puntos = $"-{canje.PuntosUsados} pts",
+                EsPositivo = false,
+                Fecha = canje.Fecha
+            });
+        }
+
+        var historialOrdenado = historial.OrderByDescending(h => h.Fecha).ToList();
+
+        return Ok(ApiResponse<List<HistorialItemResponse>>.Ok(historialOrdenado));
     }
 
     [HttpPut("perfil")]
