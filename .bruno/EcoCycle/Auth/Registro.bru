@@ -1,0 +1,21 @@
+meta {
+  name: Registro
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/Auth/registro
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  "nombre": "Juan",
+  "apellidos": "Perez",
+  "telefono": "999999999",
+  "direccion": "Calle 123"
+}

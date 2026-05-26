@@ -1,0 +1,14 @@
+meta {
+  name: Eliminar usuario
+  type: http
+  seq: 11
+}
+
+delete {
+  url: {{baseUrl}}/api/Usuario/{{usuarioId}}
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

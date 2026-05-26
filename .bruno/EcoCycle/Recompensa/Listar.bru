@@ -1,0 +1,14 @@
+meta {
+  name: Listar recompensas
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/Recompensa
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

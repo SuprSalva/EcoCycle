@@ -1,0 +1,14 @@
+meta {
+  name: Obtener usuario por id
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/api/Usuario/{{usuarioId}}
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
