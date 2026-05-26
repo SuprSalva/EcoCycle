@@ -1,4 +1,4 @@
-namespace Back.Entities;
+namespace Back.Models.Entities;
 
 public class SesionReciclaje
 {
