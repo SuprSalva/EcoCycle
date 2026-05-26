@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 using Back.Infrastructure;
 using Back.Infrastructure.Repositories;
 using Back.Infrastructure.Repositories.Interfaces;
@@ -29,6 +30,55 @@ builder.Host.UseSerilog();
 // ==========================================
 
 // Configurar OpenAPI (que ya tenías)
+=======
+using Google.Cloud.Firestore;
+using Back.Infrastructure;
+using Back.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Configurar Autenticación (Firebase JWT)
+var firebaseProjectId = builder.Configuration["Firestore:ProjectId"];
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = $"https://securetoken.google.com/{firebaseProjectId}";
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = $"https://securetoken.google.com/{firebaseProjectId}",
+            ValidateAudience = true,
+            ValidAudience = firebaseProjectId,
+            ValidateLifetime = true
+        };
+    });
+
+// Agregar Controladores
+builder.Services.AddControllers();
+
+// Configurar Firestore
+var firestoreKeyPath = builder.Configuration["Firestore:KeyPath"];
+if (!string.IsNullOrEmpty(firebaseProjectId) && !string.IsNullOrEmpty(firestoreKeyPath))
+{
+    var credentialsPath = Path.Combine(AppContext.BaseDirectory, firestoreKeyPath);
+    if (!File.Exists(credentialsPath))
+    {
+        credentialsPath = Path.GetFullPath(firestoreKeyPath);
+    }
+    
+    // Método oficial para evitar warnings
+    Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
+    var firestoreDb = FirestoreDb.Create(firebaseProjectId);
+    builder.Services.AddSingleton(firestoreDb);
+}
+
+// Configurar Infraestructura (Repositorios, Servicios)
+builder.Services.AddInfrastructure(builder.Configuration);
+
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+>>>>>>> e9baa1e4074ac01438e712f11fa2184c27ce8485
 builder.Services.AddOpenApi();
 
 // Configurar Swagger (alternativa más completa)
@@ -102,6 +152,7 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+<<<<<<< HEAD
 // ==========================================
 // CONFIGURAR EL PIPELINE DE HTTP REQUEST
 // ==========================================
@@ -110,6 +161,11 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
 // Configurar OpenAPI/Swagger (lo que ya tenías)
+=======
+// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
+>>>>>>> e9baa1e4074ac01438e712f11fa2184c27ce8485
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -120,6 +176,7 @@ if (app.Environment.IsDevelopment())
 // Redirección HTTPS (lo que ya tenías)
 app.UseHttpsRedirection();
 
+<<<<<<< HEAD
 // CORS (debe ir antes de autenticación y autorización)
 app.UseCors("AllowAngular");
 
@@ -151,11 +208,18 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast");
+=======
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+>>>>>>> e9baa1e4074ac01438e712f11fa2184c27ce8485
 
 // ==========================================
 // INICIAR LA APLICACIÓN
 // ==========================================
 app.Run();
+<<<<<<< HEAD
 
 // ==========================================
 // RECORD DE WEATHERFORECAST (lo que ya tenías)
@@ -164,3 +228,5 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+=======
+>>>>>>> e9baa1e4074ac01438e712f11fa2184c27ce8485
