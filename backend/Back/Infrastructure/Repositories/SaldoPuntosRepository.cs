@@ -1,60 +1,89 @@
 using Back.Infrastructure.Repositories.Interfaces;
-using Back.Models.Entities;
-using Dapper;
+using Google.Cloud.Firestore;
 
 namespace Back.Infrastructure.Repositories;
 
 public class SaldoPuntosRepository : ISaldoPuntosRepository
 {
-    private readonly IDbConnectionFactory _dbFactory;
+    private readonly FirestoreDb _firestoreDb;
+    private const string CollectionName = "usuarios";
 
-    public SaldoPuntosRepository(IDbConnectionFactory dbFactory)
+    public SaldoPuntosRepository(FirestoreDb firestoreDb)
     {
-        _dbFactory = dbFactory;
+        _firestoreDb = firestoreDb;
     }
 
-    public async Task<SaldoPuntos?> GetSaldoAsync(int usuarioId)
+    public async Task<double> GetSaldoAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT * FROM saldo_puntos WHERE usuario_id = @UsuarioId";
-        return await connection.QueryFirstOrDefaultAsync<SaldoPuntos>(sql, new { UsuarioId = usuarioId });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(usuarioId);
+        var snapshot = await docRef.GetSnapshotAsync();
+
+        if (snapshot.Exists && snapshot.TryGetValue("saldo_puntos", out double saldo))
+        {
+            return saldo;
+        }
+        return 0.0;
     }
 
-    public async Task<bool> AddPuntosAsync(int usuarioId, decimal puntos)
+    public async Task<bool> AddPuntosAsync(string usuarioId, double puntos)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO saldo_puntos (usuario_id, saldo, actualizado_en)
-            VALUES (@UsuarioId, @Puntos, NOW())
-            ON CONFLICT (usuario_id) 
-            DO UPDATE SET saldo = saldo_puntos.saldo + @Puntos, actualizado_en = NOW()
-            RETURNING 1";
+        var docRef = _firestoreDb.Collection(CollectionName).Document(usuarioId);
 
-        var result = await connection.ExecuteScalarAsync<int>(sql, new { UsuarioId = usuarioId, Puntos = puntos });
-        return result == 1;
+        try
+        {
+            await _firestoreDb.RunTransactionAsync(async transaction =>
+            {
+                var snapshot = await transaction.GetSnapshotAsync(docRef);
+                if (snapshot.Exists)
+                {
+                    double currentSaldo = snapshot.TryGetValue("saldo_puntos", out double s) ? s : 0.0;
+                    transaction.Update(docRef, "saldo_puntos", currentSaldo + puntos);
+                }
+            });
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public async Task<bool> SubtractPuntosAsync(int usuarioId, decimal puntos)
+    public async Task<bool> SubtractPuntosAsync(string usuarioId, double puntos)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            UPDATE saldo_puntos 
-            SET saldo = saldo - @Puntos, actualizado_en = NOW()
-            WHERE usuario_id = @UsuarioId AND saldo >= @Puntos
-            RETURNING 1";
+        var docRef = _firestoreDb.Collection(CollectionName).Document(usuarioId);
 
-        var result = await connection.ExecuteScalarAsync<int>(sql, new { UsuarioId = usuarioId, Puntos = puntos });
-        return result == 1;
+        try
+        {
+            bool success = false;
+            await _firestoreDb.RunTransactionAsync(async transaction =>
+            {
+                var snapshot = await transaction.GetSnapshotAsync(docRef);
+                if (snapshot.Exists)
+                {
+                    double currentSaldo = snapshot.TryGetValue("saldo_puntos", out double s) ? s : 0.0;
+                    if (currentSaldo >= puntos)
+                    {
+                        transaction.Update(docRef, "saldo_puntos", currentSaldo - puntos);
+                        success = true;
+                    }
+                }
+            });
+            return success;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
-    public async Task InitializeSaldoAsync(int usuarioId)
+    public async Task InitializeSaldoAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO saldo_puntos (usuario_id, saldo, actualizado_en)
-            VALUES (@UsuarioId, 0, NOW())
-            ON CONFLICT (usuario_id) DO NOTHING";
+        var docRef = _firestoreDb.Collection(CollectionName).Document(usuarioId);
+        var snapshot = await docRef.GetSnapshotAsync();
 
-        await connection.ExecuteAsync(sql, new { UsuarioId = usuarioId });
+        if (snapshot.Exists && !snapshot.ContainsField("saldo_puntos"))
+        {
+            await docRef.UpdateAsync("saldo_puntos", 0.0);
+        }
     }
 }

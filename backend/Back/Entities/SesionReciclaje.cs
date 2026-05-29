@@ -18,7 +18,7 @@ public class SesionReciclaje
     public int Botellas { get; set; }
 
     [FirestoreProperty("puntos")]
-    public double Puntos { get; set; } // Firestore soporta double, no decimal directamente.
+    public double Puntos { get; set; } // Firestore soporta double, no double directamente.
 
     [FirestoreProperty("fecha")]
     public DateTime Fecha { get; set; } = DateTime.UtcNow;

@@ -1,13 +1,13 @@
-using Back.Models.Entities;
+using Back.Entities;
 
 namespace Back.Infrastructure.Repositories.Interfaces;
 
 public interface IReciclajeRepository
 {
-    Task<int> CreateAsync(SesionReciclaje sesion);
-    Task<IEnumerable<SesionReciclaje>> GetByUsuarioIdAsync(int usuarioId, int page, int pageSize);
-    Task<int> GetCountByUsuarioIdAsync(int usuarioId);
+    Task<string> CreateAsync(SesionReciclaje sesion);
+    Task<IEnumerable<SesionReciclaje>> GetByUsuarioIdAsync(string usuarioId, int page, int pageSize);
+    Task<int> GetCountByUsuarioIdAsync(string usuarioId);
     Task<IEnumerable<SesionReciclaje>> GetAllAsync(DateTime? desde, DateTime? hasta, int page, int pageSize);
-    Task<int> GetTotalBotellasByUsuarioIdAsync(int usuarioId);
-    Task<decimal> GetTotalPuntosByUsuarioIdAsync(int usuarioId);
+    Task<int> GetTotalBotellasByUsuarioIdAsync(string usuarioId);
+    Task<double> GetTotalPuntosByUsuarioIdAsync(string usuarioId);
 }

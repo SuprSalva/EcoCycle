@@ -1,11 +1,11 @@
-using Back.Models.Entities;
+using Back.Entities;
 
 namespace Back.Infrastructure.Repositories.Interfaces;
 
 public interface ICanjeRepository
 {
-    Task<int> CreateAsync(Canje canje);
-    Task<IEnumerable<Canje>> GetByUsuarioIdAsync(int usuarioId, int page, int pageSize);
-    Task<int> GetCountByUsuarioIdAsync(int usuarioId);
+    Task<string> CreateAsync(Canje canje);
+    Task<IEnumerable<Canje>> GetByUsuarioIdAsync(string usuarioId, int page, int pageSize);
+    Task<int> GetCountByUsuarioIdAsync(string usuarioId);
     Task<IEnumerable<Canje>> GetAllAsync(DateTime? desde, DateTime? hasta);
 }

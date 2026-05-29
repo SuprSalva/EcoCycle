@@ -1,74 +1,75 @@
+using Back.Entities;
 using Back.Infrastructure.Repositories.Interfaces;
-using Back.Models.Entities;
-using Dapper;
+using Google.Cloud.Firestore;
 
 namespace Back.Infrastructure.Repositories;
 
 public class ReciclajeRepository : IReciclajeRepository
 {
-    private readonly IDbConnectionFactory _dbFactory;
+    private readonly FirestoreDb _firestoreDb;
+    private const string CollectionName = "sesiones_reciclaje";
 
-    public ReciclajeRepository(IDbConnectionFactory dbFactory)
+    public ReciclajeRepository(FirestoreDb firestoreDb)
     {
-        _dbFactory = dbFactory;
+        _firestoreDb = firestoreDb;
     }
 
-    public async Task<int> CreateAsync(SesionReciclaje sesion)
+    public async Task<string> CreateAsync(SesionReciclaje sesion)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO sesiones_reciclaje (usuario_id, maquina_id, botellas, puntos, fecha)
-            VALUES (@UsuarioId, @MaquinaId, @Botellas, @Puntos, @Fecha)
-            RETURNING id";
-
-        return await connection.ExecuteScalarAsync<int>(sql, sesion);
+        var collection = _firestoreDb.Collection(CollectionName);
+        var docRef = collection.Document();
+        sesion.Id = docRef.Id;
+        sesion.Fecha = DateTime.UtcNow;
+        await docRef.SetAsync(sesion);
+        return docRef.Id;
     }
 
-    public async Task<IEnumerable<SesionReciclaje>> GetByUsuarioIdAsync(int usuarioId, int page, int pageSize)
+    public async Task<IEnumerable<SesionReciclaje>> GetByUsuarioIdAsync(string usuarioId, int page, int pageSize)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var offset = (page - 1) * pageSize;
-        const string sql = @"
-            SELECT * FROM sesiones_reciclaje 
-            WHERE usuario_id = @UsuarioId
-            ORDER BY fecha DESC
-            OFFSET @Offset LIMIT @Limit";
+        var query = _firestoreDb.Collection(CollectionName)
+            .WhereEqualTo("usuario_id", usuarioId)
+            .OrderByDescending("fecha")
+            .Offset((page - 1) * pageSize)
+            .Limit(pageSize);
 
-        return await connection.QueryAsync<SesionReciclaje>(sql, new { UsuarioId = usuarioId, Offset = offset, Limit = pageSize });
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<SesionReciclaje>());
     }
 
-    public async Task<int> GetCountByUsuarioIdAsync(int usuarioId)
+    public async Task<int> GetCountByUsuarioIdAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COUNT(*) FROM sesiones_reciclaje WHERE usuario_id = @UsuarioId";
-        return await connection.ExecuteScalarAsync<int>(sql, new { UsuarioId = usuarioId });
+        Query query = _firestoreDb.Collection(CollectionName); if (usuarioId != "0" && !string.IsNullOrEmpty(usuarioId)) query = query.WhereEqualTo("usuario_id", usuarioId);
+        var countQuery = query.Count();
+        var snapshot = await countQuery.GetSnapshotAsync();
+        return (int)snapshot.Count;
     }
 
     public async Task<IEnumerable<SesionReciclaje>> GetAllAsync(DateTime? desde, DateTime? hasta, int page, int pageSize)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var offset = (page - 1) * pageSize;
-        var sql = @"
-            SELECT * FROM sesiones_reciclaje 
-            WHERE (@Desde IS NULL OR fecha >= @Desde)
-              AND (@Hasta IS NULL OR fecha <= @Hasta)
-            ORDER BY fecha DESC
-            OFFSET @Offset LIMIT @Limit";
+        Query query = _firestoreDb.Collection(CollectionName);
 
-        return await connection.QueryAsync<SesionReciclaje>(sql, new { Desde = desde, Hasta = hasta, Offset = offset, Limit = pageSize });
+        if (desde.HasValue)
+            query = query.WhereGreaterThanOrEqualTo("fecha", desde.Value.ToUniversalTime());
+        if (hasta.HasValue)
+            query = query.WhereLessThanOrEqualTo("fecha", hasta.Value.ToUniversalTime());
+
+        query = query.OrderByDescending("fecha").Offset((page - 1) * pageSize).Limit(pageSize);
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<SesionReciclaje>());
     }
 
-    public async Task<int> GetTotalBotellasByUsuarioIdAsync(int usuarioId)
+    public async Task<int> GetTotalBotellasByUsuarioIdAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COALESCE(SUM(botellas), 0) FROM sesiones_reciclaje WHERE usuario_id = @UsuarioId";
-        return await connection.ExecuteScalarAsync<int>(sql, new { UsuarioId = usuarioId });
+        Query query = _firestoreDb.Collection(CollectionName); if (usuarioId != "0" && !string.IsNullOrEmpty(usuarioId)) query = query.WhereEqualTo("usuario_id", usuarioId);
+        var snapshot = await query.GetSnapshotAsync();
+        // Since Firestore lacks SUM aggregations natively, we fetch and sum in memory
+        return snapshot.Documents.Sum(d => d.TryGetValue("botellas", out int botellas) ? botellas : 0);
     }
 
-    public async Task<decimal> GetTotalPuntosByUsuarioIdAsync(int usuarioId)
+    public async Task<double> GetTotalPuntosByUsuarioIdAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COALESCE(SUM(puntos), 0) FROM sesiones_reciclaje WHERE usuario_id = @UsuarioId";
-        return await connection.ExecuteScalarAsync<decimal>(sql, new { UsuarioId = usuarioId });
+        Query query = _firestoreDb.Collection(CollectionName); if (usuarioId != "0" && !string.IsNullOrEmpty(usuarioId)) query = query.WhereEqualTo("usuario_id", usuarioId);
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Sum(d => d.TryGetValue("puntos", out double puntos) ? puntos : 0.0);
     }
 }

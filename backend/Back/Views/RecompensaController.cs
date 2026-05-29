@@ -17,10 +17,10 @@ public class RecompensaController : ControllerBase
         _recompensaViewModel = recompensaViewModel;
     }
 
-    private int GetUserId()
+    private string GetUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userIdClaim ?? "0");
+        return userIdClaim ?? "0";
     }
 
     [HttpGet]
@@ -54,7 +54,7 @@ public class RecompensaController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> Update(int id, [FromBody] RecompensaRequest request)
+    public async Task<IActionResult> Update(string id, [FromBody] RecompensaRequest request)
     {
         var result = await _recompensaViewModel.UpdateAsync(id, request);
         if (!result.Suceso)
@@ -64,7 +64,7 @@ public class RecompensaController : ControllerBase
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete(string id)
     {
         var result = await _recompensaViewModel.DeleteAsync(id);
         if (!result.Suceso)

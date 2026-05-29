@@ -43,7 +43,7 @@ public class RecompensaController(IRecompensaRepository recompensaRepository, IU
 
         // Aplicar el canje
         usuario.SaldoPuntos -= recompensa.CostoPuntos;
-        
+
         if (recompensa.Stock > 0)
         {
             recompensa.Stock -= 1;

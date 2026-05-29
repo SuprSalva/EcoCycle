@@ -23,6 +23,9 @@ public class Usuario
     [FirestoreProperty("direccion")]
     public string? Direccion { get; set; }
 
+    [FirestoreProperty("password_hash")]
+    public string PasswordHash { get; set; } = string.Empty;
+
     [FirestoreProperty("rol")]
     public string Rol { get; set; } = "usuario";
 

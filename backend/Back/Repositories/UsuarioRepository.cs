@@ -12,7 +12,7 @@ public class UsuarioRepository(FirestoreDb firestoreDb) : IUsuarioRepository
     {
         var docRef = _collection.Document(id);
         var snapshot = await docRef.GetSnapshotAsync();
-        
+
         if (!snapshot.Exists) return null;
 
         var usuario = snapshot.ConvertTo<Usuario>();
@@ -23,9 +23,9 @@ public class UsuarioRepository(FirestoreDb firestoreDb) : IUsuarioRepository
     {
         var query = _collection.WhereEqualTo("email", email).WhereEqualTo("activo", true).Limit(1);
         var snapshot = await query.GetSnapshotAsync();
-        
+
         if (snapshot.Documents.Count == 0) return null;
-        
+
         return snapshot.Documents[0].ConvertTo<Usuario>();
     }
 

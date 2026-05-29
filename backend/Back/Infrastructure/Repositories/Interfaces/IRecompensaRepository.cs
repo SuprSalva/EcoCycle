@@ -1,13 +1,13 @@
-using Back.Models.Entities;
+using Back.Entities;
 
 namespace Back.Infrastructure.Repositories.Interfaces;
 
 public interface IRecompensaRepository
 {
-    Task<Recompensa?> GetByIdAsync(int id);
+    Task<Recompensa?> GetByIdAsync(string id);
     Task<IEnumerable<Recompensa>> GetAllAsync(bool soloActivas = true);
-    Task<int> CreateAsync(Recompensa recompensa);
+    Task<string> CreateAsync(Recompensa recompensa);
     Task UpdateAsync(Recompensa recompensa);
-    Task DeleteAsync(int id);
-    Task<bool> UpdateStockAsync(int id, int cantidad);
+    Task DeleteAsync(string id);
+    Task<bool> UpdateStockAsync(string id, int cantidad);
 }

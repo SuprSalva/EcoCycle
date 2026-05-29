@@ -1,76 +1,103 @@
+using Back.Entities;
 using Back.Infrastructure.Repositories.Interfaces;
-using Back.Models.Entities;
-using Dapper;
+using Google.Cloud.Firestore;
 
 namespace Back.Infrastructure.Repositories;
 
 public class RecompensaRepository : IRecompensaRepository
 {
-    private readonly IDbConnectionFactory _dbFactory;
+    private readonly FirestoreDb _firestoreDb;
+    private const string CollectionName = "recompensas";
 
-    public RecompensaRepository(IDbConnectionFactory dbFactory)
+    public RecompensaRepository(FirestoreDb firestoreDb)
     {
-        _dbFactory = dbFactory;
+        _firestoreDb = firestoreDb;
     }
 
-    public async Task<Recompensa?> GetByIdAsync(int id)
+    public async Task<Recompensa?> GetByIdAsync(string id)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT * FROM recompensas WHERE id = @Id";
-        return await connection.QueryFirstOrDefaultAsync<Recompensa>(sql, new { Id = id });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        var snapshot = await docRef.GetSnapshotAsync();
+
+        if (!snapshot.Exists) return null;
+
+        return snapshot.ConvertTo<Recompensa>();
     }
 
     public async Task<IEnumerable<Recompensa>> GetAllAsync(bool soloActivas = true)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var sql = "SELECT * FROM recompensas";
-        if (soloActivas)
-            sql += " WHERE activa = true";
-        sql += " ORDER BY costo_puntos ASC";
+        Query query = _firestoreDb.Collection(CollectionName);
 
-        return await connection.QueryAsync<Recompensa>(sql);
+        if (soloActivas)
+        {
+            query = query.WhereEqualTo("activa", true);
+        }
+
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Recompensa>());
     }
 
-    public async Task<int> CreateAsync(Recompensa recompensa)
+    public async Task<string> CreateAsync(Recompensa recompensa)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO recompensas (nombre, descripcion, costo_puntos, stock, activa)
-            VALUES (@Nombre, @Descripcion, @CostoPuntos, @Stock, @Activa)
-            RETURNING id";
-
-        return await connection.ExecuteScalarAsync<int>(sql, recompensa);
+        var collection = _firestoreDb.Collection(CollectionName);
+        var docRef = collection.Document();
+        recompensa.Id = docRef.Id;
+        await docRef.SetAsync(recompensa);
+        return docRef.Id;
     }
 
     public async Task UpdateAsync(Recompensa recompensa)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            UPDATE recompensas 
-            SET nombre = @Nombre, descripcion = @Descripcion, 
-                costo_puntos = @CostoPuntos, stock = @Stock, activa = @Activa
-            WHERE id = @Id";
-
-        await connection.ExecuteAsync(sql, recompensa);
+        var docRef = _firestoreDb.Collection(CollectionName).Document(recompensa.Id);
+        var updates = new Dictionary<string, object>
+        {
+            { "nombre", recompensa.Nombre },
+            { "descripcion", recompensa.Descripcion },
+            { "costo_puntos", recompensa.CostoPuntos },
+            { "stock", recompensa.Stock },
+            { "activa", recompensa.Activa }
+        };
+        await docRef.UpdateAsync(updates);
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(string id)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "DELETE FROM recompensas WHERE id = @Id";
-        await connection.ExecuteAsync(sql, new { Id = id });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        await docRef.DeleteAsync();
     }
 
-    public async Task<bool> UpdateStockAsync(int id, int cantidad)
+    public async Task<bool> UpdateStockAsync(string id, int cantidad)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            UPDATE recompensas 
-            SET stock = stock - @Cantidad
-            WHERE id = @Id AND (stock = -1 OR stock >= @Cantidad)
-            RETURNING 1";
-
-        var result = await connection.ExecuteScalarAsync<int>(sql, new { Id = id, Cantidad = cantidad });
-        return result == 1;
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        try
+        {
+            bool success = false;
+            await _firestoreDb.RunTransactionAsync(async transaction =>
+            {
+                var snapshot = await transaction.GetSnapshotAsync(docRef);
+                if (snapshot.Exists)
+                {
+                    int currentStock = snapshot.TryGetValue("stock", out int s) ? s : 0;
+                    int newStock = currentStock + cantidad;
+                    // Note: If stock allows negative like -1 for infinite, we need to adapt logic.
+                    // But here we just add the 'cantidad' (which could be negative to decrease stock).
+                    if (currentStock >= 0 && newStock < 0 && currentStock != -1)
+                    {
+                        // Cannot reduce stock below 0 if it's not infinite (-1)
+                        success = false;
+                    }
+                    else
+                    {
+                        transaction.Update(docRef, "stock", newStock);
+                        success = true;
+                    }
+                }
+            });
+            return success;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

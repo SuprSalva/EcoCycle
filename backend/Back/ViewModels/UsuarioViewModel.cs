@@ -24,7 +24,7 @@ public class UsuarioViewModel : IUsuarioViewModel
         _canjeRepository = canjeRepository;
     }
 
-    public async Task<ApiResponse<UsuarioResponse>> GetPerfilAsync(int usuarioId)
+    public async Task<ApiResponse<UsuarioResponse>> GetPerfilAsync(string usuarioId)
     {
         var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
         if (usuario == null)
@@ -42,13 +42,13 @@ public class UsuarioViewModel : IUsuarioViewModel
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             Activo = usuario.Activo,
-            PuntosDisponibles = saldo?.Saldo ?? 0
+            PuntosDisponibles = saldo
         };
 
         return ApiResponse<UsuarioResponse>.Success(response);
     }
 
-    public async Task<ApiResponse<UsuarioResponse>> ActualizarPerfilAsync(int usuarioId, ActualizarPerfilRequest request)
+    public async Task<ApiResponse<UsuarioResponse>> ActualizarPerfilAsync(string usuarioId, ActualizarPerfilRequest request)
     {
         var usuario = await _usuarioRepository.GetByIdAsync(usuarioId);
         if (usuario == null)
@@ -73,26 +73,26 @@ public class UsuarioViewModel : IUsuarioViewModel
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             Activo = usuario.Activo,
-            PuntosDisponibles = saldo?.Saldo ?? 0
+            PuntosDisponibles = saldo
         };
 
         return ApiResponse<UsuarioResponse>.Success(response, "Perfil actualizado exitosamente");
     }
 
-    public async Task<ApiResponse<PuntosResponse>> GetPuntosAsync(int usuarioId)
+    public async Task<ApiResponse<PuntosResponse>> GetPuntosAsync(string usuarioId)
     {
         var saldo = await _saldoPuntosRepository.GetSaldoAsync(usuarioId);
 
         var response = new PuntosResponse
         {
             UsuarioId = usuarioId,
-            Saldo = saldo?.Saldo ?? 0
+            Saldo = saldo
         };
 
         return ApiResponse<PuntosResponse>.Success(response);
     }
 
-    public async Task<ApiResponse<List<SesionResponse>>> GetHistorialAsync(int usuarioId, int page, int pageSize)
+    public async Task<ApiResponse<List<SesionResponse>>> GetHistorialAsync(string usuarioId, int page, int pageSize)
     {
         var sesiones = await _reciclajeRepository.GetByUsuarioIdAsync(usuarioId, page, pageSize);
         var total = await _reciclajeRepository.GetCountByUsuarioIdAsync(usuarioId);
@@ -109,7 +109,7 @@ public class UsuarioViewModel : IUsuarioViewModel
         return ApiResponse<List<SesionResponse>>.Success(response);
     }
 
-    public async Task<ApiResponse<List<CanjeResponse>>> GetCanjesAsync(int usuarioId, int page, int pageSize)
+    public async Task<ApiResponse<List<CanjeResponse>>> GetCanjesAsync(string usuarioId, int page, int pageSize)
     {
         var canjes = await _canjeRepository.GetByUsuarioIdAsync(usuarioId, page, pageSize);
 

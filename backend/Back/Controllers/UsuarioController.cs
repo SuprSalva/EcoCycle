@@ -33,7 +33,7 @@ public class UsuarioController(IUsuarioRepository usuarioRepository, ISesionReci
             Telefono = usuario.Telefono,
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
-            SaldoPuntos = (decimal)usuario.SaldoPuntos
+            SaldoPuntos = (double)usuario.SaldoPuntos
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -67,7 +67,7 @@ public class UsuarioController(IUsuarioRepository usuarioRepository, ISesionReci
         {
             var recompensa = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
             var titulo = recompensa != null ? recompensa.Nombre : "Premio Canjeado";
-            
+
             historial.Add(new HistorialItemResponse
             {
                 Id = canje.Id,
@@ -130,7 +130,7 @@ public class UsuarioController(IUsuarioRepository usuarioRepository, ISesionReci
             Telefono = u.Telefono,
             Direccion = u.Direccion,
             Rol = u.Rol,
-            SaldoPuntos = (decimal)u.SaldoPuntos
+            SaldoPuntos = (double)u.SaldoPuntos
         }).ToList();
 
         return Ok(ApiResponse<List<UsuarioResponse>>.Ok(response));
@@ -151,7 +151,7 @@ public class UsuarioController(IUsuarioRepository usuarioRepository, ISesionReci
             Telefono = usuario.Telefono,
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
-            SaldoPuntos = (decimal)usuario.SaldoPuntos
+            SaldoPuntos = (double)usuario.SaldoPuntos
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));

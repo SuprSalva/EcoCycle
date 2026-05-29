@@ -1,101 +1,112 @@
+using Back.Entities;
 using Back.Infrastructure.Repositories.Interfaces;
-using Back.Models.Entities;
-using Dapper;
+using Google.Cloud.Firestore;
 
 namespace Back.Infrastructure.Repositories;
 
 public class UsuarioRepository : IUsuarioRepository
 {
-    private readonly IDbConnectionFactory _dbFactory;
+    private readonly FirestoreDb _firestoreDb;
+    private const string CollectionName = "usuarios";
 
-    public UsuarioRepository(IDbConnectionFactory dbFactory)
+    public UsuarioRepository(FirestoreDb firestoreDb)
     {
-        _dbFactory = dbFactory;
+        _firestoreDb = firestoreDb;
     }
 
     public async Task<Usuario?> GetByEmailAsync(string email)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT * FROM usuarios WHERE email = @Email";
-        return await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Email = email });
+        var query = _firestoreDb.Collection(CollectionName).WhereEqualTo("email", email);
+        var snapshot = await query.GetSnapshotAsync();
+
+        if (snapshot.Documents.Count == 0) return null;
+
+        return snapshot.Documents[0].ConvertTo<Usuario>();
     }
 
-    public async Task<Usuario?> GetByIdAsync(int id)
+    public async Task<Usuario?> GetByIdAsync(string id)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT * FROM usuarios WHERE id = @Id";
-        return await connection.QueryFirstOrDefaultAsync<Usuario>(sql, new { Id = id });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        var snapshot = await docRef.GetSnapshotAsync();
+
+        if (!snapshot.Exists) return null;
+
+        return snapshot.ConvertTo<Usuario>();
     }
 
-    public async Task<int> CreateAsync(Usuario usuario)
+    public async Task<string> CreateAsync(Usuario usuario)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO usuarios (nombre, apellidos, telefono, email, password_hash, direccion, rol, activo)
-            VALUES (@Nombre, @Apellidos, @Telefono, @Email, @PasswordHash, @Direccion, @Rol, @Activo)
-            RETURNING id";
-
-        return await connection.ExecuteScalarAsync<int>(sql, usuario);
+        var collection = _firestoreDb.Collection(CollectionName);
+        var docRef = collection.Document(); // Auto-generate ID
+        usuario.Id = docRef.Id;
+        await docRef.SetAsync(usuario);
+        return docRef.Id;
     }
 
     public async Task UpdateAsync(Usuario usuario)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            UPDATE usuarios 
-            SET nombre = @Nombre, apellidos = @Apellidos, telefono = @Telefono, 
-                direccion = @Direccion
-            WHERE id = @Id";
-
-        await connection.ExecuteAsync(sql, usuario);
+        var docRef = _firestoreDb.Collection(CollectionName).Document(usuario.Id);
+        var updates = new Dictionary<string, object>
+        {
+            { "nombre", usuario.Nombre },
+            { "apellidos", usuario.Apellidos },
+            { "telefono", usuario.Telefono },
+            { "direccion", usuario.Direccion ?? "" }
+        };
+        await docRef.UpdateAsync(updates);
     }
 
-    public async Task UpdatePasswordAsync(int id, string newPasswordHash)
+    public async Task UpdatePasswordAsync(string id, string newPasswordHash)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "UPDATE usuarios SET password_hash = @NewPasswordHash WHERE id = @Id";
-        await connection.ExecuteAsync(sql, new { Id = id, NewPasswordHash = newPasswordHash });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        await docRef.UpdateAsync("password_hash", newPasswordHash);
     }
 
     public async Task<IEnumerable<Usuario>> GetAllAsync(int page, int pageSize, string? rol = null)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var offset = (page - 1) * pageSize;
+        Query query = _firestoreDb.Collection(CollectionName);
 
-        var sql = @"
-            SELECT * FROM usuarios 
-            WHERE (@Rol IS NULL OR rol = @Rol)
-            ORDER BY id 
-            OFFSET @Offset LIMIT @Limit";
+        if (!string.IsNullOrEmpty(rol))
+        {
+            query = query.WhereEqualTo("rol", rol);
+        }
 
-        return await connection.QueryAsync<Usuario>(sql, new { Rol = rol, Offset = offset, Limit = pageSize });
+        query = query.Offset((page - 1) * pageSize).Limit(pageSize);
+
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Usuario>());
     }
 
     public async Task<int> GetTotalCountAsync(string? rol = null)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var sql = "SELECT COUNT(*) FROM usuarios WHERE (@Rol IS NULL OR rol = @Rol)";
-        return await connection.ExecuteScalarAsync<int>(sql, new { Rol = rol });
+        Query query = _firestoreDb.Collection(CollectionName);
+
+        if (!string.IsNullOrEmpty(rol))
+        {
+            query = query.WhereEqualTo("rol", rol);
+        }
+
+        var countQuery = query.Count();
+        var snapshot = await countQuery.GetSnapshotAsync();
+        return (int)snapshot.Count;
     }
 
     public async Task<bool> ExistsEmailAsync(string email)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COUNT(1) FROM usuarios WHERE email = @Email";
-        return await connection.ExecuteScalarAsync<int>(sql, new { Email = email }) > 0;
+        var user = await GetByEmailAsync(email);
+        return user != null;
     }
 
-    public async Task<bool> ExistsByIdAsync(int id)
+    public async Task<bool> ExistsByIdAsync(string id)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COUNT(1) FROM usuarios WHERE id = @Id";
-        return await connection.ExecuteScalarAsync<int>(sql, new { Id = id }) > 0;
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        var snapshot = await docRef.GetSnapshotAsync();
+        return snapshot.Exists;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(string id)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "DELETE FROM usuarios WHERE id = @Id";
-        await connection.ExecuteAsync(sql, new { Id = id });
+        var docRef = _firestoreDb.Collection(CollectionName).Document(id);
+        await docRef.DeleteAsync();
     }
 }

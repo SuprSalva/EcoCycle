@@ -1,63 +1,60 @@
+using Back.Entities;
 using Back.Infrastructure.Repositories.Interfaces;
-using Back.Models.Entities;
-using Dapper;
+using Google.Cloud.Firestore;
 
 namespace Back.Infrastructure.Repositories;
 
 public class CanjeRepository : ICanjeRepository
 {
-    private readonly IDbConnectionFactory _dbFactory;
+    private readonly FirestoreDb _firestoreDb;
+    private const string CollectionName = "canjes";
 
-    public CanjeRepository(IDbConnectionFactory dbFactory)
+    public CanjeRepository(FirestoreDb firestoreDb)
     {
-        _dbFactory = dbFactory;
+        _firestoreDb = firestoreDb;
     }
 
-    public async Task<int> CreateAsync(Canje canje)
+    public async Task<string> CreateAsync(Canje canje)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = @"
-            INSERT INTO canjes (usuario_id, recompensa_id, puntos_usados, fecha)
-            VALUES (@UsuarioId, @RecompensaId, @PuntosUsados, @Fecha)
-            RETURNING id";
-
-        return await connection.ExecuteScalarAsync<int>(sql, canje);
+        var collection = _firestoreDb.Collection(CollectionName);
+        var docRef = collection.Document();
+        canje.Id = docRef.Id;
+        canje.Fecha = DateTime.UtcNow;
+        await docRef.SetAsync(canje);
+        return docRef.Id;
     }
 
-    public async Task<IEnumerable<Canje>> GetByUsuarioIdAsync(int usuarioId, int page, int pageSize)
+    public async Task<IEnumerable<Canje>> GetByUsuarioIdAsync(string usuarioId, int page, int pageSize)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var offset = (page - 1) * pageSize;
-        const string sql = @"
-            SELECT c.*, r.nombre as recompensa_nombre
-            FROM canjes c
-            JOIN recompensas r ON c.recompensa_id = r.id
-            WHERE c.usuario_id = @UsuarioId
-            ORDER BY c.fecha DESC
-            OFFSET @Offset LIMIT @Limit";
+        var query = _firestoreDb.Collection(CollectionName)
+            .WhereEqualTo("usuario_id", usuarioId)
+            .OrderByDescending("fecha")
+            .Offset((page - 1) * pageSize)
+            .Limit(pageSize);
 
-        return await connection.QueryAsync<Canje>(sql, new { UsuarioId = usuarioId, Offset = offset, Limit = pageSize });
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Canje>());
     }
 
-    public async Task<int> GetCountByUsuarioIdAsync(int usuarioId)
+    public async Task<int> GetCountByUsuarioIdAsync(string usuarioId)
     {
-        using var connection = _dbFactory.CreateConnection();
-        const string sql = "SELECT COUNT(*) FROM canjes WHERE usuario_id = @UsuarioId";
-        return await connection.ExecuteScalarAsync<int>(sql, new { UsuarioId = usuarioId });
+        var query = _firestoreDb.Collection(CollectionName).WhereEqualTo("usuario_id", usuarioId);
+        var countQuery = query.Count();
+        var snapshot = await countQuery.GetSnapshotAsync();
+        return (int)snapshot.Count;
     }
 
     public async Task<IEnumerable<Canje>> GetAllAsync(DateTime? desde, DateTime? hasta)
     {
-        using var connection = _dbFactory.CreateConnection();
-        var sql = @"
-            SELECT c.*, u.nombre, u.apellidos, r.nombre as recompensa_nombre
-            FROM canjes c
-            JOIN usuarios u ON c.usuario_id = u.id
-            JOIN recompensas r ON c.recompensa_id = r.id
-            WHERE (@Desde IS NULL OR c.fecha >= @Desde)
-              AND (@Hasta IS NULL OR c.fecha <= @Hasta)
-            ORDER BY c.fecha DESC";
+        Query query = _firestoreDb.Collection(CollectionName);
 
-        return await connection.QueryAsync<Canje>(sql, new { Desde = desde, Hasta = hasta });
+        if (desde.HasValue)
+            query = query.WhereGreaterThanOrEqualTo("fecha", desde.Value.ToUniversalTime());
+        if (hasta.HasValue)
+            query = query.WhereLessThanOrEqualTo("fecha", hasta.Value.ToUniversalTime());
+
+        query = query.OrderByDescending("fecha");
+        var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Canje>());
     }
 }

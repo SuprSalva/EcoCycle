@@ -8,6 +8,6 @@ public class UsuarioResponse
     public string Telefono { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string? Direccion { get; set; }
-    public decimal SaldoPuntos { get; set; }
+    public double SaldoPuntos { get; set; }
     public string Rol { get; set; } = string.Empty;
 }

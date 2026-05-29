@@ -18,10 +18,10 @@ public class UsuarioController : ControllerBase
         _usuarioViewModel = usuarioViewModel;
     }
 
-    private int GetUserId()
+    private string GetUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userIdClaim ?? "0");
+        return userIdClaim ?? "0";
     }
 
     [HttpGet("perfil")]

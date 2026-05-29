@@ -17,10 +17,10 @@ public class ReciclajeController : ControllerBase
         _reciclajeViewModel = reciclajeViewModel;
     }
 
-    private int GetUserId()
+    private string GetUserId()
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.Parse(userIdClaim ?? "0");
+        return userIdClaim ?? "0";
     }
 
     [HttpPost("sesion")]
