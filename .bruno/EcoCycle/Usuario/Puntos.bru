@@ -1,0 +1,14 @@
+meta {
+  name: Puntos
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/api/Usuario/puntos
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,4 +1,5 @@
 using Google.Cloud.Firestore;
+using Back.Infrastructure;
 using Back.Infrastructure.Repositories;
 using Back.Infrastructure.Repositories.Interfaces;
 using Back.Middleware;
@@ -75,11 +76,16 @@ builder.Services.AddScoped<IReciclajeRepository, ReciclajeRepository>();
 builder.Services.AddScoped<IRecompensaRepository, RecompensaRepository>();
 builder.Services.AddScoped<ICanjeRepository, CanjeRepository>();
 
+<<<<<<< HEAD
 // ViewModels
 builder.Services.AddScoped<IAuthViewModel, AuthViewModel>();
 builder.Services.AddScoped<IUsuarioViewModel, UsuarioViewModel>();
 builder.Services.AddScoped<IReciclajeViewModel, ReciclajeViewModel>();
 builder.Services.AddScoped<IRecompensaViewModel, RecompensaViewModel>();
+=======
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+>>>>>>> features
 
 // Validators
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -104,9 +110,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+<<<<<<< HEAD
 // ==========================================
 // CONFIGURAR EL PIPELINE DE HTTP REQUEST
 // ==========================================
+=======
+// Configure the HTTP request pipeline.
+>>>>>>> features
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -116,7 +126,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+<<<<<<< HEAD
 app.UseCors("AllowAngular");
+=======
+>>>>>>> features
 
 app.UseAuthentication();
 app.UseAuthorization();

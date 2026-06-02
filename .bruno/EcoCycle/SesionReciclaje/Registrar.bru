@@ -1,0 +1,16 @@
+meta {
+  name: Registrar sesion
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/api/SesionReciclaje
+  body: json
+}
+
+body:json {
+  "usuarioId": "{{usuarioId}}",
+  "maquinaId": "{{maquinaId}}",
+  "botellas": 10
+}

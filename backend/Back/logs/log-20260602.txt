@@ -7,3 +7,13 @@
 2026-06-02 10:00:33.409 -06:00 [INF] Hosting environment: Development
 2026-06-02 10:00:33.409 -06:00 [INF] Content root path: /home/zavalaw/Documentos/universidad/recicladora/EcoCycle/backend/Back
 2026-06-02 10:01:17.514 -06:00 [INF] Application is shutting down...
+2026-06-02 16:10:51.367 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2026-06-02 16:10:51.398 +00:00 [INF] User profile is available. Using '/root/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2026-06-02 16:10:51.406 +00:00 [INF] Creating key {53a01d02-4f08-4ace-af72-2b9c3af550c9} with creation date 2026-06-02 16:10:51Z, activation date 2026-06-02 16:10:51Z, and expiration date 2026-08-31 16:10:51Z.
+2026-06-02 16:10:51.412 +00:00 [WRN] No XML encryptor configured. Key {53a01d02-4f08-4ace-af72-2b9c3af550c9} may be persisted to storage in unencrypted form.
+2026-06-02 16:10:51.414 +00:00 [INF] Writing data to file '/root/.aspnet/DataProtection-Keys/key-53a01d02-4f08-4ace-af72-2b9c3af550c9.xml'.
+2026-06-02 16:10:51.422 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://0.0.0.0:5000'.
+2026-06-02 16:10:51.454 +00:00 [INF] Now listening on: http://0.0.0.0:5000
+2026-06-02 16:10:51.454 +00:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-02 16:10:51.454 +00:00 [INF] Hosting environment: Development
+2026-06-02 16:10:51.454 +00:00 [INF] Content root path: /app

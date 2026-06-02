@@ -1,0 +1,18 @@
+meta {
+  name: Canjear recompensa
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/api/Recompensa/canjear
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  "recompensaId": "{{recompensaId}}"
+}
