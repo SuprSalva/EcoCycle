@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/api/Auth/registro
+  url: http://localhost:5000/api/Auth/registro
   body: json
   auth: none
 }
@@ -23,7 +23,4 @@ body:json {
   }
 }
 
-vars:pre-request {
-  baseUrl: http://localhost:5000
-  token: eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg1NGFhNGMyM2VkZTdiOGNhODc1OWZiMDZlNmExZDU4OTI0MjVkMDYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZWNvY3ljbGUtZTljMDQiLCJhdWQiOiJlY29jeWNsZS1lOWMwNCIsImF1dGhfdGltZSI6MTc4MDQxNzM3OCwidXNlcl9pZCI6ImlGOTJKQUhXNG5RZXg2RVhSVTNvc2xlaVBQMjIiLCJzdWIiOiJpRjkySkFIVzRuUWV4NkVYUlUzb3NsZWlQUDIyIiwiaWF0IjoxNzgwNDE3Mzc4LCJleHAiOjE3ODA0MjA5NzgsImVtYWlsIjoicHJ1ZWJhQGVjb2N5Y2xlLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJwcnVlYmFAZWNvY3ljbGUuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.cw3Tmxp9O46UY9ZUa9sLU5WqFalwfqyvy_k626pTHGnd2C1mlFNa1hGwL_fZqUB4GPobdmxwTF4in39BzvjAQkdq4UCfezrafHbVSCACc70eb0BDZH96cYw09q8rGYVRAWCBCjpSB9u-zbwm2-t_6QoFW3R6VHqMDmj4EQN2sylhlJ7WkkOdmtKPJc2Y1WzKlZV4xOyARYJnjITquld8t6_NNGahq0DqM1GIdYf1b_dNjIzTnkdfk7vGh51DRgQdi2uHun0pCiosFx623lVknEnrL5Kp5VxmksYgORTO-NHiyJmc1mTY1SymChrd0D217QQQkmRhNeTglwLbRVqgKA
-}
+

@@ -2,6 +2,9 @@
   "version": "1",
   "name": "EcoCycle",
   "type": "collection",
+  "environments": [
+    "Local"
+  ],
   "variables": [
     {
       "name": "baseUrl",
