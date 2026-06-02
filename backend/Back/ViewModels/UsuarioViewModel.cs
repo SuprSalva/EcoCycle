@@ -1,3 +1,4 @@
+using Back.Helpers;
 using Back.Infrastructure.Repositories.Interfaces;
 using Back.Models.DTOs.Request;
 using Back.Models.DTOs.Response;
@@ -31,6 +32,8 @@ public class UsuarioViewModel : IUsuarioViewModel
             return ApiResponse<UsuarioResponse>.Fail("Usuario no encontrado");
 
         var saldo = await _saldoPuntosRepository.GetSaldoAsync(usuarioId);
+        var totalBotellas = await _reciclajeRepository.GetTotalBotellasByUsuarioIdAsync(usuarioId);
+        var (nivel, meta, faltantes) = NivelHelper.CalcularNivel(totalBotellas);
 
         var response = new UsuarioResponse
         {
@@ -42,7 +45,11 @@ public class UsuarioViewModel : IUsuarioViewModel
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             Activo = usuario.Activo,
-            PuntosDisponibles = saldo
+            PuntosDisponibles = saldo,
+            TotalBotellasRecicladas = totalBotellas,
+            NivelActual = nivel,
+            MetaActual = meta,
+            FaltantesSiguienteNivel = faltantes
         };
 
         return ApiResponse<UsuarioResponse>.Success(response);
@@ -62,6 +69,8 @@ public class UsuarioViewModel : IUsuarioViewModel
         await _usuarioRepository.UpdateAsync(usuario);
 
         var saldo = await _saldoPuntosRepository.GetSaldoAsync(usuarioId);
+        var totalBotellas = await _reciclajeRepository.GetTotalBotellasByUsuarioIdAsync(usuarioId);
+        var (nivel, meta, faltantes) = NivelHelper.CalcularNivel(totalBotellas);
 
         var response = new UsuarioResponse
         {
@@ -73,7 +82,11 @@ public class UsuarioViewModel : IUsuarioViewModel
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             Activo = usuario.Activo,
-            PuntosDisponibles = saldo
+            PuntosDisponibles = saldo,
+            TotalBotellasRecicladas = totalBotellas,
+            NivelActual = nivel,
+            MetaActual = meta,
+            FaltantesSiguienteNivel = faltantes
         };
 
         return ApiResponse<UsuarioResponse>.Success(response, "Perfil actualizado exitosamente");

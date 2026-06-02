@@ -11,4 +11,8 @@ public class UsuarioResponse
     public string Rol { get; set; } = string.Empty;
     public bool Activo { get; set; }
     public double PuntosDisponibles { get; set; }
+    public int TotalBotellasRecicladas { get; set; }
+    public string NivelActual { get; set; } = "Bronce";
+    public int MetaActual { get; set; }
+    public int FaltantesSiguienteNivel { get; set; }
 }

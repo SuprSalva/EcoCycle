@@ -37,8 +37,16 @@ public class UsuarioRepository : IUsuarioRepository
     public async Task<string> CreateAsync(Usuario usuario)
     {
         var collection = _firestoreDb.Collection(CollectionName);
-        var docRef = collection.Document(); // Auto-generate ID
-        usuario.Id = docRef.Id;
+        DocumentReference docRef;
+        if (!string.IsNullOrEmpty(usuario.Id))
+        {
+            docRef = collection.Document(usuario.Id);
+        }
+        else
+        {
+            docRef = collection.Document(); // Auto-generate ID
+            usuario.Id = docRef.Id;
+        }
         await docRef.SetAsync(usuario);
         return docRef.Id;
     }

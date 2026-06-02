@@ -8,4 +8,5 @@ public class RegistroRequest
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string? Direccion { get; set; }
+    public string? Id { get; set; }
 }

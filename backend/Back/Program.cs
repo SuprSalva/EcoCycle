@@ -74,12 +74,14 @@ builder.Services.AddScoped<ISaldoPuntosRepository, SaldoPuntosRepository>();
 builder.Services.AddScoped<IReciclajeRepository, ReciclajeRepository>();
 builder.Services.AddScoped<IRecompensaRepository, RecompensaRepository>();
 builder.Services.AddScoped<ICanjeRepository, CanjeRepository>();
+builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
 
 // ViewModels
 builder.Services.AddScoped<IAuthViewModel, AuthViewModel>();
 builder.Services.AddScoped<IUsuarioViewModel, UsuarioViewModel>();
 builder.Services.AddScoped<IReciclajeViewModel, ReciclajeViewModel>();
 builder.Services.AddScoped<IRecompensaViewModel, RecompensaViewModel>();
+builder.Services.AddScoped<INotificacionViewModel, NotificacionViewModel>();
 
 // Validators
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
