@@ -1,10 +1,7 @@
 using Google.Cloud.Firestore;
-using Back.Infrastructure;
-using Back.Infrastructure.Repositories;
-using Back.Infrastructure.Repositories.Interfaces;
+using Back.Repositories;
+using Back.Repositories.Interfaces;
 using Back.Middleware;
-using Back.ViewModels;
-using Back.ViewModels.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -67,20 +64,11 @@ var firestoreDb = FirestoreDb.Create(firebaseProjectId);
 builder.Services.AddSingleton(firestoreDb);
 
 // ==========================================
-// SERVICIOS, REPOSITORIOS Y VIEWMODELS
+// SERVICIOS Y REPOSITORIOS
 // ==========================================
-// Repositories
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<ISaldoPuntosRepository, SaldoPuntosRepository>();
-builder.Services.AddScoped<IReciclajeRepository, ReciclajeRepository>();
+builder.Services.AddScoped<ISesionReciclajeRepository, SesionReciclajeRepository>();
 builder.Services.AddScoped<IRecompensaRepository, RecompensaRepository>();
-builder.Services.AddScoped<ICanjeRepository, CanjeRepository>();
-
-// ViewModels
-builder.Services.AddScoped<IAuthViewModel, AuthViewModel>();
-builder.Services.AddScoped<IUsuarioViewModel, UsuarioViewModel>();
-builder.Services.AddScoped<IReciclajeViewModel, ReciclajeViewModel>();
-builder.Services.AddScoped<IRecompensaViewModel, RecompensaViewModel>();
 
 // Validators
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

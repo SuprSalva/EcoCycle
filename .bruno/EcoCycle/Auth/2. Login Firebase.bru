@@ -16,3 +16,9 @@ body:json {
     "returnSecureToken": true
   }
 }
+
+script:post-response {
+  if (res.status === 200 && res.body.idToken) {
+    bru.setVar("token", res.body.idToken);
+  }
+}

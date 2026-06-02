@@ -125,3 +125,159 @@ System.InvalidOperationException: Unable to resolve service for type 'Back.Repos
    at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
    at Back.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context) in /app/Middleware/ExceptionMiddleware.cs:line 13
 2026-06-02 16:23:13.213 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 500 null application/json 770.4331ms
+2026-06-02 16:25:21.494 +00:00 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/Auth/registro - application/json 89
+2026-06-02 16:25:21.497 +00:00 [INF] Executing endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:25:21.502 +00:00 [INF] Route matched with {action = "Registro", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Registro(Back.DTOs.Request.RegistroRequest) on controller Back.Controllers.AuthController (Back).
+2026-06-02 16:25:21.503 +00:00 [INF] Executed action Back.Controllers.AuthController.Registro (Back) in 0.2431ms
+2026-06-02 16:25:21.503 +00:00 [INF] Executed endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:25:21.503 +00:00 [ERR] Error no controlado
+System.InvalidOperationException: Unable to resolve service for type 'Back.Repositories.Interfaces.IUsuarioRepository' while attempting to activate 'Back.Controllers.AuthController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method18(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Back.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context)
+2026-06-02 16:25:21.507 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 500 null application/json 12.5145ms
+2026-06-02 16:26:04.011 +00:00 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/Auth/registro - application/json 89
+2026-06-02 16:26:04.013 +00:00 [INF] Executing endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:26:04.013 +00:00 [INF] Route matched with {action = "Registro", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Registro(Back.DTOs.Request.RegistroRequest) on controller Back.Controllers.AuthController (Back).
+2026-06-02 16:26:04.013 +00:00 [INF] Executed action Back.Controllers.AuthController.Registro (Back) in 0.1727ms
+2026-06-02 16:26:04.013 +00:00 [INF] Executed endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:26:04.013 +00:00 [ERR] Error no controlado
+System.InvalidOperationException: Unable to resolve service for type 'Back.Repositories.Interfaces.IUsuarioRepository' while attempting to activate 'Back.Controllers.AuthController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method18(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Back.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context)
+2026-06-02 16:26:04.015 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 500 null application/json 3.6204ms
+2026-06-02 16:26:05.229 +00:00 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/Auth/registro - application/json 89
+2026-06-02 16:26:05.230 +00:00 [INF] Executing endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:26:05.230 +00:00 [INF] Route matched with {action = "Registro", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Registro(Back.DTOs.Request.RegistroRequest) on controller Back.Controllers.AuthController (Back).
+2026-06-02 16:26:05.231 +00:00 [INF] Executed action Back.Controllers.AuthController.Registro (Back) in 0.1892ms
+2026-06-02 16:26:05.231 +00:00 [INF] Executed endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:26:05.231 +00:00 [ERR] Error no controlado
+System.InvalidOperationException: Unable to resolve service for type 'Back.Repositories.Interfaces.IUsuarioRepository' while attempting to activate 'Back.Controllers.AuthController'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ThrowHelperUnableToResolveService(Type type, Type requiredBy)
+   at lambda_method18(Closure, IServiceProvider, Object[])
+   at Microsoft.AspNetCore.Mvc.Controllers.ControllerFactoryProvider.<>c__DisplayClass6_0.<CreateControllerFactory>g__CreateController|0(ControllerContext controllerContext)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Back.Middleware.ExceptionMiddleware.InvokeAsync(HttpContext context)
+2026-06-02 16:26:05.232 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 500 null application/json 2.5326ms
+2026-06-02 16:27:11.776 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2026-06-02 16:27:11.808 +00:00 [INF] User profile is available. Using '/root/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2026-06-02 16:27:11.818 +00:00 [INF] Creating key {e39d3f98-2621-4861-917b-e27d7e1a6ef7} with creation date 2026-06-02 16:27:11Z, activation date 2026-06-02 16:27:11Z, and expiration date 2026-08-31 16:27:11Z.
+2026-06-02 16:27:11.825 +00:00 [WRN] No XML encryptor configured. Key {e39d3f98-2621-4861-917b-e27d7e1a6ef7} may be persisted to storage in unencrypted form.
+2026-06-02 16:27:11.828 +00:00 [INF] Writing data to file '/root/.aspnet/DataProtection-Keys/key-e39d3f98-2621-4861-917b-e27d7e1a6ef7.xml'.
+2026-06-02 16:27:11.836 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://0.0.0.0:5000'.
+2026-06-02 16:27:11.868 +00:00 [INF] Now listening on: http://0.0.0.0:5000
+2026-06-02 16:27:11.869 +00:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-02 16:27:11.869 +00:00 [INF] Hosting environment: Development
+2026-06-02 16:27:11.869 +00:00 [INF] Content root path: /app
+2026-06-02 16:27:15.236 +00:00 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/Auth/registro - application/json 89
+2026-06-02 16:27:15.264 +00:00 [WRN] Failed to determine the https port for redirect.
+2026-06-02 16:27:16.177 +00:00 [INF] Executing endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:27:16.193 +00:00 [INF] Route matched with {action = "Registro", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Registro(Back.DTOs.Request.RegistroRequest) on controller Back.Controllers.AuthController (Back).
+2026-06-02 16:27:16.219 +00:00 [INF] Executing BadRequestObjectResult, writing value of type 'Microsoft.AspNetCore.Mvc.ValidationProblemDetails'.
+2026-06-02 16:27:16.241 +00:00 [INF] Executed action Back.Controllers.AuthController.Registro (Back) in 45.4399ms
+2026-06-02 16:27:16.243 +00:00 [INF] Executed endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:27:16.245 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 400 null application/problem+json; charset=utf-8 1010.3278ms
+2026-06-02 16:27:40.696 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Recompensa - null null
+2026-06-02 16:27:40.699 +00:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-06-02 16:27:40.704 +00:00 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-06-02 16:27:40.705 +00:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-02 16:27:40.709 +00:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-02 16:27:40.710 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Recompensa - 401 0 null 14.0185ms
+2026-06-02 16:28:03.758 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-02 16:28:03.761 +00:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-06-02 16:28:03.761 +00:00 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-06-02 16:28:03.762 +00:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-02 16:28:03.762 +00:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-02 16:28:03.763 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 401 0 null 4.4486ms
+2026-06-02 16:28:31.656 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-02 16:28:31.658 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-02 16:28:31.662 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-02 16:28:31.972 +00:00 [INF] Executing NotFoundObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-02 16:28:31.975 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 313.4479ms
+2026-06-02 16:28:31.976 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-02 16:28:31.976 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 404 null application/json; charset=utf-8 319.9191ms
+2026-06-02 16:29:36.326 +00:00 [INF] Request starting HTTP/1.1 POST http://localhost:5000/api/Auth/registro - application/json 101
+2026-06-02 16:29:36.327 +00:00 [INF] Executing endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:29:36.327 +00:00 [INF] Route matched with {action = "Registro", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Registro(Back.DTOs.Request.RegistroRequest) on controller Back.Controllers.AuthController (Back).
+2026-06-02 16:29:36.680 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-02 16:29:36.681 +00:00 [INF] Executed action Back.Controllers.AuthController.Registro (Back) in 353.7095ms
+2026-06-02 16:29:36.681 +00:00 [INF] Executed endpoint 'Back.Controllers.AuthController.Registro (Back)'
+2026-06-02 16:29:36.681 +00:00 [INF] Request finished HTTP/1.1 POST http://localhost:5000/api/Auth/registro - 200 null application/json; charset=utf-8 355.1304ms
+2026-06-02 16:29:51.997 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-02 16:29:51.998 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-02 16:29:51.998 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-02 16:29:52.100 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-02 16:29:52.105 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 107.3614ms
+2026-06-02 16:29:52.105 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-02 16:29:52.105 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 108.652ms
+2026-06-02 16:30:20.879 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/historial - null null
+2026-06-02 16:30:20.879 +00:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+ ---> Microsoft.IdentityModel.Tokens.SecurityTokenMalformedException: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken.ReadToken(String encodedJson)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebToken..ctor(String jwtEncodedString)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ReadToken(String token, TokenValidationParameters validationParameters)
+   --- End of inner exception stack trace ---
+2026-06-02 16:30:20.879 +00:00 [INF] Bearer was not authenticated. Failure message: IDX14100: JWT is not well formed, there are no dots (.).
+The token needs to be in JWS or JWE Compact Serialization Format. (JWS): 'EncodedHeader.EndcodedPayload.EncodedSignature'. (JWE): 'EncodedProtectedHeader.EncodedEncryptedKey.EncodedInitializationVector.EncodedCiphertext.EncodedAuthenticationTag'.
+2026-06-02 16:30:20.879 +00:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-02 16:30:20.879 +00:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-02 16:30:20.880 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/historial - 401 0 null 0.9516ms
