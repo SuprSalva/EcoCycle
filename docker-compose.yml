@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    container_name: ecocycle_backend
+    working_dir: /app
+    volumes:
+      - ./backend/Back:/app
+    # Usamos dotnet watch run para que tenga hot-reload (como start:dev)
+    command: dotnet watch run --urls "http://0.0.0.0:5000"
+    ports:
+      - "5000:5000"
+    environment:
+      # Configuramos la variable para que busque el archivo dentro del contenedor
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-key.json
+      # Puedes poner aquí otras variables si quieres evitar usar el archivo
+      # - FIREBASE_PROJECT_ID=ecocycle-e9c04
+
+  frontend:
+    image: node:20
+    container_name: ecocycle_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend/front:/app
+    # Instala las dependencias y corre el servidor en modo desarrollo con hot-reload
+    command: sh -c "npm install && npm start -- --host 0.0.0.0"
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend

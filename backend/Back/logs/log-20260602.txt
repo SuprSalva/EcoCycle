@@ -1,0 +1,8 @@
+2026-06-02 10:00:33.271 -06:00 [INF] User profile is available. Using '/home/zavalaw/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2026-06-02 10:00:33.349 -06:00 [INF] Creating key {47a75e3e-5548-4a11-b596-84f6ab0c0533} with creation date 2026-06-02 16:00:33Z, activation date 2026-06-02 16:00:33Z, and expiration date 2026-08-31 16:00:33Z.
+2026-06-02 10:00:33.356 -06:00 [WRN] No XML encryptor configured. Key {47a75e3e-5548-4a11-b596-84f6ab0c0533} may be persisted to storage in unencrypted form.
+2026-06-02 10:00:33.359 -06:00 [INF] Writing data to file '/home/zavalaw/.aspnet/DataProtection-Keys/key-47a75e3e-5548-4a11-b596-84f6ab0c0533.xml'.
+2026-06-02 10:00:33.407 -06:00 [INF] Now listening on: http://0.0.0.0:5171
+2026-06-02 10:00:33.409 -06:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-02 10:00:33.409 -06:00 [INF] Hosting environment: Development
+2026-06-02 10:00:33.409 -06:00 [INF] Content root path: /home/zavalaw/Documentos/universidad/recicladora/EcoCycle/backend/Back

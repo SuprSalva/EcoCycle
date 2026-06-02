@@ -88,7 +88,6 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 // CONFIGURAR OPENAPI/SWAGGER Y CORS
 // ==========================================
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -112,7 +111,6 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
