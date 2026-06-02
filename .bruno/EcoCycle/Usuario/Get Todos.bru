@@ -1,0 +1,14 @@
+meta {
+  name: Get Todos
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/Usuario/todos
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
