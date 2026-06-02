@@ -1,0 +1,14 @@
+meta {
+  name: Listar usuarios
+  type: http
+  seq: 9
+}
+
+get {
+  url: http://localhost:5000/api/Usuario/todos
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Update Perfil
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:5000/api/Usuario/perfil
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "nombre": "Nuevo Nombre",
+    "apellidos": "Nuevos Apellidos",
+    "telefono": "1234567890",
+    "direccion": "Nueva Direccion 123"
+  }
+}

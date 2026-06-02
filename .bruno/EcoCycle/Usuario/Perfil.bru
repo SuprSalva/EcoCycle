@@ -1,0 +1,14 @@
+meta {
+  name: Perfil
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:5000/api/Usuario/perfil
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

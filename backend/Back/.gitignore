@@ -19,6 +19,7 @@ secrets.json
 *.pfx
 *.pem
 *.key
+firebase-key.json
 
 # ── Logs de Serilog ───────────────────────────────────────────────────────────
 Logs/

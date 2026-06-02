@@ -1,0 +1,35 @@
+{
+  "version": "1",
+  "name": "EcoCycle",
+  "type": "collection",
+  "environments": [
+    "Local"
+  ],
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:5000",
+      "enabled": true
+    },
+    {
+      "name": "token",
+      "value": "YOUR_JWT_TOKEN",
+      "enabled": true
+    },
+    {
+      "name": "usuarioId",
+      "value": "USER_ID",
+      "enabled": true
+    },
+    {
+      "name": "recompensaId",
+      "value": "RECOMPENSA_ID",
+      "enabled": true
+    },
+    {
+      "name": "maquinaId",
+      "value": "MAQUINA_ID",
+      "enabled": true
+    }
+  ]
+}

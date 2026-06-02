@@ -1,0 +1,14 @@
+meta {
+  name: Get Por Id
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:5000/api/Usuario/{id}
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Registro
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:5000/api/Auth/registro
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "nombre": "Juan",
+    "apellidos": "Perez",
+    "telefono": "999999999",
+    "direccion": "Calle 123"
+  }
+}
+
+

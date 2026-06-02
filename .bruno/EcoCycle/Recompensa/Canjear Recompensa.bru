@@ -1,0 +1,20 @@
+meta {
+  name: Canjear Recompensa
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:5000/api/Recompensa/canjear
+  body: json
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
+
+body:json {
+  {
+    "recompensaId": "ID_DE_LA_RECOMPENSA"
+  }
+}
