@@ -1,0 +1,18 @@
+meta {
+  name: 2. Login Firebase (Obtener Token)
+  type: http
+  seq: 3
+}
+
+post {
+  url: https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCi4xX5rjXyk_M-jtCVv-amtpijTb9LCsY
+  body: json
+}
+
+body:json {
+  {
+    "email": "prueba@ecocycle.com",
+    "password": "Password123!",
+    "returnSecureToken": true
+  }
+}

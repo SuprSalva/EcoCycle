@@ -7,8 +7,13 @@ meta {
 get {
   url: {{baseUrl}}/api/Usuario/todos
   body: none
+  auth: none
 }
 
 headers {
   Authorization: Bearer {{token}}
+}
+
+vars:pre-request {
+  baseUrl: http://localhost:5000
 }
