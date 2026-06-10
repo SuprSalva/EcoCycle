@@ -1,0 +1,231 @@
+<div class="container-fluid p-4 min-vh-100" style="background-color: #f4f7fe;">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+    <div>
+      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: #1b2559 !important; letter-spacing: -0.02em;">Control y CRUD Maestro de Usuarios</h2>
+      <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">Activa, suspende y consulta de forma detallada las cuentas vinculadas.</p>
+    </div>
+    
+    <button type="button" 
+            class="btn d-flex align-items-center gap-2 px-3 py-2 shadow-sm rounded-3 border-0 text-white" 
+            style="background-color: #7cb342;"
+            title="Nuevo Usuario" 
+            aria-label="Registrar nuevo usuario" 
+            (click)="modalNuevoUsuario()"
+            data-bs-toggle="modal" 
+            data-bs-target="#usuarioModal">
+      <i class="bi bi-person-plus-fill fs-5"></i>
+      <span class="fw-semibold">Nuevo Usuario</span>
+    </button>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 bg-white overflow-hidden mb-4">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-white text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.05em; border-bottom: 2px solid #f1f3f5;">
+            <tr>
+              <th class="ps-4 py-3 text-secondary border-0 fw-bold">Usuario Registrado</th>
+              <th class="py-3 text-secondary border-0 fw-bold">Correo Único</th>
+              <th class="py-3 text-secondary border-0 fw-bold">Rol Asignado</th>
+              <th class="py-3 text-center text-secondary border-0 fw-bold">Estatus Cuenta</th>
+              <th class="py-3 text-center pe-4 text-secondary border-0 fw-bold">Acción Operativa</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let usuario of usuarios" style="border-bottom: 1px solid #efefe3 !important;">
+              
+              <td class="ps-4 py-3 border-0">
+                <span class="fw-bold" style="color: #2b3674 !important; font-size: 0.95rem;">
+                  {{ usuario.nombre }} {{ usuario.apellidos }}
+                </span>
+              </td>
+              
+              <td class="border-0" style="font-size: 0.9rem; color: #a3b1cc !important;">
+                {{ usuario.email }}
+              </td>
+              
+              <td class="border-0 text-capitalize" style="font-size: 0.9rem; color: #2b3674 !important;">
+                {{ usuario.rol }}
+              </td>
+              
+              <td class="text-center border-0">
+                <span class="badge rounded-pill px-3 py-1.5 text-uppercase fw-bold"
+                      style="font-size: 0.75rem; letter-spacing: 0.03em;"
+                      [ngClass]="usuario.rol !== 'suspendido' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+                  {{ usuario.rol !== 'suspendido' ? 'Activo' : 'Suspendido' }}
+                </span>
+              </td>
+              
+              <td class="text-center pe-4 border-0">
+                <div class="d-flex justify-content-center gap-3">
+                  
+                  <button type="button" 
+                          class="btn btn-sm btn-link p-0 text-decoration-none fw-semibold" 
+                          style="color: #4361ee; font-size: 0.9rem;"
+                          (click)="modalEditarUsuario(usuario)"
+                          data-bs-toggle="modal" 
+                          data-bs-target="#usuarioModal">
+                    Editar
+                  </button>
+
+                  <button type="button" 
+                          class="btn btn-sm btn-link p-0 text-decoration-none fw-bold"
+                          style="font-size: 0.9rem;"
+                          [style.color]="usuario.rol !== 'suspendido' ? '#017e44' : '#10b981'"
+                          (click)="alternarEstado(usuario)">
+                    {{ usuario.rol !== 'suspendido' ? 'Suspender' : 'Activar Cuenta' }}
+                  </button>
+
+                  <button type="button" 
+                          class="btn btn-sm btn-link p-0 text-decoration-none fw-semibold" 
+                          style="color: #ef233c; font-size: 0.9rem;"
+                          (click)="confirmarEliminar(usuario)">
+                    Eliminar
+                  </button>
+
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 rounded-4 shadow-lg bg-white overflow-hidden">
+      
+      <div class="modal-header px-4 pt-4 pb-2 border-0 d-flex justify-content-between align-items-center">
+        <div>
+          <h3 class="fw-bold m-0" id="usuarioModalLabel" style="color: #1b2559 !important; font-size: 1.5rem; letter-spacing: -0.02em;">
+            {{ esEdicion ? 'Modificar Información' : 'Información del Usuario' }}
+          </h3>
+          <p class="text-muted small m-0 mt-1" style="font-size: 0.85rem;">
+            Completa los campos requeridos para gestionar las credenciales y accesos del sistema.
+          </p>
+        </div>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body px-4 py-3">
+        <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+          <div class="row g-3">
+            
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                NOMBRE(S) <span class="text-danger">*</span>
+              </label>
+              <input type="text" 
+                     formControlName="nombre"
+                     class="form-control rounded-3 px-3 py-2 shadow-none fs-6" 
+                     style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+                     placeholder="Ej. Juan Carlos">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                APELLIDOS <span class="text-danger">*</span>
+              </label>
+              <input type="text" 
+                     formControlName="apellidos"
+                     class="form-control rounded-3 px-3 py-2 shadow-none fs-6" 
+                     style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+                     placeholder="Ej. Pérez Gómez">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                CORREO ELECTRÓNICO ÚNICO <span class="text-danger">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
+                  <i class="bi bi-envelope-fill"></i>
+                </span>
+                <input type="email" 
+                       formControlName="email"
+                       [readOnly]="esEdicion"
+                       class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                       style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+                       placeholder="usuario@correo.com">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                ROL ASIGNADO <span class="text-danger">*</span>
+              </label>
+              <select formControlName="rol"
+                      class="form-select rounded-3 px-3 py-2 shadow-none fs-6 text-capitalize" 
+                      style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;">
+                <option value="usuario">Usuario Estándar</option>
+                <option value="administrador">Administrador</option>
+                <option value="suspendido" *ngIf="esEdicion">Suspender Cuenta</option>
+              </select>
+            </div>
+
+            <div class="col-12 mt-4 pt-2 border-top" style="border-top: 1px solid #f1f3f5 !important;">
+              <h5 class="fw-bold m-0" style="color: #1b2559 !important; font-size: 1.1rem; letter-spacing: -0.01em;">
+                {{ esEdicion ? 'Cambiar Contraseña (Opcional)' : 'Seguridad de la Cuenta' }}
+              </h5>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                CONTRASEÑA ACCESO <span class="text-danger" *ngIf="!esEdicion">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
+                  <i class="bi bi-lock-fill"></i>
+                </span>
+                <input type="password" 
+                       formControlName="password"
+                       class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                       style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+                       placeholder="••••••••">
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+                CONFIRMAR CONTRASEÑA <span class="text-danger" *ngIf="!esEdicion">*</span>
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
+                  <i class="bi bi-shield-lock-fill"></i>
+                </span>
+                <input type="password" 
+                       formControlName="confirmarPassword"
+                       class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                       style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+                       placeholder="••••••••">
+              </div>
+            </div>
+
+            <button type="submit" class="d-none"></button>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer px-4 pb-4 pt-2 border-0 d-flex justify-content-end gap-2 bg-light-subtle">
+        <button type="button" 
+                class="btn btn-link text-decoration-none fw-semibold px-3 py-2 text-muted shadow-none" 
+                style="font-size: 0.95rem;" 
+                data-bs-dismiss="modal">
+          Cancelar Operación
+        </button>
+        <button type="button" 
+                (click)="guardarUsuario()"
+                class="btn d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3 border-0 text-white fw-semibold" 
+                style="background-color: #7cb342; font-size: 0.95rem;">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>{{ esEdicion ? 'Guardar Cambios' : 'Guardar Usuario' }}</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,125 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f9;
+}
+
+// Estilos de la barra lateral
+.sidebar {
+  width: 260px;
+  background-color: #111625;
+  color: #fff;
+  padding: 20px;
+
+  .logo-seccion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    h2 { font-size: 1.2rem; span { color: #8bc34a; } }
+  }
+
+  .menu-navegacion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .item-menu {
+      color: #b0b5c1;
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: 0.3s;
+      &.activo, &:hover {
+        background-color: #7cb342;
+        color: #fff;
+      }
+    }
+  }
+}
+
+// Área de contenido
+.contenido-principal {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+// Cuadrícula de tarjetas superiores
+.tarjetas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+
+  .tarjeta {
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    p { font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; opacity: 0.9; }
+    h3 { font-size: 2rem; span { font-size: 1rem; font-weight: normal; } }
+    
+    &.verde { background-color: #00bfa5; }
+    &.azul { background-color: #2979ff; }
+    &.verde-claro { background-color: #7cb342; }
+    &.naranja { background-color: #ff6d00; }
+  }
+}
+
+// Cuadrícula de secciones inferiores
+.graficas-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+
+  .bloque-grafica, .bloque-iot {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    h4 { margin-bottom: 5px; color: #333; }
+    .subtitulo { font-size: 0.85rem; color: #777; margin-bottom: 20px; }
+  }
+}
+
+// Mockup rápido de barras estadísticas
+.barras-mockup {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 200px;
+  padding-top: 20px;
+  .barra {
+    width: 35px;
+    background-color: #4caf50;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    span { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; font-weight: bold; color: #444; }
+  }
+}
+
+// Estado Dispositivos IoT
+.dispositivo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  .badge.estable { background: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; }
+}
+
+.btn-iot {
+  width: 100%;
+  background: #111625;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+}

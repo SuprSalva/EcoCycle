@@ -1,0 +1,36 @@
+<div class="dashboard-container">
+  
+  <aside class="sidebar">
+    <div class="logo-seccion">
+      <div class="icono-logo">⚙️</div>
+      <h2>EcoCycle <span>Panel</span></h2>
+    </div>
+
+    <nav class="menu-navegacion">
+      <a routerLink="/panel/dashboard" class="item-menu" routerLinkActive="activo">
+        <i class="fa-solid fa-chart-pie"></i> Dashboard Global
+      </a>
+      
+      <a routerLink="/panel/usuarios" class="item-menu" routerLinkActive="activo">
+        <i class="fa-solid fa-users"></i> Control Usuarios
+      </a>
+      
+      <a routerLink="/panel/reciclaje" class="item-menu" routerLinkActive="activo">
+        <i class="fa-solid fa-microchip"></i> Terminal Ingesta IoT
+      </a>
+      
+      <a routerLink="/panel/catalogo" class="item-menu" routerLinkActive="activo">
+  <i class="fa-solid fa-tags"></i> Catálogo Maestro
+</a>
+      
+      <a routerLink="/panel/reportes" class="item-menu" routerLinkActive="activo">
+        <i class="fa-solid fa-file-invoice"></i> Reportes Núcleo
+      </a>
+    </nav>
+  </aside>
+
+  <main class="contenido-principal">
+    <router-outlet></router-outlet>
+  </main>
+  
+</div>
