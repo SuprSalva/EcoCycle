@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 // 1. IMPORTAMOS LAS HERRAMIENTAS DE ENRUTAMIENTO
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { RouterOutlet, RouterModule, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-panel',
@@ -8,11 +10,39 @@ import { RouterOutlet, RouterModule } from '@angular/router';
   imports: [
     // 2. LAS AGREGAMOS AQUÍ PARA QUE EL HTML RECONOZCA EL routerLink Y EL <router-outlet>
     RouterOutlet, 
-    RouterModule 
+    RouterModule,
+    CommonModule
   ],
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.scss'
 })
-export class PanelComponent {
-  // Tu lógica del componente se queda limpia por ahora
+export class PanelComponent implements OnInit {
+  perfil: any = null;
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    this.authService.obtenerPerfilUsuario().subscribe({
+      next: (datos) => {
+        this.perfil = datos;
+      },
+      error: (err) => {
+        console.error('Error al obtener perfil', err);
+        // Fallback para evitar que se quede en "Cargando perfil..." si el usuario no está en la BD
+        this.perfil = {
+          nombre: 'Usuario',
+          apellidos: 'No Registrado',
+          email: 'Falta completar registro',
+          rol: 'invitado',
+          saldoPuntos: 0
+        };
+      }
+    });
+  }
+
+  logout() {
+    this.authService.logout().subscribe(() => {
+      this.router.navigate(['/login']);
+    });
+  }
 }

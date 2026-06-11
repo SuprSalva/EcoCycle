@@ -2,7 +2,7 @@
   
   <aside class="sidebar">
     <div class="logo-seccion">
-      <div class="icono-logo">⚙️</div>
+      <img src="/logo_eco.png" alt="EcoCycle Logo" style="height: 32px; width: auto; margin-right: 10px;">
       <h2>EcoCycle <span>Panel</span></h2>
     </div>
 
@@ -30,7 +30,33 @@
   </aside>
 
   <main class="contenido-principal">
-    <router-outlet></router-outlet>
+    <!-- TOP HEADER -->
+    <header class="top-header">
+      <div class="saludo">
+        <h3 *ngIf="perfil">¡Hola, {{ perfil?.nombre || 'Usuario' }} {{ perfil?.apellidos || '' }}!</h3>
+        <h3 *ngIf="!perfil">Cargando perfil...</h3>
+        <span class="rol-badge" *ngIf="perfil">{{ (perfil?.rol || 'usuario') | uppercase }}</span>
+      </div>
+      
+      <div class="acciones-header">
+        <div class="perfil-info" *ngIf="perfil">
+          <div class="avatar">
+            {{ (perfil?.nombre ? perfil.nombre.charAt(0) : 'U') | uppercase }}
+          </div>
+          <div class="detalles">
+            <span class="email">{{ perfil?.email || 'Sin correo' }}</span>
+            <span class="puntos"><i class="fa-solid fa-coins"></i> {{ perfil?.saldoPuntos || 0 }} pts</span>
+          </div>
+        </div>
+        <button class="btn-logout" (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </header>
+
+    <div class="contenido-router">
+      <router-outlet></router-outlet>
+    </div>
   </main>
   
 </div>

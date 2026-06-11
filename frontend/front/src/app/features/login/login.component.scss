@@ -5,65 +5,90 @@
   justify-content: center;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: radial-gradient(circle at top right, rgba(132, 204, 22, 0.15), transparent 50%),
-              radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.05), transparent 50%),
-              #f8fafc;
+  background: linear-gradient(135deg, #073B0F 0%, #0D631B 50%, #18912E 100%);
+  position: relative;
+  overflow: hidden;
   box-sizing: border-box;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(165, 214, 167, 0.15) 0%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    bottom: -150px;
+    left: -150px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
 }
 
 .tarjeta-login {
   background: #ffffff;
-  border-radius: 24px;
-  padding: 35px;
+  border-radius: 20px;
+  padding: 40px 35px;
   width: 100%;
-  max-width: 450px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-  border: 1px solid #f1f5f9;
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  border: none;
   box-sizing: border-box;
   text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
 .header-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 25px;
 }
 
-.logo-icono {
-  background-color: #84cc16;
-  color: white;
-  padding: 8px 10px;
-  border-radius: 12px;
-  font-size: 18px;
-  box-shadow: 0 4px 6px -1px rgba(132, 204, 22, 0.2);
+.logo-img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
 }
 
 .logo-texto {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1e293b;
+  font-size: 26px;
+  font-weight: 800;
+  color: #0D631B;
+  letter-spacing: -0.5px;
 }
 
 .titulo {
-  font-size: 24px;
+  font-size: 22px;
   color: #1e293b;
   margin: 0 0 8px 0;
   font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .subtitulo {
-  font-size: 13px;
+  font-size: 14px;
   color: #64748b;
-  margin: 0 0 25px 0;
+  margin: 0 0 30px 0;
   line-height: 1.5;
 }
 
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .grupo-input {
@@ -72,10 +97,10 @@
 
 .grupo-input label {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: #475569;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   margin-left: 4px;
 }
 
@@ -85,69 +110,58 @@
 
 .input-icono-wrapper .icono {
   position: absolute;
-  left: 14px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   color: #94a3b8;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .input-icono-wrapper input {
   width: 100%;
-  padding: 12px 12px 12px 40px;
-  background-color: #ffffff;
+  padding: 14px 14px 14px 44px;
+  background-color: #f8fafc;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 15px;
   color: #334155;
   outline: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
 .input-icono-wrapper input:focus {
-  border-color: #84cc16;
-  box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.15);
+  background-color: #ffffff;
+  border-color: #0D631B;
+  box-shadow: 0 0 0 4px rgba(13, 99, 27, 0.1);
 }
 
 .btn-principal {
-  background-color: #84cc16;
+  background-color: #0D631B;
   color: white;
   border: none;
-  padding: 14px;
+  padding: 16px;
   border-radius: 12px;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
-  box-shadow: 0 10px 15px -3px rgba(132, 204, 22, 0.2);
-  transition: all 0.2s ease;
+  box-shadow: 0 8px 15px rgba(13, 99, 27, 0.25);
+  transition: all 0.3s ease;
   margin-top: 10px;
 }
 
 .btn-principal:hover {
-  background-color: #65a30d;
+  background-color: #0A4D15;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px rgba(13, 99, 27, 0.3);
 }
 
 .btn-principal:active {
-  transform: scale(0.98);
+  transform: translateY(1px);
+  box-shadow: 0 4px 10px rgba(13, 99, 27, 0.2);
 }
-
-.footer-tarjeta {
-  margin-top: 25px;
-  font-size: 13px;
-  color: #64748b;
-}
-
-.footer-tarjeta a {
-  color: #65a30d;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.footer-tarjeta a:hover {
-  text-decoration: underline;
-}
+

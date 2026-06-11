@@ -1,42 +1,48 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-import Swal from 'sweetalert2';
+import { UsuarioFormComponent } from './usuario-form/usuario-form.component';
+import { NotificationService } from '../../core/services/notification.service';
+
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-usuarios',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, UsuarioFormComponent],
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss']
 })
 export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
-  usuarioForm!: FormGroup;
-  esEdicion: boolean = false;
-  usuarioSeleccionadoId: string | null = null;
+  
+  // Paginación y búsqueda
+  private _searchTerm: string = '';
+  get searchTerm(): string {
+    return this._searchTerm;
+  }
+  set searchTerm(value: string) {
+    this._searchTerm = value;
+    this.currentPage = 1; // Resetear la página al buscar
+  }
+
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  itemsPerPageOptions: number[] = [10, 20, 50];
+
+  vistaActual: 'lista' | 'formulario' = 'lista';
+  idEdicion: string | null = null;
 
   constructor(
     private authService: AuthService,
-    private fb: FormBuilder
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.obtenerLista();
-  }
-
-  // Inicializa el formulario reactivo con validaciones básicas
-  initForm(): void {
-    this.usuarioForm = this.fb.group({
-      nombre: ['', [Validators.required]],
-      apellidos: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      rol: ['usuario', [Validators.required]],
-      password: [''],
-      confirmarPassword: ['']
-    });
   }
 
   obtenerLista(): void {
@@ -48,106 +54,182 @@ export class UsuariosComponent implements OnInit {
     });
   }
 
-  // Prepara el formulario para un Nuevo Usuario
-  modalNuevoUsuario(): void {
-    this.esEdicion = false;
-    this.usuarioSeleccionadoId = null;
-    this.usuarioForm.reset({ rol: 'usuario' });
-    
-    // La contraseña es requerida solo al crear
-    this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
-    this.usuarioForm.get('password')?.updateValueAndValidity();
+  get usuariosFiltrados(): any[] {
+    if (!this.searchTerm.trim()) {
+      return this.usuarios;
+    }
+    const term = this.searchTerm.toLowerCase();
+    return this.usuarios.filter(u => 
+      (u.nombre && u.nombre.toLowerCase().includes(term)) ||
+      (u.apellidos && u.apellidos.toLowerCase().includes(term)) ||
+      (u.email && u.email.toLowerCase().includes(term)) ||
+      (u.rol && u.rol.toLowerCase().includes(term))
+    );
   }
 
-  // Prepara el formulario cargando los datos del usuario a Editar
-  modalEditarUsuario(usuario: any): void {
-    this.esEdicion = true;
-    this.usuarioSeleccionadoId = usuario.id;
+  get paginatedUsuarios(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.usuariosFiltrados.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.usuariosFiltrados.length / this.itemsPerPage) || 1;
+  }
+
+  cambiarPagina(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  cambiarItemsPorPagina(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.itemsPerPage = Number(selectElement.value);
+    this.currentPage = 1;
+  }
+
+  exportToExcel(): void {
+    const datosBase = this.usuariosFiltrados.map(u => ({
+      'Nombre Completo': `${u.nombre} ${u.apellidos}`,
+      'Correo Electrónico': u.email,
+      'Puntos Acumulados': u.saldoPuntos || 0,
+      'Rol Asignado': u.rol.toUpperCase(),
+      'Estatus': u.rol !== 'suspendido' ? 'ACTIVO' : 'INACTIVO'
+    }));
+
+    // Crear un libro y una hoja de trabajo vacía
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
     
-    this.usuarioForm.patchValue({
-      nombre: usuario.nombre,
-      apellidos: usuario.apellidos || '',
-      email: usuario.email,
-      rol: usuario.rol || 'usuario',
-      password: '', // Se dejan vacíos por seguridad si no se va a cambiar
-      confirmarPassword: ''
+    // Configurar título y fecha en la parte superior
+    XLSX.utils.sheet_add_aoa(worksheet, [
+      ['Reporte Maestro de Usuarios - EcoCycle'],
+      [`Fecha de generación: ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}`],
+      [`Total de registros: ${this.usuariosFiltrados.length}`],
+      [] // Fila en blanco de separación
+    ], { origin: 'A1' });
+
+    // Agregar la tabla de datos a partir de la fila 5 (A5)
+    XLSX.utils.sheet_add_json(worksheet, datosBase, { origin: 'A5' });
+
+    // Combinar celdas para el título y la información para que abarquen toda la tabla
+    worksheet['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, // Título principal
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }, // Fecha
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 4 } }  // Total registros
+    ];
+
+    // Ajustar los anchos de las columnas para mayor legibilidad
+    const columnWidths = [
+      { wch: 35 }, // Nombre
+      { wch: 40 }, // Correo
+      { wch: 18 }, // Puntos
+      { wch: 22 }, // Rol
+      { wch: 15 }  // Estatus
+    ];
+    worksheet['!cols'] = columnWidths;
+
+    const workbook: XLSX.WorkBook = { Sheets: { 'Usuarios': worksheet }, SheetNames: ['Usuarios'] };
+    XLSX.writeFile(workbook, 'Reporte_Usuarios_EcoCycle.xlsx');
+  }
+
+  exportToPDF(): void {
+    const doc = new jsPDF();
+    const fecha = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
+
+    // Diseño de Cabecera
+    // Título Principal
+    doc.setFontSize(24);
+    doc.setTextColor(13, 99, 27); // Verde principal EcoCycle #0D631B
+    doc.text('EcoCycle', 14, 22);
+
+    // Subtítulo
+    doc.setFontSize(16);
+    doc.setTextColor(26, 28, 28); // Gris oscuro #1A1C1C
+    doc.text('Reporte Maestro de Usuarios', 14, 32);
+    
+    // Información secundaria (Fecha y cantidad)
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Fecha de generación: ${fecha}`, 14, 40);
+    doc.text(`Total de registros listados: ${this.usuariosFiltrados.length}`, 14, 45);
+
+    // Preparar datos para la tabla
+    const bodyData = this.usuariosFiltrados.map(u => [
+      `${u.nombre} ${u.apellidos}`,
+      u.email,
+      (u.saldoPuntos || 0).toString(),
+      u.rol.toUpperCase(),
+      u.rol !== 'suspendido' ? 'ACTIVO' : 'INACTIVO'
+    ]);
+
+    // Generar la tabla con estilos
+    autoTable(doc, {
+      startY: 50,
+      head: [['Nombre Completo', 'Correo', 'Puntos', 'Rol', 'Estatus']],
+      body: bodyData,
+      theme: 'grid',
+      headStyles: { 
+        fillColor: [13, 99, 27], // Fondo Verde Principal #0D631B
+        textColor: [255, 255, 255], // Letras blancas
+        fontStyle: 'bold',
+        halign: 'center'
+      },
+      bodyStyles: {
+        textColor: [40, 40, 40] // Letras oscuras para la vista
+      },
+      alternateRowStyles: { 
+        fillColor: [249, 249, 249] // Fondo variante sutil
+      },
+      columnStyles: {
+        0: { cellWidth: 45 },
+        1: { cellWidth: 60 },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 30, halign: 'center' },
+        4: { cellWidth: 25, halign: 'center' }
+      },
+      didDrawPage: (data) => {
+        // Pie de página (Footer) con número de página
+        const pageSize = doc.internal.pageSize;
+        const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
+        const text = `Página ${data.pageNumber}`;
+        
+        doc.setFontSize(9);
+        doc.setTextColor(150, 150, 150);
+        doc.text(text, (pageSize.width - doc.getTextWidth(text)) / 2, pageHeight - 10);
+      }
     });
 
-    // Al editar, la contraseña ya no es obligatoria obligatoriamente
-    this.usuarioForm.get('password')?.clearValidators();
-    this.usuarioForm.get('password')?.updateValueAndValidity();
+    doc.save('Reporte_Usuarios_EcoCycle.pdf');
   }
 
-  // Acción del botón principal "Guardar Usuario" del Modal
-  guardarUsuario(): void {
-    if (this.usuarioForm.invalid) {
-      Swal.fire('Campos Incompletos', 'Por favor llena todos los datos obligatorios correctamente.', 'warning');
-      return;
-    }
-
-    const valores = this.usuarioForm.value;
-
-    // Validar contraseñas solo si se ha escrito algo en ellas
-    if (!this.esEdicion || valores.password) {
-      if (valores.password !== valores.confirmarPassword) {
-        Swal.fire('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.', 'error');
-        return;
-      }
-    }
-
-    if (this.esEdicion && this.usuarioSeleccionadoId) {
-      // MODO EDICIÓN
-      const bodyActualizado = {
-        nombre: valores.nombre,
-        apellidos: valores.apellidos,
-        rol: valores.rol
-      };
-
-      this.authService.actualizarUsuario(this.usuarioSeleccionadoId, bodyActualizado).subscribe({
-        next: () => {
-          Swal.fire('¡Actualizado!', 'Datos del usuario modificados correctamente.', 'success');
-          this.obtenerLista();
-          this.cerrarModalManual();
-        },
-        error: () => Swal.fire('Error', 'No se pudieron guardar los cambios en la base de datos.', 'error')
-      });
-
-    } else {
-      // MODO REGISTRO NUEVO
-      const payloadNuevo = {
-        nombre: valores.nombre,
-        apellidos: valores.apellidos,
-        email: valores.email,
-        password: valores.password,
-        rol: valores.rol
-      };
-
-      this.authService.registrarDesdeAdmin(payloadNuevo).subscribe({
-        next: () => {
-          Swal.fire('¡Creado!', 'El usuario ha sido insertado con éxito en el sistema.', 'success');
-          this.obtenerLista();
-          this.cerrarModalManual();
-        },
-        error: () => Swal.fire('Error', 'No se pudo registrar la cuenta en Firebase Auth.', 'error')
-      });
-    }
+  irANuevoUsuario(): void {
+    this.idEdicion = null;
+    this.vistaActual = 'formulario';
   }
 
-  // Alterna el estado del usuario entre Activo / Suspendido
-  alternarEstado(usuario: any): void {
+  irAEditarUsuario(usuario: any): void {
+    this.idEdicion = usuario.id;
+    this.vistaActual = 'formulario';
+  }
+
+  volverDeFormulario(): void {
+    this.vistaActual = 'lista';
+    this.idEdicion = null;
+    this.obtenerLista(); // Refrescar lista al regresar
+  }
+
+  alternarEstado(usuario: any, event: Event): void {
+    event.stopPropagation(); // Evitar que el click se propague a la fila y abra editar
     const esSuspendido = usuario.rol === 'suspendido';
     const nuevoRol = esSuspendido ? 'usuario' : 'suspendido';
-    const tituloAction = esSuspendido ? '¿Deseas reactivar esta cuenta?' : '¿Seguro que deseas suspender al usuario?';
+    const tituloAction = esSuspendido ? '¿Deseas reactivar esta cuenta?' : '¿Seguro que deseas desactivar al usuario?';
 
-    Swal.fire({
-      title: tituloAction,
-      text: esSuspendido ? 'Volverá a tener acceso normal.' : 'Se le denegará el acceso a los módulos operativos.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: esSuspendido ? '#7cb342' : '#dc3545',
-      confirmButtonText: esSuspendido ? 'Sí, activar' : 'Sí, suspender',
-      cancelButtonText: 'Regresar'
-    }).then((result: any) => {
+    this.notificationService.confirmAction(
+      tituloAction,
+      esSuspendido ? 'Volverá a tener acceso normal.' : 'Se le denegará el acceso a los módulos operativos.',
+      esSuspendido ? 'Sí, reactivar' : 'Sí, desactivar',
+      esSuspendido ? '#0D631B' : '#ef233c'
+    ).then((result: any) => {
       if (result.isConfirmed) {
         const bodyActualizado = {
           nombre: usuario.nombre,
@@ -157,42 +239,11 @@ export class UsuariosComponent implements OnInit {
 
         this.authService.actualizarUsuario(usuario.id, bodyActualizado).subscribe({
           next: () => {
-            Swal.fire('Estatus Modificado', 'El estado de la cuenta cambió exitosamente.', 'success');
+            this.notificationService.toastSuccess('Estatus modificado exitosamente.');
             this.obtenerLista();
           }
         });
       }
     });
-  }
-
-  // Elimina físicamente el documento de Cloud Firestore
-  confirmarEliminar(usuario: any): void {
-    Swal.fire({
-      title: '¿Eliminar permanentemente?',
-      text: `Esta acción removerá la cuenta de ${usuario.nombre} de Cloud Firestore.`,
-      icon: 'error',
-      showCancelButton: true,
-      confirmButtonColor: '#ef233c',
-      confirmButtonText: 'Sí, borrar definitivamente',
-      cancelButtonText: 'Cancelar'
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this.authService.eliminarUsuario(usuario.id).subscribe({
-          next: () => {
-            Swal.fire('Eliminado', 'La cuenta ha sido borrada.', 'success');
-            this.usuarios = this.usuarios.filter(u => u.id !== usuario.id);
-          }
-        });
-      }
-    });
-  }
-
-  // Función utilitaria para cerrar el modal de Bootstrap usando la API web nativa al guardar exitosamente
-  private cerrarModalManual(): void {
-    const modalElement = document.getElementById('usuarioModal');
-    if (modalElement) {
-      const botonCerrar = modalElement.querySelector('.btn-close') as HTMLButtonElement;
-      botonCerrar?.click();
-    }
   }
 }

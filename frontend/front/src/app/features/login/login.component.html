@@ -2,14 +2,12 @@
   <div class="tarjeta-login">
     
     <div class="header-logo">
-      <div class="logo-icono">
-        <i class="fa-solid fa-leaf"></i>
-      </div>
+      <img src="/logo_eco.png" alt="EcoCycle Logo" class="logo-img">
       <span class="logo-texto">EcoCycle</span>
     </div>
 
-    <h1 class="titulo">¡Hola de nuevo!</h1>
-    <p class="subtitulo">Interfaz limpia con campos de Email y Password. Integración con JWT para sesiones seguras y persistentes.</p>
+    <h1 class="titulo">Bienvenido a EcoCycle</h1>
+    <p class="subtitulo">Ingresa tus credenciales para acceder al panel de administración.</p>
 
     <form class="formulario" (ngSubmit)="onLogin()">
   
@@ -17,7 +15,7 @@
     <label for="email">Correo Electrónico</label>
     <div class="input-icono-wrapper">
       <i class="fa-regular fa-envelope icono"></i>
-      <input type="email" id="email" name="email" [(ngModel)]="email" placeholder="michellegalcan@gmail.com" required>
+      <input type="email" id="email" name="email" [(ngModel)]="email" placeholder="admin@ecocycle.com" required>
     </div>
   </div>
 
@@ -30,15 +28,11 @@
   </div>
 
   <button type="submit" class="btn-principal">
-    <span>Iniciar Sesión de Forma Segura</span>
+    <span>Iniciar Sesión</span>
     <i class="fa-solid fa-arrow-right"></i>
   </button>
 
 </form>
-
-    <div class="footer-tarjeta">
-      ¿Nuevo en EcoCycle? <a routerLink="/registro">Crea una cuenta</a>
-    </div>
 
   </div>
 </main>

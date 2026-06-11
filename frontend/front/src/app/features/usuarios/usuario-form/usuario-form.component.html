@@ -1,0 +1,192 @@
+<div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color);">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+    <div>
+      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
+        {{ esEdicion ? 'Detalles del Usuario' : 'Nuevo Usuario' }}
+      </h2>
+      <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
+        {{ esEdicion ? 'Consulta los datos vinculados a esta cuenta.' : 'Completa los campos requeridos para gestionar las credenciales y accesos.' }}
+      </p>
+    </div>
+    
+    <button type="button" 
+            class="btn btn-light d-flex align-items-center gap-2 px-3 py-2 shadow-sm rounded-3" 
+            style="background-color: var(--surface-color); border: 1px solid var(--surface-variant-color);"
+            title="Volver" 
+            (click)="volver()">
+      <span class="material-symbols-outlined fs-5">arrow_back</span>
+      <span class="fw-semibold" style="color: var(--on-surface-color);">Regresar</span>
+    </button>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 p-4" style="background-color: var(--surface-color);">
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border" style="color: var(--primary-color);" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3 text-muted">Obteniendo información...</p>
+    </div>
+
+    <form *ngIf="!cargando" [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+      <div class="row g-4">
+        
+        <div class="col-md-6">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            NOMBRE(S) <span class="text-danger">*</span>
+          </label>
+          <input type="text" 
+                 formControlName="nombre"
+                 class="form-control rounded-3 px-3 py-2 shadow-none fs-6" 
+                 style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                 placeholder="Ej. Juan Carlos">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            APELLIDOS <span class="text-danger">*</span>
+          </label>
+          <input type="text" 
+                 formControlName="apellidos"
+                 class="form-control rounded-3 px-3 py-2 shadow-none fs-6" 
+                 style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                 placeholder="Ej. Pérez Gómez">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            CORREO ELECTRÓNICO ÚNICO <span class="text-danger">*</span>
+          </label>
+          <div class="input-group">
+            <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
+              <span class="material-symbols-outlined fs-5">mail</span>
+            </span>
+            <input type="email" 
+                   formControlName="email"
+                   [readOnly]="esEdicion"
+                   class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                   style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                   placeholder="usuario@correo.com">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            TELÉFONO
+          </label>
+          <div class="input-group">
+            <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
+              <span class="material-symbols-outlined fs-5">call</span>
+            </span>
+            <input type="text" 
+                   formControlName="telefono"
+                   class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                   style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                   placeholder="Ej. 5512345678">
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            DIRECCIÓN FÍSICA
+          </label>
+          <div class="input-group">
+            <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
+              <span class="material-symbols-outlined fs-5">location_on</span>
+            </span>
+            <input type="text" 
+                   formControlName="direccion"
+                   class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                   style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                   placeholder="Ej. Av. Reforma 222, CDMX">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            ROL ASIGNADO <span class="text-danger">*</span>
+          </label>
+          <select formControlName="rol"
+                  class="form-select rounded-3 px-3 py-2 shadow-none fs-6 text-capitalize" 
+                  style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);">
+            <option value="usuario">Usuario Estándar</option>
+            <option value="administrador">Administrador</option>
+            <option value="suspendido" *ngIf="esEdicion">Suspendido</option>
+          </select>
+        </div>
+
+        <div class="col-md-6" *ngIf="esEdicion">
+          <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+            PUNTOS ACUMULADOS
+          </label>
+          <div class="input-group">
+            <span class="input-group-text border-end-0 rounded-start-3" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color); color: var(--primary-color);">
+              <span class="material-symbols-outlined fs-5">water_drop</span>
+            </span>
+            <input type="number" 
+                   formControlName="saldoPuntos"
+                   class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6 fw-bold" 
+                   style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); background-color: var(--background-color);">
+          </div>
+        </div>
+
+        <ng-container *ngIf="!esEdicion">
+          <div class="col-12 mt-5 pt-3 border-top" style="border-top: 1px solid var(--surface-variant-color) !important;">
+            <h5 class="fw-bold m-0" style="color: var(--on-surface-color) !important; font-size: 1.1rem; letter-spacing: -0.01em;">
+              Seguridad de la Cuenta
+            </h5>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+              CONTRASEÑA ACCESO <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
+                <span class="material-symbols-outlined fs-5">lock</span>
+              </span>
+              <input type="password" 
+                     formControlName="password"
+                     class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                     style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                     placeholder="••••••••">
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
+              CONFIRMAR CONTRASEÑA <span class="text-danger">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
+                <span class="material-symbols-outlined fs-5">enhanced_encryption</span>
+              </span>
+              <input type="password" 
+                     formControlName="confirmarPassword"
+                     class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
+                     style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
+                     placeholder="••••••••">
+            </div>
+          </div>
+        </ng-container>
+
+      </div>
+
+      <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top" style="border-top: 1px solid var(--surface-variant-color) !important;">
+        <button type="button" 
+                class="btn btn-light text-decoration-none fw-semibold px-4 py-2 shadow-sm rounded-3" 
+                style="font-size: 0.95rem; border: 1px solid var(--surface-variant-color); background-color: var(--background-color); color: var(--on-background-color);" 
+                (click)="volver()">
+          {{ esEdicion ? 'Cerrar Detalles' : 'Cancelar' }}
+        </button>
+        <button type="submit" *ngIf="!esEdicion"
+                class="btn d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3 border-0 fw-semibold" 
+                style="background-color: #0D631B; color: #FFFFFF; font-size: 0.95rem;">
+          <span class="material-symbols-outlined fs-5">check_circle</span>
+          <span>Guardar Usuario</span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

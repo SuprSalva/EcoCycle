@@ -1,6 +1,10 @@
 using Google.Cloud.Firestore;
 using Back.Repositories;
 using Back.Repositories.Interfaces;
+using Back.Infrastructure.Repositories;
+using Back.Infrastructure.Repositories.Interfaces;
+using Back.ViewModels;
+using Back.ViewModels.Interfaces;
 using Back.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,11 +70,15 @@ builder.Services.AddSingleton(firestoreDb);
 // ==========================================
 // SERVICIOS Y REPOSITORIOS
 // ==========================================
-builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-builder.Services.AddScoped<ISesionReciclajeRepository, SesionReciclajeRepository>();
-builder.Services.AddScoped<IRecompensaRepository, RecompensaRepository>();
+builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IUsuarioRepository, Back.Infrastructure.Repositories.UsuarioRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.IUsuarioRepository, Back.Repositories.UsuarioRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.ISesionReciclajeRepository, Back.Repositories.SesionReciclajeRepository>();
+builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IReciclajeRepository, Back.Infrastructure.Repositories.ReciclajeRepository>();
+builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IRecompensaRepository, Back.Infrastructure.Repositories.RecompensaRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, Back.Repositories.RecompensaRepository>();
 builder.Services.AddScoped<ICanjeRepository, CanjeRepository>();
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
+builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.ISaldoPuntosRepository, Back.Infrastructure.Repositories.SaldoPuntosRepository>();
 
 // ViewModels
 builder.Services.AddScoped<IAuthViewModel, AuthViewModel>();

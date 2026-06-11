@@ -17,7 +17,7 @@ export interface Recompensa {
 })
 // 🌟 CORREGIDO: Usamos export class en lugar de public class
 export class RecompensaService {
-  private readonly API_URL = 'http://localhost:5171/api/Recompensa';
+  private readonly API_URL = 'http://localhost:5000/api/Recompensa';
 
   constructor(private http: HttpClient) {}
 

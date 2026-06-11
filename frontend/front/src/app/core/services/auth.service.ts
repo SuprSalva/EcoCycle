@@ -9,8 +9,8 @@ import { from, Observable, switchMap, tap, map } from 'rxjs';
 })
 export class AuthService {
   // Base de las URLs de tu backend de C#
-  private authUrl = 'http://localhost:5171/api/Auth'; 
-  private usuarioUrl = 'http://localhost:5171/api/Usuario';
+  private authUrl = 'http://localhost:5000/api/Auth'; 
+  private usuarioUrl = 'http://localhost:5000/api/Usuario';
 
   constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {}
 
@@ -27,6 +27,24 @@ export class AuthService {
           )
         );
       })
+    );
+  }
+
+  // CERRAR SESIÓN
+  logout(): Observable<void> {
+    return from(this.auth.signOut()).pipe(
+      tap(() => {
+        localStorage.removeItem('token');
+      })
+    );
+  }
+
+  // OBTENER PERFIL DE USUARIO LOGUEADO
+  obtenerPerfilUsuario(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`${this.usuarioUrl}/perfil`, { headers }).pipe(
+      map(res => res.data)
     );
   }
 
@@ -95,13 +113,23 @@ export class AuthService {
     );
   }
 
+  // OBTENER UN SOLO USUARIO POR ID
+  obtenerUsuarioPorId(id: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    return this.http.get<any>(`${this.usuarioUrl}/${id}`, { headers }).pipe(
+      map(res => res.data)
+    );
+  }
+
   // 5. ACTUALIZAR: CAMBIAR DATOS, ROLES O ESTATUS DESDE EL ADMIN
   actualizarUsuario(id: string, datos: any): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     
-    // Mandamos el objeto modificado (que ahora sí incluye el string "rol") a tu C#
-    return this.http.put(`${this.usuarioUrl}/${id}`, datos, { headers });
+    // Mandamos el objeto modificado a C#
+    return this.http.put(`${this.usuarioUrl}/${id}/estatus`, datos, { headers });
   }
 
   // 6. ELIMINAR: BORRAR CUENTA PERMANENTEMENTE

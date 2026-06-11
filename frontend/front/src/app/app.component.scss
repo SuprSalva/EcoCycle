@@ -34,13 +34,11 @@
   margin-bottom: 20px;
 }
 
-.logo-icono {
-  background-color: #84cc16;
-  color: white;
-  padding: 8px 10px;
-  border-radius: 12px;
-  font-size: 18px;
-  box-shadow: 0 4px 6px -1px rgba(132, 204, 22, 0.2);
+.logo-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin-right: 12px;
 }
 
 .logo-texto {
@@ -110,13 +108,13 @@
 }
 
 .input-icono-wrapper input:focus {
-  border-color: #84cc16;
+  border-color: #0d631b;
   box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.15);
 }
 
 /* Botón Verde EcoCycle */
 .btn-principal {
-  background-color: #84cc16;
+  background-color: #0d631b;
   color: white;
   border: none;
   padding: 14px;
@@ -134,7 +132,7 @@
 }
 
 .btn-principal:hover {
-  background-color: #65a30d;
+  background-color: #2e7d32;
 }
 
 .btn-principal:active {
@@ -149,7 +147,7 @@
 }
 
 .footer-tarjeta a {
-  color: #65a30d;
+  color: #2e7d32;
   text-decoration: none;
   font-weight: 600;
 }

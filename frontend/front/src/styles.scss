@@ -1,5 +1,37 @@
+:root {
+  /* Colores Principales (Primary) */
+  --primary-color: #0D631B;
+  --on-primary-color: #FFFFFF;
+  --primary-container-color: #2E7D32;
+  --on-primary-container-color: #CBFFC2;
+
+  /* Colores Secundarios (Secondary) */
+  --secondary-color: #3C6842;
+  --secondary-container-color: #BDEFBE;
+  --on-secondary-container-color: #426E47;
+
+  /* Colores de Fondo y Superficie (Background & Surface) */
+  --background-color: #F9F9F9;
+  --on-background-color: #1A1C1C;
+  --surface-color: #FFFFFF;
+  --on-surface-color: #1A1C1C;
+  --surface-variant-color: #E2E2E2;
+  --on-surface-variant-color: #40493D;
+
+  /* Colores adicionales y neutros */
+  --input-bg-color: #F3F3F3;
+  --border-neutral-color: #DADADA;
+  --border-accent-color: #A2D3A4;
+  --text-secondary-color: #BFCABA;
+  --icon-color: #707A6C;
+  --bg-secondary-color: #EEEEEE;
+}
+
 /* Fuentes y estilos base para el panel EcoCycle */
 body {
-  background-color: #f4f7fe !important; 
+  background-color: var(--background-color) !important; 
+  color: var(--on-background-color);
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  margin: 0;
+  padding: 0;
 }
