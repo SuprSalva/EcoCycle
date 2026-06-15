@@ -1,44 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Premium Eco Colors */
-  --primary-color: #0E5C36;       /* Deep elegant green */
-  --primary-gradient: linear-gradient(135deg, #0E5C36 0%, #1A8450 100%);
+  /* Professional Eco Colors */
+  --primary-color: #2E7D32;       /* Trustworthy green */
+  --primary-dark: #1B5E20;
   --on-primary-color: #FFFFFF;
-  --primary-container-color: #E6F4EA; /* Very soft green */
-  --on-primary-container-color: #083D22;
+  --primary-container-color: #E8F5E9; 
+  --on-primary-container-color: #2E7D32;
 
-  --accent-color: #34D399;        /* Mint pop */
-  --accent-gradient: linear-gradient(135deg, #10B981 0%, #34D399 100%);
-  
-  --secondary-color: #1E293B;     /* Slate dark */
+  --accent-color: #81C784;        /* Soft green */
+  --secondary-color: #374151;     /* Charcoal text */
   
   /* Backgrounds */
-  --background-color: #F4F7F6;    /* Off-white, slightly cool */
+  --background-color: #F3F4F6;    /* Soft gray */
   --surface-color: #FFFFFF;
-  --surface-hover: #F8FAFC;
-  --on-surface-color: #0F172A;
+  --surface-hover: #F9FAFB;
+  --on-surface-color: #1F2937;
   
-  --border-neutral-color: #E2E8F0;
-  --border-accent-color: #A2D3A4;
-  --text-secondary-color: #64748B;
+  --border-neutral-color: #E5E7EB;
+  --text-secondary-color: #6B7280;
   
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-  --shadow-glow: 0 10px 25px -5px rgba(16, 185, 129, 0.3);
+  /* Subtle Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 body {
   background-color: var(--background-color) !important; 
   color: var(--on-surface-color);
-  font-family: 'Outfit', sans-serif !important;
+  font-family: 'Inter', sans-serif !important;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: -0.02em;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.01em;
 }

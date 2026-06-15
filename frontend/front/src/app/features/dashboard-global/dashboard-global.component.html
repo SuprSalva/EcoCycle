@@ -1,19 +1,23 @@
 <section class="tarjetas-grid">
   <div class="tarjeta verde">
     <p>TOTAL BOTELLAS RECICLADAS</p>
-    <h3>12,450 <span>uds</span></h3>
+    <h3 *ngIf="cargando">...</h3>
+    <h3 *ngIf="!cargando">{{ resumen.totalBotellas | number }} <span>uds</span></h3>
   </div>
   <div class="tarjeta azul">
     <p>PUNTOS TOTALES EMITIDOS</p>
-    <h3>$1,245.00 <span>pts</span></h3>
+    <h3 *ngIf="cargando">...</h3>
+    <h3 *ngIf="!cargando">${{ resumen.totalPuntosEmitidos | number:'1.2-2' }} <span>pts</span></h3>
   </div>
   <div class="tarjeta verde-claro">
     <p>USUARIOS REGISTRADOS ACTIVOS</p>
-    <h3>850 <span>habs</span></h3>
+    <h3 *ngIf="cargando">...</h3>
+    <h3 *ngIf="!cargando">{{ resumen.totalUsuarios | number }} <span>habs</span></h3>
   </div>
   <div class="tarjeta naranja">
     <p>CANJES TOTALES COMPLETADOS</p>
-    <h3>112 <span>éxitos</span></h3>
+    <h3 *ngIf="cargando">...</h3>
+    <h3 *ngIf="!cargando">{{ resumen.totalCanjes | number }} <span>éxitos</span></h3>
   </div>
 </section>
 

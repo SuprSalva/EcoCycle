@@ -4,67 +4,54 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
-  position: sticky;
-  top: 0;
+  padding: 16px 32px;
+  background-color: var(--surface-color);
+  border-bottom: 1px solid var(--border-neutral-color);
   z-index: 5;
 
   .saludo {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     
     h3 {
       margin: 0;
-      color: var(--secondary-color);
-      font-size: 1.5rem;
-      font-weight: 700;
+      color: var(--on-surface-color);
+      font-size: 1.25rem;
+      font-weight: 600;
     }
 
     .rol-badge {
-      background: var(--accent-gradient);
-      color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
+      background: var(--primary-container-color);
+      color: var(--on-primary-container-color);
+      padding: 4px 10px;
+      border-radius: 16px;
       font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 1px;
-      box-shadow: var(--shadow-glow);
+      font-weight: 600;
     }
   }
 
   .acciones-header {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 24px;
 
     .perfil-info {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
 
       .avatar {
-        width: 46px;
-        height: 46px;
-        background: var(--primary-gradient);
+        width: 40px;
+        height: 40px;
+        background: var(--primary-color);
         color: white;
-        border-radius: 14px;
+        border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 1.4rem;
-        font-weight: 700;
-        box-shadow: var(--shadow-md);
-        transform: rotate(-3deg);
-        transition: transform 0.3s ease;
-        
-        &:hover {
-          transform: rotate(0deg) scale(1.05);
-        }
+        font-size: 1.2rem;
+        font-weight: 600;
       }
 
       .detalles {
@@ -74,20 +61,18 @@
         .email {
           font-size: 0.85rem;
           color: var(--text-secondary-color);
-          font-weight: 500;
         }
 
         .puntos {
-          font-size: 0.95rem;
-          color: var(--primary-color);
-          font-weight: 800;
+          font-size: 0.9rem;
+          color: var(--secondary-color);
+          font-weight: 600;
           display: flex;
           align-items: center;
           gap: 6px;
           
           i { 
             color: #F59E0B;
-            filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.4));
           }
         }
       }
@@ -95,24 +80,20 @@
 
     .btn-logout {
       background-color: white;
-      color: #EF4444;
-      border: 1px solid #FCA5A5;
-      padding: 10px 18px;
-      border-radius: 12px;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      padding: 8px 16px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 0.9rem;
+      font-weight: 500;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: var(--shadow-sm);
+      transition: background-color 0.2s ease;
 
       &:hover {
         background-color: #FEF2F2;
-        border-color: #EF4444;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
       }
     }
   }

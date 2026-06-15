@@ -729,3 +729,99 @@
 2026-06-15 19:08:47.742 +00:00 [INF] Executed action Back.Controllers.UsuarioController.ObtenerTodos (Back) in 19.5674ms
 2026-06-15 19:08:47.742 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
 2026-06-15 19:08:47.742 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - 200 null application/json; charset=utf-8 21.1196ms
+2026-06-15 19:10:15.125 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 19:10:15.125 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:15.125 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - 204 null null 0.2149ms
+2026-06-15 19:10:15.131 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 19:10:15.131 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:15.132 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 19:10:15.132 +00:00 [INF] Route matched with {action = "ObtenerTodos", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ObtenerTodos() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:10:15.254 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 19:10:15.254 +00:00 [INF] Executed action Back.Controllers.UsuarioController.ObtenerTodos (Back) in 122.5866ms
+2026-06-15 19:10:15.254 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 19:10:15.254 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - 200 null application/json; charset=utf-8 123.785ms
+2026-06-15 19:10:17.281 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - null null
+2026-06-15 19:10:17.281 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:17.281 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - 204 null null 0.206ms
+2026-06-15 19:10:17.284 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - null null
+2026-06-15 19:10:17.284 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:17.284 +00:00 [INF] Executing endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 19:10:17.284 +00:00 [INF] Route matched with {action = "GetRecompensasAdmin", controller = "Recompensa"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetRecompensasAdmin() on controller Back.Controllers.RecompensaController (Back).
+2026-06-15 19:10:17.307 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.Recompensa, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 19:10:17.307 +00:00 [INF] Executed action Back.Controllers.RecompensaController.GetRecompensasAdmin (Back) in 22.3655ms
+2026-06-15 19:10:17.307 +00:00 [INF] Executed endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 19:10:17.307 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - 200 null application/json; charset=utf-8 22.9823ms
+2026-06-15 19:10:25.678 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 19:10:25.678 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:25.678 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - 204 null null 0.2405ms
+2026-06-15 19:10:25.683 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 19:10:25.683 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:10:25.683 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 19:10:25.683 +00:00 [INF] Route matched with {action = "ObtenerTodos", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ObtenerTodos() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:10:25.711 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 19:10:25.711 +00:00 [INF] Executed action Back.Controllers.UsuarioController.ObtenerTodos (Back) in 27.609ms
+2026-06-15 19:10:25.711 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 19:10:25.711 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - 200 null application/json; charset=utf-8 28.1592ms
+2026-06-15 19:12:12.800 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:12.800 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.801 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.2297ms
+2026-06-15 19:12:12.803 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:12.803 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:12.803 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.803 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.803 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.248ms
+2026-06-15 19:12:12.803 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:12.804 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.804 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - 204 null null 0.1451ms
+2026-06-15 19:12:12.804 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:12.804 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:12:12.804 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:12.804 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.804 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:12.804 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:12:12.808 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:12.808 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:12.808 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.808 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.808 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - 204 null null 0.1395ms
+2026-06-15 19:12:12.809 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:12.809 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:12.809 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - 404 0 null 1.689ms
+2026-06-15 19:12:12.810 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - 404 0 null 1.7766ms
+2026-06-15 19:12:12.811 +00:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5000/api/Dashboard/resumen, Response status code: 404
+2026-06-15 19:12:12.811 +00:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5000/api/Dashboard/resumen, Response status code: 404
+2026-06-15 19:12:13.074 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 19:12:13.076 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 272.0154ms
+2026-06-15 19:12:13.076 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.076 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 499 null application/json; charset=utf-8 272.9709ms
+2026-06-15 19:12:13.103 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 19:12:13.103 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 298.6204ms
+2026-06-15 19:12:13.103 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.103 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 499 null application/json; charset=utf-8 299.4258ms
+2026-06-15 19:12:13.204 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:13.204 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:13.204 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.1462ms
+2026-06-15 19:12:13.205 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:13.205 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:13.205 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.205 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:12:13.210 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:13.211 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:13.212 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - 404 0 null 1.6426ms
+2026-06-15 19:12:13.212 +00:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5000/api/Dashboard/resumen, Response status code: 404
+2026-06-15 19:12:13.229 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 19:12:13.230 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 24.3298ms
+2026-06-15 19:12:13.230 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.230 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 25.0533ms
+2026-06-15 19:12:13.234 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 19:12:13.234 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:13.235 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.235 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 19:12:13.237 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 19:12:13.237 +00:00 [INF] CORS policy execution successful.
+2026-06-15 19:12:13.238 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - 404 0 null 1.51ms
+2026-06-15 19:12:13.238 +00:00 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5000/api/Dashboard/resumen, Response status code: 404
+2026-06-15 19:12:13.293 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 19:12:13.293 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 58.2911ms
+2026-06-15 19:12:13.293 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 19:12:13.293 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 59.6727ms

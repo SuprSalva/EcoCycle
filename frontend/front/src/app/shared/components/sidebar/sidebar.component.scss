@@ -1,14 +1,12 @@
 :host { display: contents; }
 
 .sidebar {
-  width: 280px;
-  background: var(--primary-color);
-  background: linear-gradient(180deg, var(--primary-color) 0%, #094A2B 100%);
-  padding: 30px 20px;
+  width: 260px;
+  background-color: var(--primary-dark);
+  padding: 24px;
   border-right: none;
   display: flex;
   flex-direction: column;
-  box-shadow: 4px 0 24px rgba(14, 92, 54, 0.2);
   z-index: 10;
   position: relative;
   color: white;
@@ -17,17 +15,17 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 50px;
-    padding-left: 10px;
+    margin-bottom: 40px;
+    padding-left: 8px;
     
     img {
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
+      height: 28px !important;
     }
     
     h2 { 
-      font-size: 1.6rem; 
+      font-size: 1.3rem; 
       color: #FFFFFF; 
-      font-weight: 800;
+      font-weight: 700;
       margin: 0;
       span { 
         color: var(--accent-color); 
@@ -39,61 +37,35 @@
   .menu-navegacion {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 4px;
 
     .item-menu {
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
-      padding: 14px 18px;
-      border-radius: 14px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 12px 16px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      font-weight: 500;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
-      position: relative;
-      overflow: hidden;
 
       i { 
-        margin-right: 14px; 
-        font-size: 1.2rem; 
-        width: 24px; 
+        margin-right: 12px; 
+        font-size: 1.1rem; 
+        width: 20px; 
         text-align: center; 
-        transition: transform 0.3s ease;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        left: 0; top: 0; bottom: 0; width: 4px;
-        background: var(--accent-color);
-        border-radius: 0 4px 4px 0;
-        opacity: 0;
-        transition: opacity 0.3s ease;
       }
 
       &:hover {
         background-color: rgba(255, 255, 255, 0.1);
         color: #FFFFFF;
-        transform: translateX(5px);
-        
-        i {
-          transform: scale(1.1);
-        }
       }
 
       &.activo {
-        background: rgba(255, 255, 255, 0.15);
+        background-color: rgba(255, 255, 255, 0.15);
         color: #FFFFFF;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        
-        &::before {
-          opacity: 1;
-        }
-        
-        i {
-          color: var(--accent-color);
-        }
+        font-weight: 600;
       }
     }
   }
