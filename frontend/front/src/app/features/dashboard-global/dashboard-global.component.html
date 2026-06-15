@@ -23,13 +23,18 @@
 
 <div class="graficas-grid">
   <div class="bloque-grafica">
-    <h4>Monitoreo de Reciclaje Semanal</h4>
-    <p class="subtitulo">Comportamiento e historial de capturas por sucursal principal</p>
-    <div class="barras-mockup">
-      <div class="barra" style="height: 60%"><span>2.8k</span></div>
-      <div class="barra" style="height: 90%"><span>4.1k</span></div>
-      <div class="barra" style="height: 40%"><span>1.9k</span></div>
-      <div class="barra" style="height: 80%"><span>3.6k</span></div>
+    <h4>Monitoreo de Reciclaje</h4>
+    <p class="subtitulo">Actividad de los últimos 4 días registrados</p>
+    
+    <div class="barras-mockup" *ngIf="cargando">
+      <div class="barra" style="height: 10%"><span>...</span></div>
+    </div>
+
+    <div class="barras-mockup" *ngIf="!cargando">
+      <div class="barra" *ngFor="let item of resumen.grafica" [style.height.%]="item.porcentaje || 5">
+        <span>{{ item.cantidad }}</span>
+        <div style="position: absolute; bottom: -25px; width: 100%; text-align: center; font-size: 0.75rem; color: var(--text-secondary-color);">{{ item.dia }}</div>
+      </div>
     </div>
   </div>
 
@@ -43,6 +48,6 @@
       <span>MQ-02 (Plaza)</span>
       <span class="badge estable">ESTABLE</span>
     </div>
-    <button class="btn-iot">Administrar Nodos IoT</button>
+    <button class="btn-iot" routerLink="/panel/reciclaje">Administrar Nodos IoT</button>
   </div>
 </div>

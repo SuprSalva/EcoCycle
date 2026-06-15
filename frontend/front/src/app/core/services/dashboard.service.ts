@@ -4,11 +4,18 @@ import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+export interface DashboardGrafica {
+  dia: string;
+  cantidad: number;
+  porcentaje: number;
+}
+
 export interface DashboardResumen {
   totalBotellas: number;
   totalPuntosEmitidos: number;
   totalUsuarios: number;
   totalCanjes: number;
+  grafica: DashboardGrafica[];
 }
 
 @Injectable({

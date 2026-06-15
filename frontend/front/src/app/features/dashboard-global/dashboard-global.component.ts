@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { DashboardService, DashboardResumen } from '../../core/services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard-global',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard-global.component.html',
   styleUrl: './dashboard-global.component.scss'
 })
@@ -14,7 +15,8 @@ export class DashboardGlobalComponent implements OnInit {
     totalBotellas: 0,
     totalPuntosEmitidos: 0,
     totalUsuarios: 0,
-    totalCanjes: 0
+    totalCanjes: 0,
+    grafica: []
   };
   
   cargando = true;

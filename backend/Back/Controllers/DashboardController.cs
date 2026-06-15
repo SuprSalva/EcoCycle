@@ -25,12 +25,42 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
         
         long totalBotellas = 0;
         long totalPuntosEmitidos = 0;
+        
+        // Para la gráfica (Agrupamos por día en los últimos 4 días que haya actividad)
+        var agrupadoPorDia = new Dictionary<string, long>();
 
         foreach (var doc in sesionesSnap.Documents)
         {
             if (doc.TryGetValue("botellas", out long botellas)) totalBotellas += botellas;
             if (doc.TryGetValue("puntos", out long puntos)) totalPuntosEmitidos += puntos;
+            
+            if (doc.TryGetValue("fecha", out Google.Cloud.Firestore.Timestamp timestamp))
+            {
+                var dateStr = timestamp.ToDateTime().ToString("dd MMM");
+                if (doc.TryGetValue("botellas", out long botellasDelDia))
+                {
+                    if (agrupadoPorDia.ContainsKey(dateStr)) agrupadoPorDia[dateStr] += botellasDelDia;
+                    else agrupadoPorDia[dateStr] = botellasDelDia;
+                }
+            }
         }
+        
+        // Tomar los últimos 4 días con actividad
+        var graficaDatos = agrupadoPorDia
+            .Select(x => new { Dia = x.Key, Cantidad = x.Value })
+            .OrderByDescending(x => x.Dia) // Asumiendo formato ordenable o alfabético simple
+            .Take(4)
+            .Reverse()
+            .ToList();
+            
+        // Si no hay 4, rellenamos con vacíos
+        while(graficaDatos.Count < 4) {
+            graficaDatos.Insert(0, new { Dia = "--", Cantidad = 0L });
+        }
+        
+        // Calcular el máximo para los porcentajes de altura en HTML
+        long maxCantidad = graficaDatos.Max(x => x.Cantidad);
+        if (maxCantidad == 0) maxCantidad = 1; // Para evitar división por 0
 
         // 3. Canjes
         var canjesRef = firestoreDb.Collection("canjes");
@@ -41,7 +71,12 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
             totalBotellas,
             totalPuntosEmitidos,
             totalUsuarios,
-            totalCanjes
+            totalCanjes,
+            grafica = graficaDatos.Select(g => new { 
+                dia = g.Dia, 
+                cantidad = g.Cantidad, 
+                porcentaje = (int)((double)g.Cantidad / maxCantidad * 100) 
+            })
         }));
     }
 }
