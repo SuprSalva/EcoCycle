@@ -3,10 +3,10 @@
   <div class="d-flex justify-content-between align-items-center mb-4 px-2">
     <div>
       <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
-        {{ esEdicion ? 'Detalles del Usuario' : 'Nuevo Usuario' }}
+        {{ esEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}
       </h2>
       <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
-        {{ esEdicion ? 'Consulta los datos vinculados a esta cuenta.' : 'Completa los campos requeridos para gestionar las credenciales y accesos.' }}
+        {{ esEdicion ? 'Modifica los datos vinculados a esta cuenta.' : 'Completa los campos requeridos para gestionar las credenciales y accesos.' }}
       </p>
     </div>
     
@@ -177,13 +177,14 @@
                 class="btn btn-light text-decoration-none fw-semibold px-4 py-2 shadow-sm rounded-3" 
                 style="font-size: 0.95rem; border: 1px solid var(--surface-variant-color); background-color: var(--background-color); color: var(--on-background-color);" 
                 (click)="volver()">
-          {{ esEdicion ? 'Cerrar Detalles' : 'Cancelar' }}
+          Cancelar
         </button>
-        <button type="submit" *ngIf="!esEdicion"
+        <button type="submit"
                 class="btn d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3 border-0 fw-semibold" 
-                style="background-color: #0D631B; color: #FFFFFF; font-size: 0.95rem;">
+                style="background-color: #0D631B; color: #FFFFFF; font-size: 0.95rem;"
+                [disabled]="usuarioForm.invalid">
           <span class="material-symbols-outlined fs-5">check_circle</span>
-          <span>Guardar Usuario</span>
+          <span>{{ esEdicion ? 'Guardar Cambios' : 'Registrar Usuario' }}</span>
         </button>
       </div>
 

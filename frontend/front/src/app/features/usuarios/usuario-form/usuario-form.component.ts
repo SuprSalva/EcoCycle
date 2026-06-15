@@ -84,7 +84,10 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
           });
           this.usuarioForm.get('password')?.clearValidators();
           this.usuarioForm.get('password')?.updateValueAndValidity();
-          this.usuarioForm.disable(); // Desactivar el formulario para modo lectura
+          // Desactivar solo los campos que no se pueden editar
+          this.usuarioForm.get('email')?.disable();
+          this.usuarioForm.get('password')?.disable();
+          this.usuarioForm.get('confirmarPassword')?.disable();
         } else {
           this.notificationService.error('Error', 'Usuario no encontrado.');
           this.volver();
@@ -115,8 +118,28 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
     }
 
     if (this.esEdicion) {
-      // El modo edición ahora es solo lectura, así que no se puede guardar nada.
-      this.volver();
+      const payloadActualizar = {
+        nombre: valores.nombre,
+        apellidos: valores.apellidos,
+        telefono: valores.telefono,
+        direccion: valores.direccion,
+        rol: valores.rol
+      };
+
+      this.notificationService.showLoading('Actualizando...', 'Guardando los cambios del usuario');
+      this.authService.actualizarUsuario(this.idSeleccionado!, payloadActualizar).subscribe({
+        next: () => {
+          this.notificationService.hideLoading();
+          this.notificationService.success('¡Actualizado!', 'El usuario ha sido modificado con éxito.');
+          this.volver();
+        },
+        error: (err: any) => {
+          this.notificationService.hideLoading();
+          console.error(err);
+          const errorMsg = err.error?.message || err.message || 'Error desconocido';
+          this.notificationService.error('Error al Actualizar', errorMsg);
+        }
+      });
     } else {
       const payloadNuevo = {
         nombre: valores.nombre,
@@ -138,7 +161,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
         error: (err: any) => {
           this.notificationService.hideLoading();
           console.error(err);
-          this.notificationService.error('Error', 'No se pudo registrar la cuenta en Firebase Auth.');
+          const errorMsg = err.error?.message || err.message || 'Error desconocido';
+          this.notificationService.error('Error en el Registro', errorMsg);
         }
       });
     }

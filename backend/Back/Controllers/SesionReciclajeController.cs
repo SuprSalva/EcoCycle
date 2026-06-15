@@ -44,4 +44,12 @@ public class SesionReciclajeController(Back.Repositories.Interfaces.ISesionRecic
     }
 
     // El historial unificado ahora se encuentra en UsuarioController.
+
+    [HttpGet("todas")]
+    [Authorize]
+    public async Task<IActionResult> GetTodas()
+    {
+        var sesiones = await sesionRepository.ObtenerTodasAsync();
+        return Ok(ApiResponse<List<SesionReciclaje>>.Ok(sesiones));
+    }
 }

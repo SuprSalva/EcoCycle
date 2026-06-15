@@ -22,4 +22,9 @@ public class SesionReciclajeRepository(FirestoreDb firestoreDb) : ISesionRecicla
 
         return snapshot.Documents.Select(d => d.ConvertTo<SesionReciclaje>()).ToList();
     }
+    public async Task<List<SesionReciclaje>> ObtenerTodasAsync()
+    {
+        var snapshot = await _collection.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<SesionReciclaje>()).ToList();
+    }
 }

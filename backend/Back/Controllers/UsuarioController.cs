@@ -158,6 +158,26 @@ public class UsuarioController(Back.Repositories.Interfaces.IUsuarioRepository u
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
     }
 
+    [HttpPut("{id}")]
+    public async Task<IActionResult> ActualizarUsuarioDesdeAdmin(string id, [FromBody] ActualizarUsuarioRequest request)
+    {
+        var usuario = await usuarioRepository.ObtenerPorIdAsync(id);
+        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+
+        usuario.Nombre = request.Nombre;
+        usuario.Apellidos = request.Apellidos;
+        usuario.Telefono = request.Telefono;
+        usuario.Direccion = request.Direccion;
+        if (!string.IsNullOrEmpty(request.Rol))
+        {
+            usuario.Rol = request.Rol;
+        }
+
+        await usuarioRepository.GuardarAsync(usuario);
+
+        return Ok(ApiResponse<object>.Ok(null, "Usuario actualizado correctamente por el administrador."));
+    }
+
     [HttpPut("{id}/estatus")]
     public async Task<IActionResult> CambiarEstatus(string id, [FromBody] CambiarEstatusRequest request)
     {

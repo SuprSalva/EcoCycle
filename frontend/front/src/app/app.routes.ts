@@ -8,6 +8,7 @@ import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-rec
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
 import { DashboardGlobalComponent } from './features/dashboard-global/dashboard-global.component';
 import { authGuard } from './core/guards/auth.guard';
+import { ReportesComponent } from './features/reportes/reportes.component';
 
 export const routes: Routes = [
   // 1. Rutas Públicas (Cualquiera puede entrar)
@@ -33,7 +34,7 @@ export const routes: Routes = [
       { path: 'catalogo', component: CatalogoComponent },
 
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
-      { path: 'reportes', component: SesionReciclajeComponent },
+      { path: 'reportes', component: ReportesComponent },
 
       // Redirección por defecto al entrar a /panel (Te manda a dashboard)
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

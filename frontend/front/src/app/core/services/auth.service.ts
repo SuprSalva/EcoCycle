@@ -87,8 +87,11 @@ export class AuthService {
               rol: usuarioNuevo.rol || 'usuario'
             };
 
-            // Enviamos el registro al backend usando la sesión del Admin (el interceptor ya manda el token de quien hace la petición)
-            return this.http.post(`${this.authUrl}/registro`, body);
+            // Enviamos el registro al backend con el token RECIÉN CREADO (del nuevo usuario)
+            // Esto evita que el interceptor mande el token del administrador y cause un 400 Bad Request
+            return this.http.post(`${this.authUrl}/registro`, body, {
+              headers: { Authorization: `Bearer ${nuevoToken}` }
+            });
           })
         );
       })
@@ -115,7 +118,7 @@ export class AuthService {
   // 5. ACTUALIZAR: CAMBIAR DATOS, ROLES O ESTATUS DESDE EL ADMIN
   actualizarUsuario(id: string, datos: any): Observable<any> {
     // Mandamos el objeto modificado a C#
-    return this.http.put(`${this.usuarioUrl}/${id}/estatus`, datos);
+    return this.http.put(`${this.usuarioUrl}/${id}`, datos);
   }
 
   // 6. ELIMINAR: BORRAR CUENTA PERMANENTEMENTE
