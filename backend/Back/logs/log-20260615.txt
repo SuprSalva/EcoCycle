@@ -1654,3 +1654,170 @@ DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
 2026-06-15 20:06:08.225 +00:00 [INF] Application started. Press Ctrl+C to shut down.
 2026-06-15 20:06:08.225 +00:00 [INF] Hosting environment: Development
 2026-06-15 20:06:08.225 +00:00 [INF] Content root path: /app
+2026-06-15 20:06:17.383 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:06:17.383 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:06:17.405 +00:00 [WRN] Failed to determine the https port for redirect.
+2026-06-15 20:06:17.406 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:17.406 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:17.409 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - 204 null null 26.379ms
+2026-06-15 20:06:17.409 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 26.3804ms
+2026-06-15 20:06:17.412 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:06:17.412 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:06:17.415 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:17.415 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:33.176 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 20:06:33.177 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:33.177 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - 204 null null 0.8933ms
+2026-06-15 20:06:33.180 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 20:06:33.183 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:33.959 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 20:06:33.960 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:33.960 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Dashboard/resumen - 204 null null 0.533ms
+2026-06-15 20:06:33.962 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - null null
+2026-06-15 20:06:33.962 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:43.318 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:06:43.318 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:43.318 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - 204 null null 0.4893ms
+2026-06-15 20:06:45.553 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:06:45.553 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:45.554 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.5352ms
+2026-06-15 20:06:45.557 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:06:45.558 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:06:45.565 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:06:45.565 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:05.766 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:05.767 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:05.767 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.7469ms
+2026-06-15 20:07:05.767 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:05.767 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:05.767 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - 204 null null 0.1751ms
+2026-06-15 20:07:05.770 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:05.771 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:05.771 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:05.772 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:17.460 +00:00 [INF] Failed to validate the token.
+Microsoft.IdentityModel.Tokens.SecurityTokenSignatureKeyNotFoundException: IDX10500: Signature validation failed. No security keys were provided to validate the signature.
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateSignature(JsonWebToken jwtToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateSignatureAndIssuerSecurityKey(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+   at Microsoft.IdentityModel.JsonWebTokens.JsonWebTokenHandler.ValidateJWSAsync(JsonWebToken jsonWebToken, TokenValidationParameters validationParameters, BaseConfiguration configuration)
+2026-06-15 20:07:17.463 +00:00 [INF] Bearer was not authenticated. Failure message: IDX10500: Signature validation failed. No security keys were provided to validate the signature.
+2026-06-15 20:07:17.466 +00:00 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-06-15 20:07:17.468 +00:00 [INF] AuthenticationScheme: Bearer was challenged.
+2026-06-15 20:07:17.469 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - 499 null null 60056.7287ms
+2026-06-15 20:07:23.703 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:23.703 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:23.703 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.3234ms
+2026-06-15 20:07:23.704 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:23.704 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:23.704 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - 204 null null 0.1002ms
+2026-06-15 20:07:23.707 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:23.707 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:23.708 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:23.708 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.DashboardController.GetResumen (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:28.852 +00:00 [INF] Executing endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetResumen", controller = "Dashboard"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetResumen() on controller Back.Controllers.DashboardController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetTodas", controller = "SesionReciclaje"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetTodas() on controller Back.Controllers.SesionReciclajeController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetTodas", controller = "SesionReciclaje"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetTodas() on controller Back.Controllers.SesionReciclajeController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "ObtenerTodos", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ObtenerTodos() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetTodas", controller = "SesionReciclaje"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetTodas() on controller Back.Controllers.SesionReciclajeController (Back).
+2026-06-15 20:07:28.867 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.SesionReciclaje, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.SesionReciclaje, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:31.073 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.SesionReciclaje, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:31.089 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 2219.3416ms
+2026-06-15 20:07:31.089 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 2219.2375ms
+2026-06-15 20:07:31.089 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:31.089 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 2221.3246ms
+2026-06-15 20:07:31.089 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:31.089 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:31.089 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 499 null application/json; charset=utf-8 73676.9001ms
+2026-06-15 20:07:31.089 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 499 null application/json; charset=utf-8 25318.7442ms
+2026-06-15 20:07:31.089 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 7381.8881ms
+2026-06-15 20:07:31.091 +00:00 [INF] Executed action Back.Controllers.SesionReciclajeController.GetTodas (Back) in 2222.937ms
+2026-06-15 20:07:31.091 +00:00 [INF] Executed action Back.Controllers.SesionReciclajeController.GetTodas (Back) in 2223.0217ms
+2026-06-15 20:07:31.091 +00:00 [INF] Executed action Back.Controllers.SesionReciclajeController.GetTodas (Back) in 2222.949ms
+2026-06-15 20:07:31.091 +00:00 [INF] Executed endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:31.091 +00:00 [INF] Executed endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:31.091 +00:00 [INF] Executed endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:31.091 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - 499 null application/json; charset=utf-8 45533.3049ms
+2026-06-15 20:07:31.091 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - 499 null application/json; charset=utf-8 25319.3623ms
+2026-06-15 20:07:31.091 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - 200 null application/json; charset=utf-8 7383.4117ms
+2026-06-15 20:07:31.106 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 20:07:31.106 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 2238.2723ms
+2026-06-15 20:07:31.106 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:31.106 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 499 null application/json; charset=utf-8 45541.1372ms
+2026-06-15 20:07:31.106 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:31.107 +00:00 [INF] Executed action Back.Controllers.UsuarioController.ObtenerTodos (Back) in 2239.5836ms
+2026-06-15 20:07:31.107 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 20:07:31.107 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - 499 null application/json; charset=utf-8 57927.04ms
+2026-06-15 20:07:31.597 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:31.602 +00:00 [INF] Executed action Back.Controllers.DashboardController.GetResumen (Back) in 2734.7075ms
+2026-06-15 20:07:31.602 +00:00 [INF] Executed endpoint 'Back.Controllers.DashboardController.GetResumen (Back)'
+2026-06-15 20:07:31.602 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Dashboard/resumen - 499 null application/json; charset=utf-8 57640.7163ms
+2026-06-15 20:07:54.907 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:54.907 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:54.907 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:54.907 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:54.908 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.3834ms
+2026-06-15 20:07:54.908 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/SesionReciclaje/todas - 204 null null 0.3834ms
+2026-06-15 20:07:54.910 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - null null
+2026-06-15 20:07:54.910 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-06-15 20:07:54.910 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:54.910 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:07:54.912 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:54.912 +00:00 [INF] Executing endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:54.912 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:07:54.912 +00:00 [INF] Route matched with {action = "GetTodas", controller = "SesionReciclaje"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetTodas() on controller Back.Controllers.SesionReciclajeController (Back).
+2026-06-15 20:07:54.962 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.SesionReciclaje, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:07:54.962 +00:00 [INF] Executed action Back.Controllers.SesionReciclajeController.GetTodas (Back) in 49.6901ms
+2026-06-15 20:07:54.962 +00:00 [INF] Executed endpoint 'Back.Controllers.SesionReciclajeController.GetTodas (Back)'
+2026-06-15 20:07:54.962 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/SesionReciclaje/todas - 200 null application/json; charset=utf-8 52.4289ms
+2026-06-15 20:07:54.963 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-06-15 20:07:54.964 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 51.7181ms
+2026-06-15 20:07:54.964 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-06-15 20:07:54.964 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 54.3185ms
+2026-06-15 20:08:00.116 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 20:08:00.116 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:08:00.116 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/todos - 204 null null 0.2941ms
+2026-06-15 20:08:00.118 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - null null
+2026-06-15 20:08:00.118 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:08:00.118 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 20:08:00.119 +00:00 [INF] Route matched with {action = "ObtenerTodos", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ObtenerTodos() on controller Back.Controllers.UsuarioController (Back).
+2026-06-15 20:08:00.230 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:08:00.230 +00:00 [INF] Executed action Back.Controllers.UsuarioController.ObtenerTodos (Back) in 111.5216ms
+2026-06-15 20:08:00.230 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.ObtenerTodos (Back)'
+2026-06-15 20:08:00.230 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/todos - 200 null application/json; charset=utf-8 112.5343ms
+2026-06-15 20:08:01.586 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - null null
+2026-06-15 20:08:01.586 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:08:01.586 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - 204 null null 0.4182ms
+2026-06-15 20:08:01.590 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - null null
+2026-06-15 20:08:01.591 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:08:01.592 +00:00 [INF] Executing endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 20:08:01.596 +00:00 [INF] Route matched with {action = "GetRecompensasAdmin", controller = "Recompensa"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetRecompensasAdmin() on controller Back.Controllers.RecompensaController (Back).
+2026-06-15 20:08:01.964 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.Recompensa, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:08:01.967 +00:00 [INF] Executed action Back.Controllers.RecompensaController.GetRecompensasAdmin (Back) in 371.7109ms
+2026-06-15 20:08:01.968 +00:00 [INF] Executed endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 20:08:01.968 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - 200 null application/json; charset=utf-8 377.8631ms
+2026-06-15 20:08:03.202 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - null null
+2026-06-15 20:08:03.202 +00:00 [INF] CORS policy execution successful.
+2026-06-15 20:08:03.203 +00:00 [INF] Executing endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 20:08:03.203 +00:00 [INF] Route matched with {action = "GetRecompensasAdmin", controller = "Recompensa"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetRecompensasAdmin() on controller Back.Controllers.RecompensaController (Back).
+2026-06-15 20:08:03.305 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.Recompensa, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-06-15 20:08:03.305 +00:00 [INF] Executed action Back.Controllers.RecompensaController.GetRecompensasAdmin (Back) in 102.09ms
+2026-06-15 20:08:03.305 +00:00 [INF] Executed endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-06-15 20:08:03.305 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - 200 null application/json; charset=utf-8 103.4552ms
