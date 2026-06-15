@@ -1647,3 +1647,10 @@ DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
 2026-06-15 20:05:03.816 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 26.2516ms
 2026-06-15 20:05:03.816 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
 2026-06-15 20:05:03.816 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 27.297ms
+2026-06-15 20:06:08.125 +00:00 [WRN] Storing keys in a directory '/root/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+2026-06-15 20:06:08.163 +00:00 [INF] User profile is available. Using '/root/.aspnet/DataProtection-Keys' as key repository; keys will not be encrypted at rest.
+2026-06-15 20:06:08.184 +00:00 [WRN] Overriding HTTP_PORTS '8080' and HTTPS_PORTS ''. Binding to values defined by URLS instead 'http://0.0.0.0:5000'.
+2026-06-15 20:06:08.225 +00:00 [INF] Now listening on: http://0.0.0.0:5000
+2026-06-15 20:06:08.225 +00:00 [INF] Application started. Press Ctrl+C to shut down.
+2026-06-15 20:06:08.225 +00:00 [INF] Hosting environment: Development
+2026-06-15 20:06:08.225 +00:00 [INF] Content root path: /app
