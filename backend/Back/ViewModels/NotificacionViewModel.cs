@@ -1,4 +1,4 @@
-using Back.Infrastructure.Repositories.Interfaces;
+using Back.Repositories.Interfaces;
 using Back.Models.DTOs.Response;
 using Back.ViewModels.Interfaces;
 

@@ -1,8 +1,8 @@
 using Back.Entities;
-using Back.Infrastructure.Repositories.Interfaces;
+using Back.Repositories.Interfaces;
 using Google.Cloud.Firestore;
 
-namespace Back.Infrastructure.Repositories;
+namespace Back.Repositories;
 
 public class NotificacionRepository : INotificacionRepository
 {

@@ -1,8 +1,6 @@
 using Google.Cloud.Firestore;
 using Back.Repositories;
 using Back.Repositories.Interfaces;
-using Back.Infrastructure.Repositories;
-using Back.Infrastructure.Repositories.Interfaces;
 using Back.ViewModels;
 using Back.ViewModels.Interfaces;
 using Back.Middleware;
@@ -70,21 +68,14 @@ builder.Services.AddSingleton(firestoreDb);
 // ==========================================
 // SERVICIOS Y REPOSITORIOS
 // ==========================================
-builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IUsuarioRepository, Back.Infrastructure.Repositories.UsuarioRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IUsuarioRepository, Back.Repositories.UsuarioRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ISesionReciclajeRepository, Back.Repositories.SesionReciclajeRepository>();
-builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IReciclajeRepository, Back.Infrastructure.Repositories.ReciclajeRepository>();
-builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.IRecompensaRepository, Back.Infrastructure.Repositories.RecompensaRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, Back.Repositories.RecompensaRepository>();
-builder.Services.AddScoped<ICanjeRepository, CanjeRepository>();
-builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
-builder.Services.AddScoped<Back.Infrastructure.Repositories.Interfaces.ISaldoPuntosRepository, Back.Infrastructure.Repositories.SaldoPuntosRepository>();
 
-// ViewModels
-builder.Services.AddScoped<IAuthViewModel, AuthViewModel>();
-builder.Services.AddScoped<IUsuarioViewModel, UsuarioViewModel>();
-builder.Services.AddScoped<IReciclajeViewModel, ReciclajeViewModel>();
-builder.Services.AddScoped<IRecompensaViewModel, RecompensaViewModel>();
+// Repositorios adicionales (Migrados de Infrastructure)
+builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
+
+// Servicios de Lógica (Anteriormente ViewModels)
 builder.Services.AddScoped<INotificacionViewModel, NotificacionViewModel>();
 
 // Validators

@@ -1,6 +1,6 @@
 using Back.Entities;
 
-namespace Back.Infrastructure.Repositories.Interfaces;
+namespace Back.Repositories.Interfaces;
 
 public interface INotificacionRepository
 {

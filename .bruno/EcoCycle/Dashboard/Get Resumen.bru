@@ -1,0 +1,14 @@
+meta {
+  name: Get Resumen
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:5000/api/Dashboard/resumen
+  body: none
+}
+
+headers {
+  Authorization: Bearer {{token}}
+}
