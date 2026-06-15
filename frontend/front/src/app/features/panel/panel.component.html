@@ -1,5 +1,5 @@
 <div class="dashboard-container">
-  
+
   <aside class="sidebar">
     <div class="logo-seccion">
       <img src="/logo_eco.png" alt="EcoCycle Logo" style="height: 32px; width: auto; margin-right: 10px;">
@@ -10,19 +10,19 @@
       <a routerLink="/panel/dashboard" class="item-menu" routerLinkActive="activo">
         <i class="fa-solid fa-chart-pie"></i> Dashboard Global
       </a>
-      
+
       <a routerLink="/panel/usuarios" class="item-menu" routerLinkActive="activo">
-        <i class="fa-solid fa-users"></i> Control Usuarios
+        <i class="fa-solid fa-users"></i> Usuarios
       </a>
-      
+
       <a routerLink="/panel/reciclaje" class="item-menu" routerLinkActive="activo">
         <i class="fa-solid fa-microchip"></i> Terminal Ingesta IoT
       </a>
-      
+
       <a routerLink="/panel/catalogo" class="item-menu" routerLinkActive="activo">
-  <i class="fa-solid fa-tags"></i> Catálogo Maestro
+  <i class="fa-solid fa-tags"></i> Catálogo
 </a>
-      
+
       <a routerLink="/panel/reportes" class="item-menu" routerLinkActive="activo">
         <i class="fa-solid fa-file-invoice"></i> Reportes Núcleo
       </a>
@@ -37,7 +37,7 @@
         <h3 *ngIf="!perfil">Cargando perfil...</h3>
         <span class="rol-badge" *ngIf="perfil">{{ (perfil?.rol || 'usuario') | uppercase }}</span>
       </div>
-      
+
       <div class="acciones-header">
         <div class="perfil-info" *ngIf="perfil">
           <div class="avatar">
@@ -58,5 +58,5 @@
       <router-outlet></router-outlet>
     </div>
   </main>
-  
+
 </div>

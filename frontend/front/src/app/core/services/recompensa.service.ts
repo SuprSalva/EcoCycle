@@ -6,9 +6,11 @@ import { Observable } from 'rxjs';
 export interface Recompensa {
   id: string;
   nombre: string;
+  descripcion?: string;
   costoPuntos: number;
   stock: number;
   activa: boolean;
+  imagenUrl?: string;
   icono?: string;
 }
 
@@ -41,5 +43,29 @@ export class RecompensaService {
     }
 
     return this.http.post<any>(`${this.API_URL}/canjear`, { recompensaId }, { headers });
+  }
+
+  obtenerTodasAdmin(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`${this.API_URL}/admin`, { headers });
+  }
+
+  crearRecompensa(datos: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<any>(this.API_URL, datos, { headers });
+  }
+
+  actualizarRecompensa(id: string, datos: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<any>(`${this.API_URL}/${id}`, datos, { headers });
+  }
+
+  cambiarEstatus(id: string, activa: boolean): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put<any>(`${this.API_URL}/${id}/estatus`, { activa }, { headers });
   }
 }

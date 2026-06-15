@@ -128,12 +128,18 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
         rol: valores.rol
       };
 
+      this.notificationService.showLoading('Guardando...', 'Registrando al nuevo usuario');
       this.authService.registrarDesdeAdmin(payloadNuevo).subscribe({
         next: () => {
+          this.notificationService.hideLoading();
           this.notificationService.success('¡Creado!', 'El usuario ha sido insertado con éxito en el sistema.');
           this.volver();
         },
-        error: () => this.notificationService.error('Error', 'No se pudo registrar la cuenta en Firebase Auth.')
+        error: (err: any) => {
+          this.notificationService.hideLoading();
+          console.error(err);
+          this.notificationService.error('Error', 'No se pudo registrar la cuenta en Firebase Auth.');
+        }
       });
     }
   }

@@ -22,4 +22,7 @@ public class Recompensa
 
     [FirestoreProperty("activa")]
     public bool Activa { get; set; } = true;
+
+    [FirestoreProperty("imagen_url")]
+    public string ImagenUrl { get; set; } = string.Empty;
 }

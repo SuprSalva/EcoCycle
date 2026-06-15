@@ -65,4 +65,55 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
 
         return Ok(ApiResponse<object>.Ok(new { canjeId = canje.Id, nuevoSaldo = usuario.SaldoPuntos }, "Canje realizado correctamente."));
     }
+
+    [HttpGet("admin")]
+    public async Task<IActionResult> GetRecompensasAdmin()
+    {
+        var recompensas = await recompensaRepository.ObtenerTodasAsync();
+        return Ok(ApiResponse<List<Recompensa>>.Ok(recompensas));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CrearRecompensa([FromBody] RecompensaRequest request)
+    {
+        var recompensa = new Recompensa
+        {
+            Nombre = request.Nombre,
+            Descripcion = request.Descripcion,
+            CostoPuntos = request.CostoPuntos,
+            Stock = request.Stock,
+            Activa = request.Activa,
+            ImagenUrl = request.ImagenUrl
+        };
+        await recompensaRepository.GuardarAsync(recompensa);
+        return Ok(ApiResponse<object>.Ok(null, "Recompensa creada correctamente."));
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> ActualizarRecompensa(string id, [FromBody] RecompensaRequest request)
+    {
+        var recompensa = await recompensaRepository.ObtenerPorIdAsync(id);
+        if (recompensa == null) return NotFound(ApiResponse<object>.Fail("Recompensa no encontrada."));
+
+        recompensa.Nombre = request.Nombre;
+        recompensa.Descripcion = request.Descripcion;
+        recompensa.CostoPuntos = request.CostoPuntos;
+        recompensa.Stock = request.Stock;
+        recompensa.Activa = request.Activa;
+        recompensa.ImagenUrl = request.ImagenUrl;
+
+        await recompensaRepository.GuardarAsync(recompensa);
+        return Ok(ApiResponse<object>.Ok(null, "Recompensa actualizada correctamente."));
+    }
+
+    [HttpPut("{id}/estatus")]
+    public async Task<IActionResult> CambiarEstatusRecompensa(string id, [FromBody] CambiarEstatusRecompensaRequest request)
+    {
+        var recompensa = await recompensaRepository.ObtenerPorIdAsync(id);
+        if (recompensa == null) return NotFound(ApiResponse<object>.Fail("Recompensa no encontrada."));
+
+        recompensa.Activa = request.Activa;
+        await recompensaRepository.GuardarAsync(recompensa);
+        return Ok(ApiResponse<object>.Ok(null, "Estatus de la recompensa actualizado correctamente."));
+    }
 }

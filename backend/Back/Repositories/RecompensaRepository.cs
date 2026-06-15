@@ -9,6 +9,12 @@ public class RecompensaRepository(FirestoreDb firestoreDb) : IRecompensaReposito
     private readonly CollectionReference _recompensas = firestoreDb.Collection("recompensas");
     private readonly CollectionReference _canjes = firestoreDb.Collection("canjes");
 
+    public async Task<List<Recompensa>> ObtenerTodasAsync()
+    {
+        var snapshot = await _recompensas.GetSnapshotAsync();
+        return snapshot.Documents.Select(d => d.ConvertTo<Recompensa>()).ToList();
+    }
+
     public async Task<List<Recompensa>> ObtenerActivasAsync()
     {
         var query = _recompensas.WhereEqualTo("activa", true);

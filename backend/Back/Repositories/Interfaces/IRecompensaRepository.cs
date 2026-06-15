@@ -4,6 +4,7 @@ namespace Back.Repositories.Interfaces;
 
 public interface IRecompensaRepository
 {
+    Task<List<Recompensa>> ObtenerTodasAsync();
     Task<List<Recompensa>> ObtenerActivasAsync();
     Task<Recompensa?> ObtenerPorIdAsync(string id);
     Task GuardarAsync(Recompensa recompensa);

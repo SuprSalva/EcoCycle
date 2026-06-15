@@ -18,6 +18,7 @@ import autoTable from 'jspdf-autotable';
 })
 export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
+  cargando: boolean = true;
   
   // Paginación y búsqueda
   private _searchTerm: string = '';
@@ -46,11 +47,16 @@ export class UsuariosComponent implements OnInit {
   }
 
   obtenerLista(): void {
+    this.cargando = true;
     this.authService.obtenerTodosLosUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
+        this.cargando = false;
       },
-      error: (err) => console.error('Error al listar usuarios:', err)
+      error: (err) => {
+        console.error('Error al listar usuarios:', err);
+        this.cargando = false;
+      }
     });
   }
 
@@ -237,10 +243,17 @@ export class UsuariosComponent implements OnInit {
           rol: nuevoRol
         };
 
+        this.notificationService.showLoading('Actualizando...', 'Modificando estatus del usuario');
         this.authService.actualizarUsuario(usuario.id, bodyActualizado).subscribe({
           next: () => {
+            this.notificationService.hideLoading();
             this.notificationService.toastSuccess('Estatus modificado exitosamente.');
             this.obtenerLista();
+          },
+          error: (err: any) => {
+            this.notificationService.hideLoading();
+            console.error(err);
+            this.notificationService.error('Error', 'No se pudo actualizar el estatus.');
           }
         });
       }

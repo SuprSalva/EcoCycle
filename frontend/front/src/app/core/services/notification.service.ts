@@ -108,4 +108,22 @@ export class NotificationService {
       }
     });
   }
+
+  // Pantalla de carga (bloquea la interfaz)
+  showLoading(title: string = 'Cargando...', text: string = 'Por favor espera un momento') {
+    Swal.fire({
+      title: title,
+      text: text,
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+  }
+
+  hideLoading() {
+    Swal.close();
+  }
 }
