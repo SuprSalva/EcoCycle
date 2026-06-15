@@ -5,7 +5,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './navbar.component.html'
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
   @Input() perfil: any;

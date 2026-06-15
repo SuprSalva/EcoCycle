@@ -1,12 +1,17 @@
-// Estilos del Top Header
+:host { display: contents; }
+
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 30px;
-  background-color: var(--surface-color);
-  border-bottom: 1px solid var(--border-neutral-color);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  padding: 20px 40px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  position: sticky;
+  top: 0;
+  z-index: 5;
 
   .saludo {
     display: flex;
@@ -15,44 +20,51 @@
     
     h3 {
       margin: 0;
-      color: var(--on-surface-color);
-      font-size: 1.4rem;
-      font-weight: 600;
+      color: var(--secondary-color);
+      font-size: 1.5rem;
+      font-weight: 700;
     }
 
     .rol-badge {
-      background-color: var(--secondary-container-color);
-      color: var(--on-secondary-container-color);
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 0.5px;
+      background: var(--accent-gradient);
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      box-shadow: var(--shadow-glow);
     }
   }
 
   .acciones-header {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 30px;
 
     .perfil-info {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
 
       .avatar {
-        width: 42px;
-        height: 42px;
-        background-color: var(--primary-color);
-        color: var(--on-primary-color);
-        border-radius: 50%;
+        width: 46px;
+        height: 46px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 14px;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 1.2rem;
-        font-weight: bold;
-        box-shadow: 0 3px 6px rgba(13, 99, 27, 0.3);
+        font-size: 1.4rem;
+        font-weight: 700;
+        box-shadow: var(--shadow-md);
+        transform: rotate(-3deg);
+        transition: transform 0.3s ease;
+        
+        &:hover {
+          transform: rotate(0deg) scale(1.05);
+        }
       }
 
       .detalles {
@@ -66,31 +78,41 @@
         }
 
         .puntos {
-          font-size: 0.9rem;
+          font-size: 0.95rem;
           color: var(--primary-color);
-          font-weight: bold;
-          i { margin-right: 4px; }
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          
+          i { 
+            color: #F59E0B;
+            filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.4));
+          }
         }
       }
     }
 
     .btn-logout {
-      background-color: #ffebee;
-      color: #d32f2f;
-      border: 1px solid #ffcdd2;
-      padding: 8px 16px;
-      border-radius: 8px;
+      background-color: white;
+      color: #EF4444;
+      border: 1px solid #FCA5A5;
+      padding: 10px 18px;
+      border-radius: 12px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.9rem;
       display: flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: var(--shadow-sm);
 
       &:hover {
-        background-color: #d32f2f;
-        color: white;
+        background-color: #FEF2F2;
+        border-color: #EF4444;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
       }
     }
   }

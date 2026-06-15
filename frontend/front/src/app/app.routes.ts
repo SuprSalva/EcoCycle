@@ -6,6 +6,7 @@ import { UsuariosComponent } from './features/usuarios/usuarios.component';
 import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-reciclaje.component';
 // 🌟 IMPORTAMOS EL COMPONENTE DEL CATÁLOGO MAESTRO
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
+import { DashboardGlobalComponent } from './features/dashboard-global/dashboard-global.component';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -19,6 +20,9 @@ export const routes: Routes = [
     component: PanelComponent, 
     canActivate: [authGuard], // Protege el panel y automáticamente a todas sus rutas hijas
     children: [
+      // RUTA HIJA: Dashboard Global (/panel/dashboard)
+      { path: 'dashboard', component: DashboardGlobalComponent },
+
       // RUTA HIJA: Control de Usuarios (/panel/usuarios)
       { path: 'usuarios', component: UsuariosComponent },
 
@@ -31,14 +35,13 @@ export const routes: Routes = [
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: SesionReciclajeComponent },
 
-      // Redirección por defecto al entrar a /panel (Te manda a usuarios)
-      { path: '', redirectTo: 'usuarios', pathMatch: 'full' }
+      // Redirección por defecto al entrar a /panel (Te manda a dashboard)
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   
   // 3. Redirecciones de control del Sistema
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   // 🌟 CAMBIA ESTA LÍNEA TEMPORALMENTE:
-  { path: '**', redirectTo: 'panel/usuarios' } 
-
+  { path: '**', redirectTo: 'panel/dashboard' } 
 ];
