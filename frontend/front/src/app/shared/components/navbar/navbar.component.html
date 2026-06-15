@@ -1,0 +1,22 @@
+<header class="top-header">
+  <div class="saludo">
+    <h3 *ngIf="perfil">¡Hola, {{ perfil?.nombre || 'Usuario' }} {{ perfil?.apellidos || '' }}!</h3>
+    <h3 *ngIf="!perfil">Cargando perfil...</h3>
+    <span class="rol-badge" *ngIf="perfil">{{ (perfil?.rol || 'usuario') | uppercase }}</span>
+  </div>
+
+  <div class="acciones-header">
+    <div class="perfil-info" *ngIf="perfil">
+      <div class="avatar">
+        {{ (perfil?.nombre ? perfil.nombre.charAt(0) : 'U') | uppercase }}
+      </div>
+      <div class="detalles">
+        <span class="email">{{ perfil?.email || 'Sin correo' }}</span>
+        <span class="puntos"><i class="fa-solid fa-coins"></i> {{ perfil?.saldoPuntos || 0 }} pts</span>
+      </div>
+    </div>
+    <button class="btn-logout" (click)="onLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+    </button>
+  </div>
+</header>

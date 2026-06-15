@@ -1,18 +1,21 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken } from '@angular/fire/auth';
 import { from, Observable, switchMap, tap, map } from 'rxjs';
-
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Base de las URLs de tu backend de C#
-  private authUrl = 'http://localhost:5000/api/Auth'; 
-  private usuarioUrl = 'http://localhost:5000/api/Usuario';
+  private authUrl = `${environment.apiUrl}/Auth`; 
+  private usuarioUrl = `${environment.apiUrl}/Usuario`;
 
   constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {}
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
 
   // 1. INICIAR SESIÓN (Corregido para mantener contexto de inyección)
   login(email: string, password: string): Observable<string> {
@@ -41,9 +44,7 @@ export class AuthService {
 
   // OBTENER PERFIL DE USUARIO LOGUEADO
   obtenerPerfilUsuario(): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`${this.usuarioUrl}/perfil`, { headers }).pipe(
+    return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
       map(res => res.data)
     );
   }
@@ -56,8 +57,6 @@ export class AuthService {
           from(getIdToken(userCredential.user)).pipe(
             switchMap((token) => {
               localStorage.setItem('token', token);
-
-              const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
               
               const body = {
                 nombre: datosAdicionales.nombre,
@@ -66,7 +65,7 @@ export class AuthService {
                 direccion: datosAdicionales.direccion || ''
               };
 
-              return this.http.post(`${this.authUrl}/registro`, body, { headers });
+              return this.http.post(`${this.authUrl}/registro`, body);
             })
           )
         );
@@ -79,11 +78,7 @@ export class AuthService {
     return from(createUserWithEmailAndPassword(this.auth, usuarioNuevo.email, usuarioNuevo.password)).pipe(
       switchMap((userCredential) => {
         return from(getIdToken(userCredential.user)).pipe(
-          switchMap((nuevoToken) => {
-            // Usamos el token del administrador actual para autorizar la petición en C#
-            const tokenAdmin = localStorage.getItem('token');
-            const headers = new HttpHeaders().set('Authorization', `Bearer ${tokenAdmin}`);
-            
+          switchMap((nuevoToken) => {            
             const body = {
               nombre: usuarioNuevo.nombre,
               apellidos: usuarioNuevo.apellidos || '',
@@ -92,8 +87,8 @@ export class AuthService {
               rol: usuarioNuevo.rol || 'usuario'
             };
 
-            // Enviamos el registro al backend usando la sesión del Admin
-            return this.http.post(`${this.authUrl}/registro`, body, { headers });
+            // Enviamos el registro al backend usando la sesión del Admin (el interceptor ya manda el token de quien hace la petición)
+            return this.http.post(`${this.authUrl}/registro`, body);
           })
         );
       })
@@ -102,10 +97,7 @@ export class AuthService {
 
   // 4. LEER: OBTENER TODOS LOS USUARIOS (Mantiene tu lógica funcional)
   obtenerTodosLosUsuarios(): Observable<any[]> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<any>(`${this.usuarioUrl}/todos`, { headers }).pipe(
+    return this.http.get<any>(`${this.usuarioUrl}/todos`).pipe(
       map(respuestaCsharp => {
         console.log('Datos crudos llegados de C#:', respuestaCsharp);
         return respuestaCsharp.data || []; 
@@ -115,28 +107,19 @@ export class AuthService {
 
   // OBTENER UN SOLO USUARIO POR ID
   obtenerUsuarioPorId(id: string): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-    return this.http.get<any>(`${this.usuarioUrl}/${id}`, { headers }).pipe(
+    return this.http.get<any>(`${this.usuarioUrl}/${id}`).pipe(
       map(res => res.data)
     );
   }
 
   // 5. ACTUALIZAR: CAMBIAR DATOS, ROLES O ESTATUS DESDE EL ADMIN
   actualizarUsuario(id: string, datos: any): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
     // Mandamos el objeto modificado a C#
-    return this.http.put(`${this.usuarioUrl}/${id}/estatus`, datos, { headers });
+    return this.http.put(`${this.usuarioUrl}/${id}/estatus`, datos);
   }
 
   // 6. ELIMINAR: BORRAR CUENTA PERMANENTEMENTE
   eliminarUsuario(id: string): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
-    return this.http.delete(`${this.usuarioUrl}/${id}`, { headers });
+    return this.http.delete(`${this.usuarioUrl}/${id}`);
   }
 }

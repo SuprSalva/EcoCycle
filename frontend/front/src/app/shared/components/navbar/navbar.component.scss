@@ -1,0 +1,97 @@
+// Estilos del Top Header
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: var(--surface-color);
+  border-bottom: 1px solid var(--border-neutral-color);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+
+  .saludo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+    h3 {
+      margin: 0;
+      color: var(--on-surface-color);
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+
+    .rol-badge {
+      background-color: var(--secondary-container-color);
+      color: var(--on-secondary-container-color);
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .acciones-header {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    .perfil-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        background-color: var(--primary-color);
+        color: var(--on-primary-color);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 0 3px 6px rgba(13, 99, 27, 0.3);
+      }
+
+      .detalles {
+        display: flex;
+        flex-direction: column;
+
+        .email {
+          font-size: 0.85rem;
+          color: var(--text-secondary-color);
+          font-weight: 500;
+        }
+
+        .puntos {
+          font-size: 0.9rem;
+          color: var(--primary-color);
+          font-weight: bold;
+          i { margin-right: 4px; }
+        }
+      }
+    }
+
+    .btn-logout {
+      background-color: #ffebee;
+      color: #d32f2f;
+      border: 1px solid #ffcdd2;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #d32f2f;
+        color: white;
+      }
+    }
+  }
+}

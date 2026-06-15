@@ -3,15 +3,18 @@ import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
   selector: 'app-panel',
   standalone: true, // Asegúrate de que tenga esta línea si es un componente Standalone
   imports: [
-    // 2. LAS AGREGAMOS AQUÍ PARA QUE EL HTML RECONOZCA EL routerLink Y EL <router-outlet>
     RouterOutlet, 
     RouterModule,
-    CommonModule
+    CommonModule,
+    SidebarComponent,
+    NavbarComponent
   ],
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.scss'
