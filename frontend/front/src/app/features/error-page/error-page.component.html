@@ -1,0 +1,32 @@
+<div class="d-flex flex-column align-items-center justify-content-center min-vh-100 p-4" style="background-color: var(--background-color);">
+  
+  <div class="bg-white p-4 p-md-5 rounded-4 shadow-lg fade-in-up" style="max-width: 900px; width: 100%;">
+    <div class="row align-items-center">
+      
+      <!-- Personaje a la izquierda -->
+      <div class="col-md-5 text-center mb-4 mb-md-0">
+        <img [src]="imageSrc" alt="Sad Trash Can" class="img-fluid pulse-animation" style="max-height: 350px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.15));" />
+      </div>
+
+      <!-- Texto a la derecha -->
+      <div class="col-md-7 text-center text-md-start ps-md-4">
+        <h1 class="fw-bold mb-2" style="font-size: 6rem; color: var(--primary-color); letter-spacing: -0.05em; line-height: 1;">{{ errorCode }}</h1>
+        <h3 class="fw-bold mb-3" style="color: var(--on-surface-color); font-size: 2rem;">{{ errorMessage }}</h3>
+        
+        <p class="text-muted mb-4 pe-md-3" style="font-size: 1.15rem; line-height: 1.6;">
+          {{ errorDescription }}
+        </p>
+
+        <button class="btn text-white rounded-pill px-4 py-3 fw-bold shadow-sm hover-lift" style="background-color: var(--primary-color); font-size: 1.1rem;" (click)="volverAlInicio()">
+          <i class="fa-solid fa-house me-2"></i> Volver al Inicio
+        </button>
+      </div>
+
+    </div>
+  </div>
+  
+  <div class="mt-4 text-muted small fw-medium">
+    EcoCycle &copy; {{ 2026 }}
+  </div>
+
+</div>

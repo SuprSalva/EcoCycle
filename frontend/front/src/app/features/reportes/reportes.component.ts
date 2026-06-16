@@ -36,6 +36,7 @@ export class ReportesComponent implements OnInit {
 
   cargarSesiones(): void {
     this.cargando = true;
+    this.notificationService.showLoading('Cargando reportes...', 'Obteniendo reportes desde la base de datos');
     this.http.get<any>(`${environment.apiUrl}/SesionReciclaje/todas`).subscribe({
       next: (res) => {
         if (res && res.succeeded) {
@@ -43,11 +44,13 @@ export class ReportesComponent implements OnInit {
           this.sesiones = res.data.sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         }
         this.cargando = false;
+        this.notificationService.hideLoading();
       },
       error: (err) => {
         console.error(err);
         this.notificationService.error('Error', 'No se pudieron cargar los reportes.');
         this.cargando = false;
+        this.notificationService.hideLoading();
       }
     });
   }

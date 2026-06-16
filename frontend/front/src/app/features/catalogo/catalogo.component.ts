@@ -43,6 +43,7 @@ export class CatalogoComponent implements OnInit {
 
   cargarCatalogo(): void {
     this.cargando = true;
+    this.notificationService.showLoading('Cargando catálogo...', 'Sincronizando el catálogo con el servidor');
     this.recompensaService.obtenerTodasAdmin().subscribe({
       next: (response: any) => { 
         if (response && response.succeeded) {
@@ -52,9 +53,11 @@ export class CatalogoComponent implements OnInit {
         }
         this.aplicarFiltrosYOrden();
         this.cargando = false;
+        this.notificationService.hideLoading();
       },
       error: (err: any) => {
         this.cargando = false;
+        this.notificationService.hideLoading();
         console.error('Error al cargar catálogo:', err);
         this.notificationService.error('Error', 'No se pudieron cargar las recompensas.');
         this.listaRecompensasOriginal = [];
@@ -163,6 +166,13 @@ export class CatalogoComponent implements OnInit {
     if (n.includes('cine') || n.includes('película') || n.includes('boleto')) return '🎟️';
     if (n.includes('camisa') || n.includes('playera') || n.includes('ropa')) return '👕';
     return '🎁';
+  }
+
+  abrirImagen(recompensa: Recompensa, event: Event): void {
+    event.stopPropagation(); // Prevenir que se abra el modal de edición al hacer clic en la imagen
+    if (recompensa.imagenUrl) {
+      this.notificationService.showImage(recompensa.imagenUrl, recompensa.nombre);
+    }
   }
 
   // --- MÉTODOS DE EXPORTACIÓN ---

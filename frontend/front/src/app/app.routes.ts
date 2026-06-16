@@ -9,6 +9,8 @@ import { CatalogoComponent } from './features/catalogo/catalogo.component';
 import { DashboardGlobalComponent } from './features/dashboard-global/dashboard-global.component';
 import { authGuard } from './core/guards/auth.guard';
 import { ReportesComponent } from './features/reportes/reportes.component';
+import { HistorialRecompensasComponent } from './features/historial-recompensas/historial-recompensas.component';
+import { ErrorPageComponent } from './features/error-page/error-page.component';
 
 export const routes: Routes = [
   // 1. Rutas Públicas (Cualquiera puede entrar)
@@ -33,6 +35,9 @@ export const routes: Routes = [
       // 🌟 RUTA HIJA NUEVA: Catálogo Maestro (/panel/catalogo)
       { path: 'catalogo', component: CatalogoComponent },
 
+      // RUTA HIJA: Historial de Recompensas (/panel/historial-recompensas)
+      { path: 'historial-recompensas', component: HistorialRecompensasComponent },
+
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: ReportesComponent },
 
@@ -41,8 +46,11 @@ export const routes: Routes = [
     ]
   },
   
-  // 3. Redirecciones de control del Sistema
+  // 3. Rutas de Error
+  { path: 'error/:code', component: ErrorPageComponent },
+  { path: 'error', component: ErrorPageComponent },
+
+  // 4. Redirecciones de control del Sistema
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  // 🌟 CAMBIA ESTA LÍNEA TEMPORALMENTE:
-  { path: '**', redirectTo: 'panel/dashboard' } 
+  { path: '**', redirectTo: 'error/404' } 
 ];

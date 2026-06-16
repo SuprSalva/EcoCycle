@@ -48,14 +48,17 @@ export class UsuariosComponent implements OnInit {
 
   obtenerLista(): void {
     this.cargando = true;
+    this.notificationService.showLoading('Cargando usuarios...', 'Sincronizando usuarios con el servidor');
     this.authService.obtenerTodosLosUsuarios().subscribe({
       next: (data) => {
         this.usuarios = data;
         this.cargando = false;
+        this.notificationService.hideLoading();
       },
       error: (err) => {
         console.error('Error al listar usuarios:', err);
         this.cargando = false;
+        this.notificationService.hideLoading();
       }
     });
   }

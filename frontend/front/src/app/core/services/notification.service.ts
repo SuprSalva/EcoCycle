@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import Swal, { SweetAlertIcon } from 'sweetalert2';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
+
+  constructor(private loaderService: LoaderService) {}
 
   // Configuramos un Toast para notificaciones rápidas y no intrusivas
   private Toast = Swal.mixin({
@@ -109,21 +112,30 @@ export class NotificationService {
     });
   }
 
-  // Pantalla de carga (bloquea la interfaz)
-  showLoading(title: string = 'Cargando...', text: string = 'Por favor espera un momento') {
+  // Mostrar imagen (Lightbox)
+  showImage(imageUrl: string, title: string = 'Imagen') {
     Swal.fire({
       title: title,
-      text: text,
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
+      imageUrl: imageUrl,
+      imageAlt: title,
+      imageWidth: 400,
+      imageHeight: 300,
+      showConfirmButton: true,
+      confirmButtonText: 'Cerrar',
+      confirmButtonColor: '#0D631B',
+      customClass: {
+        confirmButton: 'btn btn-success shadow-sm rounded-3 px-4 py-2 fw-semibold'
+      },
+      buttonsStyling: false
     });
   }
 
+  // Pantalla de carga (bloquea la interfaz)
+  showLoading(title: string = 'Cargando...', text: string = 'Por favor espera un momento') {
+    this.loaderService.show(title);
+  }
+
   hideLoading() {
-    Swal.close();
+    this.loaderService.hide();
   }
 }

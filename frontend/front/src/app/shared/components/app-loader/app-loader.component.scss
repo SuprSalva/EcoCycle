@@ -1,0 +1,69 @@
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.85); /* Glassmorphism background */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999; /* Ensure it stays on top of everything including modals */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-content {
+  background: white;
+  padding: 2.5rem 3.5rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  text-align: center;
+  border: 1px solid rgba(229, 231, 235, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90%;
+}
+
+.loader-logo {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Subtle loading bar */
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background-color: var(--primary-container-color);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-bar-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  animation: loadingBar 1.5s infinite ease-in-out;
+}
+
+@keyframes loadingBar {
+  0% { left: -40%; }
+  100% { left: 100%; }
+}
+
+.spin-animation {
+  animation: spinLogo 2s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spinLogo {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

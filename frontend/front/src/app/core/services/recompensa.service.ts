@@ -34,6 +34,14 @@ export class RecompensaService {
     return this.http.get<any>(`${this.API_URL}/admin`);
   }
 
+  obtenerHistorialCanjesAdmin(inicio?: string, fin?: string): Observable<any> {
+    let params = new URLSearchParams();
+    if (inicio) params.append('inicio', inicio);
+    if (fin) params.append('fin', fin);
+    const queryString = params.toString() ? `?${params.toString()}` : '';
+    return this.http.get<any>(`${this.API_URL}/canjes/admin${queryString}`);
+  }
+
   crearRecompensa(datos: any): Observable<any> {
     return this.http.post<any>(this.API_URL, datos);
   }

@@ -10,4 +10,5 @@ public interface IRecompensaRepository
     Task GuardarAsync(Recompensa recompensa);
     Task RegistrarCanjeAsync(Canje canje);
     Task<List<Canje>> ObtenerCanjesPorUsuarioAsync(string userId);
+    Task<List<Canje>> ObtenerTodosLosCanjesAsync();
 }

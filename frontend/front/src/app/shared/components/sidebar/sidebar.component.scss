@@ -13,24 +13,46 @@
 
   .logo-seccion {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    gap: 16px;
     margin-bottom: 40px;
-    padding-left: 8px;
+    text-align: center;
     
     img {
-      height: 28px !important;
+      height: 80px;
+      width: auto;
+      object-fit: contain;
+      animation: spinOccasional 12s ease-in-out infinite;
+    }
+
+    @keyframes spinOccasional {
+      0%, 85% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
     
-    h2 { 
-      font-size: 1.3rem; 
-      color: #FFFFFF; 
-      font-weight: 700;
-      margin: 0;
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h2 { 
+        font-size: 1.5rem; 
+        color: #FFFFFF; 
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+      
       span { 
         color: var(--accent-color); 
-        font-weight: 400; 
-      } 
+        font-weight: 500; 
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 2px;
+      }
     }
   }
 
