@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
+import { SesionReciclajeService } from '../../core/services/sesion-reciclaje.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -11,27 +12,31 @@ import Swal from 'sweetalert2';
   templateUrl: './sesion-reciclaje.component.html',
   styleUrls: ['./sesion-reciclaje.component.scss']
 })
-export class SesionReciclajeComponent implements OnInit {
+export class SesionReciclajeComponent implements OnInit, OnDestroy {
   reciclajeForm!: FormGroup;
   puntosCalculados: number = 0;
   procesando: boolean = false;
+  private formSub!: Subscription;
   
-  // URL base de tu API Gateway o backend local en C#
-  private readonly API_URL = 'http://localhost:5000/api/SesionReciclaje';
-
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  constructor(private fb: FormBuilder, private sesionService: SesionReciclajeService) {}
 
   ngOnInit(): void {
     this.initForm();
     
     // Escuchar cambios en la cantidad de botellas para proyectar los puntos en tiempo real
-    this.reciclajeForm.get('botellas')?.valueChanges.subscribe((valor) => {
+    this.formSub = this.reciclajeForm.get('botellas')!.valueChanges.subscribe((valor) => {
       if (valor && valor > 0) {
         this.puntosCalculados = Number((valor * 0.10).toFixed(2));
       } else {
         this.puntosCalculados = 0;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.formSub) {
+      this.formSub.unsubscribe();
+    }
   }
 
   initForm(): void {
@@ -51,7 +56,7 @@ export class SesionReciclajeComponent implements OnInit {
     this.procesando = true;
     const payload = this.reciclajeForm.value;
 
-    this.http.post<any>(this.API_URL, payload).subscribe({
+    this.sesionService.registrarSesion(payload).subscribe({
       next: (respuesta) => {
         this.procesando = false;
         

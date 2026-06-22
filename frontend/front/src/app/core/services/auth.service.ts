@@ -1,6 +1,6 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged } from '@angular/fire/auth';
 import { from, Observable, switchMap, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -11,7 +11,18 @@ export class AuthService {
   private authUrl = `${environment.apiUrl}/Auth`; 
   private usuarioUrl = `${environment.apiUrl}/Usuario`;
 
-  constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {}
+  constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {
+    // BUG FIX: El token de Firebase expira a la hora. Con esto, Angular escucha silenciosamente
+    // cada vez que Firebase refresca el token en el fondo y nosotros actualizamos localStorage.
+    onIdTokenChanged(this.auth, async (user) => {
+      if (user) {
+        const token = await user.getIdToken();
+        localStorage.setItem('token', token);
+      } else {
+        localStorage.removeItem('token');
+      }
+    });
+  }
 
   getToken(): string | null {
     return localStorage.getItem('token');

@@ -58,12 +58,4 @@
   100% { left: 100%; }
 }
 
-.spin-animation {
-  animation: spinLogo 2s linear infinite;
-  display: inline-block;
-}
 
-@keyframes spinLogo {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
