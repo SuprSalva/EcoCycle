@@ -2,78 +2,89 @@
   
   <div class="mb-4 px-2">
     <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: #1b2559 !important; letter-spacing: -0.02em;">
-      Simulador de Terminal e Ingesta de Reciclaje
+      Terminal Ingesta IoT & Depósitos
     </h2>
     <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
-      Registra las transacciones físicas provenientes de los depósitos de las celdas IoT al core del sistema.
+      Simula o registra cargas físicas de reciclaje asignadas directamente a las cuentas de usuarios del sistema.
     </p>
   </div>
 
   <div class="row g-4">
     <div class="col-lg-7">
       <div class="card shadow-sm border-0 rounded-4 bg-white p-4">
-        <h4 class="fw-bold mb-3" style="color: #1b2559;">Entrada de Datos de Cabina</h4>
+        <h4 class="fw-bold mb-3" style="color: #1b2559;">Registro de Depósito Manual</h4>
         <hr class="text-muted opacity-25 mb-4">
 
         <form [formGroup]="reciclajeForm" (ngSubmit)="registrarSesion()">
           <div class="row g-3">
             
             <div class="col-12">
+  <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
+    BUSCAR USUARIO BENEFICIARIO <span class="text-danger">*</span>
+  </label>
+  <div class="input-group">
+    <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
+      🔍
+    </span>
+    <input type="text" 
+           class="form-control border-start-0 shadow-none fs-6"
+           style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
+           placeholder="Escribe el nombre o correo para filtrar..."
+           list="usuariosList"
+           (change)="onUsuarioSeleccionado($event)">
+           
+    <datalist id="usuariosList">
+      <option *ngFor="let user of listaUsuarios" 
+              [value]="user.nombre + ' ' + user.apellidos + ' (' + user.email + ')'"
+              [attr.data-id]="user.id">
+      </option>
+    </datalist>
+  </div>
+  <small class="text-muted d-block mt-1 px-1"></small>
+</div>
+
+            <div class="col-md-6">
               <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
-                UID DEL USUARIO REGISTRADO <span class="text-danger">*</span>
+                TERMINAL RECOLECTORA (CELDA IOT) <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
-                  <i class="bi bi-person-badge-fill"></i>
+                  🤖
                 </span>
-                <input type="text" 
-                       formControlName="usuarioId"
-                       class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
-                       style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
-                       placeholder="Ej. usr_firestore_abc123">
+                <select formControlName="maquinaId" 
+                        class="form-select rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6"
+                        style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;">
+                  <option value="MQ-ECO-01">MQ-ECO-01 (Centro Principal)</option>
+                  <option value="MQ-ECO-02">MQ-ECO-02 (Zona Norte)</option>
+                  <option value="MQ-ECO-03">MQ-ECO-03 (Punto Sur)</option>
+                  <option value="MQ-ECO-04">MQ-ECO-04 (Terminal Universitaria)</option>
+                </select>
               </div>
             </div>
 
             <div class="col-md-6">
               <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
-                ID MÁQUINA (ORIGEN TRÁFICO) <span class="text-danger">*</span>
+                CANTIDAD DE BOTELLAS <span class="text-danger">*</span>
               </label>
               <div class="input-group">
                 <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
-                  <i class="bi bi-cpu-fill"></i>
-                </span>
-                <input type="text" 
-                       formControlName="maquinaId"
-                       class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
-                       style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
-                       placeholder="Ej. MQ-ECO-01">
-              </div>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label fw-bold mb-1" style="color: #2b3674; font-size: 0.85rem; letter-spacing: 0.03em;">
-                BOTELLAS RECOLECTADAS (UNIDADES) <span class="text-danger">*</span>
-              </label>
-              <div class="input-group">
-                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted" style="border: 1px solid #d0d5dd;">
-                  <i class="bi bi-trash3-fill"></i>
+                  🍾
                 </span>
                 <input type="number" 
                        formControlName="botellas"
                        class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
                        style="border: 1px solid #d0d5dd; color: #1b2559; font-weight: 500;"
-                       placeholder="Cantidad superior a 0">
+                       placeholder="Ingresa piezas físicas">
               </div>
             </div>
 
             <div class="col-12 mt-4 pt-2">
               <button type="submit" 
                       [disabled]="reciclajeForm.invalid || procesando"
-                      class="btn d-flex align-items-center justify-content-center gap-2 w-100 py-2.5 shadow-sm rounded-3 border-0 text-white fw-semibold mb-2" 
-                      style="background-color: #7cb342; font-size: 1rem; transition: background 0.2s;">
-                <i *ngIf="!procesando" class="bi bi-arrow-right-circle-fill"></i>
+                      class="btn d-flex align-items-center justify-content-center gap-2 w-100 py-3 shadow-sm rounded-3 border-0 text-white fw-semibold mb-2" 
+                      style="background-color: #7cb342; font-size: 1rem; transition: background 0.2s; cursor: pointer;">
                 <span *ngIf="procesando" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                <span>{{ procesando ? 'Procesando Depósito...' : 'Registrar Depósito Físico' }}</span>
+                <span>{{ procesando ? 'Procesando Depósito IoT...' : '⚡ Registrar Depósito Físico' }}</span>
               </button>
             </div>
 
@@ -87,24 +98,22 @@
         <div class="card-body p-4 d-flex flex-column justify-content-between">
           <div>
             <div class="d-flex align-items-center gap-2 mb-3">
-              <div class="bg-white bg-opacity-10 p-2 rounded-3">
-                <i class="bi bi-calculator-fill text-warning fs-4"></i>
-              </div>
+              <div class="bg-white bg-opacity-10 p-2 rounded-3">🪙</div>
               <h5 class="fw-bold m-0 text-white">Tabulador y Regla de Negocio</h5>
             </div>
             <p class="text-white-50 small mb-4">
-              Por directiva del controlador de la aplicación, el saldo se calcula multiplicando cada envase ingresado por una tasa fija de incentivos.
+              Cada envase procesado añade un valor de equivalencia directa en la base de datos a la billetera del usuario.
             </p>
 
             <div class="bg-white bg-opacity-5 rounded-3 p-3 mb-3 border border-white border-opacity-10">
               <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-white-50 small">Factor de Equivalencia</span>
-                <span class="fw-bold text-success bg-white px-2 py-0.5 rounded-pill fs-7" style="color: #7cb342 !important;">0.10 Pts / Botella</span>
+                <span class="fw-bold px-2 py-0.5 rounded-pill fs-7" style="background-color: #7cb342; color: white;">0.10 Pts / Botella</span>
               </div>
               <div class="d-flex justify-content-between align-items-center">
                 <span class="text-white-50 small">Estatus del Servidor</span>
                 <span class="fw-bold text-info fs-7 d-flex align-items-center gap-1">
-                  <span class="spinner-grow spinner-grow-sm text-info" style="width: 8px; height: 8px;"></span> Escuchando REST
+                  <span class="spinner-grow spinner-grow-sm text-info" style="width: 8px; height: 8px;"></span> Escuchando API Core
                 </span>
               </div>
             </div>

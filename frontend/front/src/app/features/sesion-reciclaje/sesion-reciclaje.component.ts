@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../core/services/auth.service'; // Ajusta la ruta a tu proyecto
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,63 +16,94 @@ export class SesionReciclajeComponent implements OnInit {
   reciclajeForm!: FormGroup;
   puntosCalculados: number = 0;
   procesando: boolean = false;
-  
-  // URL base de tu API Gateway o backend local en C#
-  private readonly API_URL = 'http://localhost:5000/api/SesionReciclaje';
+  listaUsuarios: any[] = []; 
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {}
+  private readonly API_RECICLAJE = 'http://localhost:5171/api/SesionReciclaje';
+
+  constructor(
+    private fb: FormBuilder, 
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
+    this.cargarUsuarios();
     
-    // Escuchar cambios en la cantidad de botellas para proyectar los puntos en tiempo real
     this.reciclajeForm.get('botellas')?.valueChanges.subscribe((valor) => {
-      if (valor && valor > 0) {
-        this.puntosCalculados = Number((valor * 0.10).toFixed(2));
-      } else {
-        this.puntosCalculados = 0;
-      }
+      this.puntosCalculados = (valor && valor > 0) ? Number((valor * 0.10).toFixed(2)) : 0;
     });
   }
 
   initForm(): void {
     this.reciclajeForm = this.fb.group({
-      usuarioId: ['', [Validators.required]],
-      maquinaId: ['MQ-ECO-01', [Validators.required]], // Valor por defecto operativo
+      usuarioId: ['', [Validators.required]], // Aquí guardaremos el ID oculto para C#
+      maquinaId: ['MQ-ECO-01', [Validators.required]],
       botellas: ['', [Validators.required, Validators.min(1)]]
     });
   }
 
+  cargarUsuarios(): void {
+    this.authService.obtenerTodosLosUsuarios().subscribe({
+      next: (usuarios) => {
+        this.listaUsuarios = usuarios;
+      },
+      error: (err) => console.error('Error cargando usuarios del sistema:', err)
+    });
+  }
+
+  // ⚡ FUNCIÓN CLAVE PARA LA UX AUTÓGONA: Mapea el texto seleccionado al ID real de Firestore
+  onUsuarioSeleccionado(event: any): void {
+    const valorSeleccionado = event.target.value;
+    
+    // Buscamos cuál usuario coincide con la cadena armada en el datalist
+    const usuarioEncontrado = this.listaUsuarios.find(user => 
+      `${user.nombre} ${user.apellidos} (${user.email})` === valorSeleccionado
+    );
+
+    if (usuarioEncontrado) {
+      // Seteamos el ID real en el formulario reactivo de forma transparente
+      this.reciclajeForm.get('usuarioId')?.setValue(usuarioEncontrado.id);
+    } else {
+      // Si borra o escribe algo inválido, reseteamos el ID
+      this.reciclajeForm.get('usuarioId')?.setValue('');
+    }
+  }
+
   registrarSesion(): void {
     if (this.reciclajeForm.invalid) {
-      Swal.fire('Formulario Inválido', 'Verifica que el ID de usuario y la cantidad de botellas sean correctos.', 'warning');
+      Swal.fire('Atención', 'Por favor selecciona un usuario válido de la lista y la cantidad de botellas.', 'warning');
       return;
     }
 
     this.procesando = true;
-    const payload = this.reciclajeForm.value;
 
-    this.http.post<any>(this.API_URL, payload).subscribe({
+    const payload = {
+      UsuarioId: this.reciclajeForm.value.usuarioId,
+      MaquinaId: this.reciclajeForm.value.maquinaId,
+      Botellas: Number(this.reciclajeForm.value.botellas)
+    };
+
+    this.http.post<any>(this.API_RECICLAJE, payload).subscribe({
       next: (respuesta) => {
         this.procesando = false;
         
         Swal.fire({
-          title: '¡Sesión Registrada!',
-          text: `Se han abonado ${this.puntosCalculados} puntos exitosamente al usuario.`,
+          title: '¡Depósito Exitoso!',
+          text: `Sesión guardada en el core. Puntos acreditados correctamente.`,
           icon: 'success',
           confirmButtonColor: '#7cb342'
         });
 
-        // Limpiar el formulario y reestablecer estados iniciales
-        this.reciclajeForm.reset({ maquinaId: 'MQ-ECO-01' });
+        this.reciclajeForm.reset({ maquinaId: 'MQ-ECO-01', usuarioId: '' });
+        // Limpiamos también visualmente el input buscador del HTML
+        (document.getElementById('usuariosList')?.previousElementSibling as HTMLInputElement).value = '';
         this.puntosCalculados = 0;
       },
       error: (err) => {
         this.procesando = false;
-        console.error('Error al registrar sesión:', err);
-        
-        const mensajeError = err.error?.message || 'No se pudo comunicar con el módulo IoT o la base de datos.';
-        Swal.fire('Error Operativo', mensajeError, 'error');
+        const msg = err.error?.message || 'Error al conectar con la base de datos IoT.';
+        Swal.fire('Error de Procesamiento', msg, 'error');
       }
     });
   }
