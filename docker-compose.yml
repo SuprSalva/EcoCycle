@@ -18,14 +18,14 @@ services:
       # - FIREBASE_PROJECT_ID=ecocycle-e9c04
 
   frontend:
-    image: node:20
-    container_name: ecocycle_frontend
-    working_dir: /app
-    volumes:
-      - ./frontend/front:/app
-    # Instala las dependencias y corre el servidor en modo desarrollo con hot-reload
-    command: sh -c "npm install && npm start -- --host 0.0.0.0"
-    ports:
-      - "4200:4200"
-    depends_on:
-      - backend
+   image: node:20
+   container_name: ecocycle_frontend
+   working_dir: /app
+   volumes:
+     - ./frontend/front:/app
+     - /app/node_modules
+   command: sh -c "npm install && npm start -- --host 0.0.0.0"
+   ports:
+     - "4200:4200"
+   depends_on:
+     - backend
