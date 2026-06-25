@@ -1,38 +1,102 @@
-<main class="contenedor-principal">
-  <div class="tarjeta-login">
-    
-    <div class="header-logo">
-      <img src="/logos.png" alt="EcoCycle Logo" class="logo-img">
-      <span class="logo-texto">EcoCycle</span>
+<main class="contenedor-login">
+  <section class="panel-formulario">
+
+    <div class="logo">
+      <img src="/logos.png" alt="EcoCycle">
+      <span>EcoCycle</span>
     </div>
 
-    <h1 class="titulo">Bienvenido a EcoCycle</h1>
-    <p class="subtitulo">Ingresa tus credenciales para acceder al panel de administración.</p>
+    <div class="avatar">
+      <i class="fa-regular fa-user"></i>
+    </div>
+
+    <div class="encabezado-login">
+      <h2>Iniciar Sesión</h2>
+      <p>Accede al sistema de gestión EcoCycle</p>
+    </div>
 
     <form class="formulario" (ngSubmit)="onLogin()">
+
+      <div class="input-group">
+        <i class="fa-regular fa-envelope"></i>
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Correo electrónico"
+          required>
+      </div>
+
+      <div class="input-group">
+        <i class="fa-solid fa-lock"></i>
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Contraseña"
+          required>
+      </div>
+
+      <button type="submit">
+        Iniciar Sesión
+      </button>
+
+    </form>
+
+  </section>
+
+
+  <section class="panel-imagen">
+
+    <img
+      src="/ecologia_portada.jpg"
+      alt="EcoCycle"
+      class="imagen-fondo">
   
-  <div class="grupo-input">
-    <label for="email">Correo Electrónico</label>
-    <div class="input-icono-wrapper">
-      <i class="fa-regular fa-envelope icono"></i>
-      <input type="email" id="email" name="email" [(ngModel)]="email" placeholder="admin@ecocycle.com" required>
+    <div class="overlay"></div>
+  
+    <nav class="navbar-login">
+      <a href="#">Inicio</a>
+      <a href="#">Nosotros</a>
+      <a href="#">Contacto</a>
+    </nav>
+  
+    <div class="contenido-panel">
+  
+      <h1>Welcome.</h1>
+  
+      <p class="descripcion">
+        Sistema de administración EcoCycle
+        <br>
+        Juntos construimos un futuro más sostenible.
+      </p>
+  
+      <div class="caracteristicas">
+  
+        <div class="item">
+          <i class="fa-solid fa-leaf"></i>
+          <h4>Sostenible</h4>
+          <span>Cuidamos el planeta</span>
+        </div>
+  
+        <div class="item">
+          <i class="fa-solid fa-recycle"></i>
+          <h4>Responsable</h4>
+          <span>Comprometidos con el entorno</span>
+        </div>
+  
+        <div class="item">
+          <i class="fa-solid fa-users"></i>
+          <h4>Consciente</h4>
+          <span>Pequeñas acciones, grandes cambios</span>
+        </div>
+  
+      </div>
+  
     </div>
-  </div>
-
-  <div class="grupo-input">
-    <label for="password">Contraseña</label>
-    <div class="input-icono-wrapper">
-      <i class="fa-solid fa-lock icono"></i>
-      <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="••••••••" required>
-    </div>
-  </div>
-
-  <button type="submit" class="btn-principal">
-    <span>Iniciar Sesión</span>
-    <i class="fa-solid fa-arrow-right"></i>
-  </button>
-
-</form>
-
-  </div>
+  
+    <div class="curva curva-1"></div>
+    <div class="curva curva-2"></div>
+  
+  </section>
 </main>
