@@ -71,6 +71,8 @@ builder.Services.AddSingleton(firestoreDb);
 builder.Services.AddScoped<Back.Repositories.Interfaces.IUsuarioRepository, Back.Repositories.UsuarioRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ISesionReciclajeRepository, Back.Repositories.SesionReciclajeRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, Back.Repositories.RecompensaRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.IProveedorRepository, Back.Repositories.ProveedorRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProveedorRepository, Back.Repositories.CompraProveedorRepository>();
 
 // Repositorios adicionales (Migrados de Infrastructure)
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();

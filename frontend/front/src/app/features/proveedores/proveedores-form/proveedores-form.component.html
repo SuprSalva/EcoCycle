@@ -1,0 +1,83 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 text-primary fw-bold">{{ isEdit ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h2>
+    <a routerLink="/panel/proveedores" class="btn btn-outline-secondary rounded-pill px-4">
+      <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4 p-md-5">
+      
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        <div class="row g-4">
+          
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Nombre del Contacto</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
+              <input type="text" class="form-control border-start-0" formControlName="nombre" placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+              Requerido
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Empresa</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-building text-muted"></i></span>
+              <input type="text" class="form-control border-start-0" formControlName="empresa" placeholder="Nombre de la empresa">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="form.get('empresa')?.invalid && form.get('empresa')?.touched">
+              Requerido
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Teléfono</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-muted"></i></span>
+              <input type="text" class="form-control border-start-0" formControlName="telefono" placeholder="Ej. 555-1234">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+              Requerido
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-medium">Email</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+              <input type="email" class="form-control border-start-0" formControlName="email" placeholder="correo@ejemplo.com">
+            </div>
+            <div class="text-danger small mt-1" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+              Email válido requerido
+            </div>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-medium">Dirección</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
+              <textarea class="form-control border-start-0" formControlName="direccion" rows="3" placeholder="Dirección completa"></textarea>
+            </div>
+            <div class="text-danger small mt-1" *ngIf="form.get('direccion')?.invalid && form.get('direccion')?.touched">
+              Requerido
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-5 d-flex justify-content-end gap-3">
+          <button type="button" routerLink="/panel/proveedores" class="btn btn-light px-4">Cancelar</button>
+          <button type="submit" class="btn btn-success px-5 shadow-sm" [disabled]="form.invalid || guardando">
+            <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+            {{ isEdit ? 'Guardar Cambios' : 'Registrar Proveedor' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

@@ -54,6 +54,17 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    overflow-y: auto;
+    
+    /* Personalización del scrollbar para que se vea limpio */
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
 
     .item-menu {
       color: rgba(255, 255, 255, 0.8);
