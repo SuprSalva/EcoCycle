@@ -16,6 +16,7 @@ export const routes: Routes = [
   // 1. Rutas Públicas (Cualquiera puede entrar)
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
+  { path: 'maquina', loadComponent: () => import('./features/maquina-info/maquina-info.component').then(m => m.MaquinaInfoComponent) },
   
   // 2. Ruta Padre del Panel (PROTEGIDA BAJO LLAVE)
   { 
