@@ -74,6 +74,9 @@ builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, B
 
 // Repositorios adicionales (Migrados de Infrastructure)
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaRepository, Back.Repositories.MateriaPrimaRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaTransaccionRepository, Back.Repositories.MateriaPrimaTransaccionRepository>();
+builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProductoRepository, Back.Repositories.CompraProductoRepository>();
 
 // Servicios de Lógica (Anteriormente ViewModels)
 builder.Services.AddScoped<INotificacionViewModel, NotificacionViewModel>();

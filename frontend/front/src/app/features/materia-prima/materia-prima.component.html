@@ -1,0 +1,179 @@
+<div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color);">
+
+  <!-- LISTA DE MATERIA PRIMA -->
+  <div *ngIf="vistaActual === 'lista'" class="fade-in-up">
+    <!-- Encabezado y Botón Agregar -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
+      <div>
+        <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
+          Control de Inventario y Costeo
+        </h2>
+        <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
+          Módulo de Administración de Materia Prima implementando Costeo Promedio.
+        </p>
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn text-white fw-semibold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2" 
+                style="background-color: var(--primary-color); font-size: 0.9rem;" (click)="crearNuevaMateria()">
+          <i class="fa-solid fa-plus"></i> Nueva Materia Prima
+        </button>
+      </div>
+    </div>
+
+    <!-- Tabla de Resultados -->
+    <div class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden mb-4 hover-lift">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+          <thead style="background-color: #f8fafc;">
+            <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+              <th class="ps-4 py-3 fw-bold border-bottom-0">Material</th>
+              <th class="py-3 fw-bold border-bottom-0">Stock Actual</th>
+              <th class="py-3 fw-bold border-bottom-0">Costo Promedio Unitario</th>
+              <th class="py-3 fw-bold border-bottom-0">Costo Total</th>
+              <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of materias" class="bg-white border-bottom cursor-pointer" style="transition: all 0.2s ease;">
+              
+              <td class="ps-4 py-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 40px; height: 40px; background-color: var(--primary-container-color); color: var(--primary-color);">
+                    <i class="fa-solid fa-layer-group"></i>
+                  </div>
+                  <span class="fw-bold" style="color: #1e293b; font-size: 0.95rem;">{{ m.nombre }}</span>
+                </div>
+              </td>
+
+              <td class="py-3">
+                <span class="fw-semibold px-2 py-1 rounded-2 bg-light text-secondary" style="font-size: 0.85rem;">
+                  {{ m.stockActual | number:'1.2-2' }} {{ m.unidad }}
+                </span>
+              </td>
+
+              <td class="py-3">
+                <span class="fw-bold" style="color: var(--primary-color); font-size: 0.95rem;">
+                  ${{ m.costoPromedioUnitario | number:'1.2-2' }}
+                </span>
+              </td>
+
+              <td class="py-3">
+                <span class="fw-bold text-dark" style="font-size: 0.95rem;">
+                  ${{ (m.stockActual * m.costoPromedioUnitario) | number:'1.2-2' }}
+                </span>
+              </td>
+
+              <td class="pe-4 py-3 text-center">
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-sm rounded-pill shadow-sm px-3 py-1 btn-action" 
+                          style="border: 1px solid var(--primary-color); color: var(--primary-color); font-weight: 500;"
+                          title="Registrar Transacción"
+                          (click)="registrarTransaccion(m, $event)">
+                    <i class="fa-solid fa-exchange-alt"></i>
+                  </button>
+                  <button class="btn btn-sm rounded-pill shadow-sm px-3 py-1" 
+                          style="border: 1px solid #64748b; color: #64748b; font-weight: 500; transition: all 0.2s;"
+                          title="Editar"
+                          onmouseover="this.style.backgroundColor='#64748b'; this.style.color='white';"
+                          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#64748b';"
+                          (click)="editarMateria(m, $event)">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button class="btn btn-sm rounded-pill shadow-sm px-3 py-1" 
+                          style="border: 1px solid #ef4444; color: #ef4444; font-weight: 500; transition: all 0.2s;"
+                          title="Eliminar"
+                          onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='white';"
+                          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ef4444';"
+                          (click)="eliminarMateria(m, $event)">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Empty State -->
+            <tr *ngIf="materias.length === 0 && !cargando">
+              <td colspan="5" class="text-center py-5 text-muted">
+                <i class="fa-solid fa-boxes-stacked fs-1 mb-3" style="opacity: 0.2;"></i>
+                <h5 class="fw-bold text-secondary">No se encontraron materias primas</h5>
+                <p class="small mb-0">Agrega un nuevo material para comenzar el inventario.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO NUEVA MATERIA PRIMA -->
+  <div *ngIf="vistaActual === 'formulario'" class="fade-in-up">
+    <div class="card shadow-sm border-0 rounded-4 bg-white p-4 mx-auto" style="max-width: 600px;">
+      <h4 class="fw-bold mb-4" style="color: var(--on-background-color);">Nueva Materia Prima</h4>
+      <form [formGroup]="formularioMateria" (ngSubmit)="guardarMateria()">
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary small text-uppercase">Nombre del Material</label>
+          <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="nombre" placeholder="Ej. PET Reciclado" style="font-size: 0.95rem;">
+        </div>
+        <div class="mb-4">
+          <label class="form-label fw-bold text-secondary small text-uppercase">Unidad de Medida</label>
+          <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="unidad" placeholder="Ej. kg, toneladas, litros" style="font-size: 0.95rem;">
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-2">
+          <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-medium text-secondary" (click)="volverALista()">Cancelar</button>
+          <button type="submit" class="btn text-white px-4 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color);" [disabled]="formularioMateria.invalid">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FORMULARIO TRANSACCION -->
+  <div *ngIf="vistaActual === 'transaccion'" class="fade-in-up">
+    <div class="card shadow-sm border-0 rounded-4 bg-white p-4 mx-auto" style="max-width: 600px;">
+      <div class="d-flex align-items-center mb-4 gap-3">
+        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background-color: var(--primary-container-color); color: var(--primary-color); font-size: 1.2rem;">
+          <i class="fa-solid fa-exchange-alt"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold m-0" style="color: var(--on-background-color);">Nueva Transacción</h4>
+          <span class="text-muted small">Registrando para: <strong>{{ materiaSeleccionada?.nombre }}</strong></span>
+        </div>
+      </div>
+      
+      <form [formGroup]="formularioTransaccion" (ngSubmit)="guardarTransaccion()">
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary small text-uppercase">Tipo de Transacción</label>
+          <select class="form-select form-select-lg bg-light border-0 shadow-none" formControlName="tipo" style="font-size: 0.95rem; cursor: pointer;">
+            <option value="Entrada">Entrada (Compra / Abastecimiento)</option>
+            <option value="Salida">Salida (Consumo / Venta)</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold text-secondary small text-uppercase">Cantidad ({{ materiaSeleccionada?.unidad }})</label>
+          <input type="number" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="cantidad" style="font-size: 0.95rem;">
+        </div>
+        <div class="mb-4" *ngIf="formularioTransaccion.get('tipo')?.value === 'Entrada'">
+          <label class="form-label fw-bold text-secondary small text-uppercase">Costo Unitario ($)</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-0 text-muted"><i class="fa-solid fa-dollar-sign"></i></span>
+            <input type="number" class="form-control form-control-lg bg-light border-0 shadow-none ps-0" formControlName="costoUnitario" style="font-size: 0.95rem;">
+          </div>
+        </div>
+        <div class="d-flex justify-content-end gap-2 mt-2">
+          <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-medium text-secondary" (click)="volverALista()">Cancelar</button>
+          <button type="submit" class="btn text-white px-4 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color);" [disabled]="formularioTransaccion.invalid">Aplicar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<style>
+  .fade-in-up { animation: fadeInUp 0.4s ease-out; }
+  .cursor-pointer { cursor: pointer; }
+  .btn-action { transition: all 0.2s ease; background-color: transparent; }
+  .btn-action:hover { background-color: var(--primary-color) !important; color: white !important; }
+  .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  tr.cursor-pointer:hover { background-color: #f8fafc !important; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
