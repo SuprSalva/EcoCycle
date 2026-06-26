@@ -1,0 +1,105 @@
+<div class="fade-in-up">
+  <div class="d-flex align-items-center mb-4 gap-3">
+    <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background-color: var(--primary-container-color); color: var(--primary-color); font-size: 1.2rem;">
+      <i class="fa-solid fa-box-open"></i>
+    </div>
+    <div>
+      <h2 class="fw-bold m-0" style="color: var(--on-background-color); letter-spacing: -0.02em;">Mis Compras</h2>
+      <p class="text-muted small m-0 mt-1">Historial de productos adquiridos e información técnica.</p>
+    </div>
+  </div>
+  
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border" style="color: var(--primary-color);" role="status"></div>
+  </div>
+
+  <div *ngIf="!cargando && compras.length === 0" class="card shadow-sm border-0 rounded-4 text-center py-5 bg-white">
+    <i class="fa-solid fa-boxes-stacked fs-1 text-muted mb-3" style="opacity: 0.2;"></i>
+    <h5 class="fw-bold text-secondary">Aún no tienes compras registradas</h5>
+    <p class="small text-muted mb-0">Cuando adquieras productos de EcoCycle aparecerán aquí.</p>
+  </div>
+
+  <div *ngIf="!cargando && compras.length > 0" class="row g-4">
+    <div class="col-md-6 col-lg-4" *ngFor="let c of compras">
+      <div class="card shadow-sm border-0 rounded-4 h-100 hover-lift bg-white">
+        <div class="card-body d-flex flex-column p-4">
+          <div class="d-flex justify-content-between align-items-start mb-3">
+            <h5 class="fw-bold m-0" style="color: var(--primary-dark);">{{ c.nombreProducto }}</h5>
+            <span class="badge rounded-pill shadow-sm" style="background-color: var(--primary-container-color); color: var(--primary-color); font-size: 0.75rem;">
+              {{ c.fechaCompra | date:'dd MMM yyyy' }}
+            </span>
+          </div>
+          
+          <p class="small text-muted flex-grow-1" style="line-height: 1.5;">{{ c.descripcion }}</p>
+          
+          <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+            <span class="fw-bold fs-5" style="color: var(--primary-color);">${{ c.precioTotal | number:'1.2-2' }}</span>
+            <a *ngIf="c.manualUrl" [href]="c.manualUrl" target="_blank" class="btn btn-sm rounded-pill px-3 py-1 btn-outline-action" style="border-color: var(--accent-color); color: var(--primary-dark); font-weight: 500;">
+              <i class="fa-solid fa-file-pdf me-1"></i> Manual
+            </a>
+          </div>
+
+          <hr class="text-muted mt-0 mb-3" style="opacity: 0.1;">
+
+          <div *ngIf="c.opinion" class="bg-light p-3 rounded-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="small fw-bold text-secondary">Tu calificación:</span>
+              <div class="text-warning" style="font-size: 0.8rem;">
+                <i class="fa-solid fa-star" *ngFor="let s of getEstrellas(c.calificacion || 0)"></i>
+              </div>
+            </div>
+            <p class="small text-muted fst-italic mb-0">"{{ c.opinion }}"</p>
+          </div>
+
+          <button *ngIf="!c.opinion" class="btn w-100 rounded-3 fw-bold text-white mt-auto py-2 shadow-sm" style="background-color: var(--primary-color);" (click)="abrirModalOpinion(c)">
+            Dejar una Opinión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Simple para Opinión -->
+  <div *ngIf="compraSeleccionada" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="background: rgba(16, 42, 31, 0.6); z-index: 1050; animation: fadeIn 0.3s; backdrop-filter: blur(4px);">
+    <div class="card shadow-lg border-0 rounded-4 p-4" style="width: 100%; max-width: 500px;">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h5 class="fw-bold m-0" style="color: var(--primary-dark);">Calificar Producto</h5>
+          <span class="small text-muted">{{ compraSeleccionada.nombreProducto }}</span>
+        </div>
+        <button class="btn-close shadow-none" (click)="compraSeleccionada = null"></button>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-bold text-secondary small text-uppercase">Calificación</label>
+        <select class="form-select form-select-lg bg-light border-0 shadow-none" [(ngModel)]="nuevaCalificacion" style="font-size: 0.95rem;">
+          <option [value]="5">5 - Excelente</option>
+          <option [value]="4">4 - Muy Bueno</option>
+          <option [value]="3">3 - Bueno</option>
+          <option [value]="2">2 - Regular</option>
+          <option [value]="1">1 - Malo</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-bold text-secondary small text-uppercase">Tu Opinión</label>
+        <textarea class="form-control bg-light border-0 shadow-none" rows="4" [(ngModel)]="nuevaOpinion" placeholder="Escribe tu experiencia con el producto..." style="font-size: 0.95rem; resize: none;"></textarea>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-2">
+        <button class="btn btn-light px-4 py-2 rounded-3 fw-medium text-secondary" (click)="compraSeleccionada = null">Cancelar</button>
+        <button class="btn text-white px-4 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color);" (click)="guardarOpinion()" [disabled]="!nuevaOpinion.trim()">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .fade-in-up { animation: fadeInUp 0.4s ease-out; }
+  .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .hover-lift:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .btn-outline-action { transition: all 0.2s; }
+  .btn-outline-action:hover { background-color: var(--primary-container-color); }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
