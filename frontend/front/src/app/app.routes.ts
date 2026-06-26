@@ -11,11 +11,16 @@ import { authGuard } from './core/guards/auth.guard';
 import { ReportesComponent } from './features/reportes/reportes.component';
 import { HistorialRecompensasComponent } from './features/historial-recompensas/historial-recompensas.component';
 import { ErrorPageComponent } from './features/error-page/error-page.component';
+import { NosotrosComponent } from './features/nosotros/nosotros.component';
+import { ContactoComponent } from './features/contacto/contacto.component';
+
 
 export const routes: Routes = [
   // 1. Rutas Públicas (Cualquiera puede entrar)
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
+  { path: 'nosotros', component: NosotrosComponent },
+  { path: 'contacto', component: ContactoComponent },
   
   // 2. Ruta Padre del Panel (PROTEGIDA BAJO LLAVE)
   { 
