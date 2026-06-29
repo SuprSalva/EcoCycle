@@ -6,7 +6,7 @@
     </a>
   </div>
 
-  <div class="card shadow-sm border-0 rounded-4">
+  <div class="card card-modern border-0 fade-in-up">
     <div class="card-body p-4">
       
       <div *ngIf="cargando" class="text-center py-5">
@@ -21,8 +21,8 @@
       </div>
 
       <div class="table-responsive" *ngIf="!cargando && compras.length > 0">
-        <table class="table table-hover align-middle">
-          <thead class="table-light">
+        <table class="table table-dark table-hover align-middle">
+          <thead>
             <tr>
               <th>Proveedor</th>
               <th>Fecha</th>
@@ -39,8 +39,8 @@
               </td>
               <td>{{ c.fechaCompra | date:'medium' }}</td>
               <td>
-                <span class="badge bg-success rounded-pill" *ngIf="c.estado === 'Completado'">{{ c.estado }}</span>
-                <span class="badge bg-warning text-dark rounded-pill" *ngIf="c.estado !== 'Completado'">{{ c.estado }}</span>
+                <span class="badge rounded-pill" style="background-color: var(--primary); color: #000;" *ngIf="c.estado === 'Completado'">{{ c.estado }}</span>
+                <span class="badge rounded-pill" style="background-color: var(--accent); color: #000;" *ngIf="c.estado !== 'Completado'">{{ c.estado }}</span>
               </td>
               <td class="fw-bold text-success">${{ c.total | number:'1.2-2' }}</td>
               <td class="text-center">

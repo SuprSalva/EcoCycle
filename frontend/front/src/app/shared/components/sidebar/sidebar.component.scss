@@ -126,10 +126,21 @@
 }
 
 
+.menu-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-left: 14px;
+  font-weight: 600;
+}
+
 .menu-navegacion {
   display:flex;
   flex-direction:column;
-  gap:6px;
+  gap:8px;
   flex: 1;
   overflow-y: auto;
 }
@@ -143,25 +154,19 @@
 }
 
 .item-menu {
-  height:42px;
-  padding:0 14px;
-  display:flex;
-  align-items:center;
-
-  gap:14px;
-
-
-  border-radius:10px;
-
-
-  color:var(--text-muted);
-
-  text-decoration:none;
-
-  font-size:14px;
-
-
-  transition:all .25s ease;
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+  transition: all .25s ease;
 
 }
 
@@ -196,10 +201,13 @@
 }
 
 .item-menu.activo {
-  background:var(--active-bg);
-  color:white;
-  box-shadow:0 4px 12px rgba(46,125,50,.35);
-
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--primary);
+  font-weight: 600;
+  border-left: 4px solid var(--primary);
+}
+.item-menu.activo i {
+  color: var(--primary);
 }
 
 .sidebar-bottom {
@@ -275,37 +283,56 @@
   border-radius:10px;
 }
 
+.sidebar.collapsed {
+  width: 80px;
+  padding: 20px 12px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar.collapsed .logo-seccion {
+  display: none; /* Hide logo to make room for toggle button centered */
+}
+
+.sidebar.collapsed .menu-section {
+  display: none; /* Hide section text when collapsed */
+}
+
 .sidebar.collapsed .item-menu {
   justify-content: center;
   padding: 0;
-  gap: 0;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+.sidebar.collapsed .item-menu.activo {
+  border-left: none; /* Hide border left in collapsed mode to keep it square */
 }
 
 .sidebar.collapsed .item-menu i {
-  font-size: 16px;
+  font-size: 18px;
+  margin: 0; /* Remove margin-right */
 }
 
 .sidebar.collapsed .usuario {
   justify-content: center;
+  padding: 10px;
 }
 
 .sidebar.collapsed .usuario img {
-  margin: 0 auto;
-}
-
-.sidebar.collapsed .logo-seccion {
-  justify-content: center;
-}
-
-.sidebar.collapsed .logo-seccion img {
-  width: 38px;
-  height: 38px;
+  margin: 0;
 }
 
 .sidebar.collapsed .logo-text,
 .sidebar.collapsed .search-box,
 .sidebar.collapsed .item-menu span,
 .sidebar.collapsed .item-menu small,
-.sidebar.collapsed .usuario div {
+.sidebar.collapsed .usuario div,
+.sidebar.collapsed .usuario i {
   display: none;
 }
