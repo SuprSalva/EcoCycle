@@ -44,6 +44,15 @@ export const routes: Routes = [
       { path: 'soporte', component: SoporteComponent },
       
 
+      // RUTA HIJA: Proveedores (/panel/proveedores)
+      { path: 'proveedores', loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component').then(c => c.ProveedoresListComponent) },
+      { path: 'proveedores/nuevo', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
+      { path: 'proveedores/editar/:id', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
+
+      // RUTA HIJA: Compras a Proveedores (/panel/compras-proveedores)
+      { path: 'compras-proveedores', loadComponent: () => import('./features/compras-proveedores/compras-list/compras-list.component').then(c => c.ComprasListComponent) },
+      { path: 'compras-proveedores/nueva', loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component').then(c => c.ComprasFormComponent) },
+
       // Redirección por defecto al entrar a /panel (Te manda a dashboard)
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

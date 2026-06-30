@@ -1,0 +1,88 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0 text-primary fw-bold">Registrar Compra</h2>
+    <a routerLink="/panel/compras-proveedores" class="btn btn-outline-secondary rounded-pill px-4">
+      <i class="bi bi-arrow-left me-2"></i>Volver
+    </a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4 p-md-5">
+      
+      <form [formGroup]="form" (ngSubmit)="guardar()">
+        
+        <div class="mb-5">
+          <label class="form-label fw-bold fs-5 border-bottom pb-2 mb-3 w-100 text-secondary">
+            <i class="bi bi-building me-2"></i>1. Seleccionar Proveedor
+          </label>
+          <div class="row">
+            <div class="col-md-6">
+              <select class="form-select form-select-lg bg-light" formControlName="proveedorId">
+                <option value="">-- Seleccione un proveedor --</option>
+                <option *ngFor="let p of proveedores" [value]="p.id">{{ p.empresa }} (Contacto: {{ p.nombre }})</option>
+              </select>
+              <div class="text-danger small mt-1" *ngIf="form.get('proveedorId')?.invalid && form.get('proveedorId')?.touched">
+                Debe seleccionar un proveedor.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-bold fs-5 border-bottom pb-2 mb-3 w-100 text-secondary d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-box-seam me-2"></i>2. Productos (Recompensas a reabastecer)</span>
+            <button type="button" class="btn btn-sm btn-primary rounded-pill" (click)="agregarDetalle()">
+              <i class="bi bi-plus-lg me-1"></i>Añadir Línea
+            </button>
+          </label>
+          
+          <div formArrayName="detalles">
+            <div class="row g-3 align-items-center mb-3 p-3 bg-light rounded-3 border" 
+                 *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
+              
+              <div class="col-md-5">
+                <label class="form-label small text-muted mb-1">Recompensa</label>
+                <select class="form-select" formControlName="recompensaId">
+                  <option value="">Seleccionar...</option>
+                  <option *ngFor="let r of recompensas" [value]="r.id">{{ r.nombre }} (Stock actual: {{ r.stock }})</option>
+                </select>
+              </div>
+
+              <div class="col-md-2">
+                <label class="form-label small text-muted mb-1">Cantidad</label>
+                <input type="number" class="form-control" formControlName="cantidad" min="1">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Precio Unitario ($)</label>
+                <input type="number" class="form-control" formControlName="precioUnitario" step="0.01" min="0">
+              </div>
+
+              <div class="col-md-2 text-end mt-4">
+                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle" (click)="removerDetalle(i)" [disabled]="detalles.length === 1">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              
+            </div>
+          </div>
+
+        </div>
+
+        <div class="bg-light p-4 rounded-3 text-end mb-4 border">
+          <h4 class="mb-0 text-success fw-bold">Total estimado: ${{ calcularTotal() | number:'1.2-2' }}</h4>
+        </div>
+
+        <div class="d-flex justify-content-end gap-3">
+          <button type="button" routerLink="/panel/compras-proveedores" class="btn btn-light px-4">Cancelar</button>
+          <button type="submit" class="btn btn-success px-5 shadow-sm" [disabled]="form.invalid || guardando">
+            <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+            Registrar Compra
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>

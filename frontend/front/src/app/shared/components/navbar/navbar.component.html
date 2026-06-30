@@ -15,6 +15,9 @@
         <span class="puntos"><i class="fa-solid fa-coins"></i> {{ perfil?.saldoPuntos || 0 }} pts</span>
       </div>
     </div>
+    <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isLightTheme ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'">
+      <i class="fa-solid" [ngClass]="isLightTheme ? 'fa-moon' : 'fa-sun'"></i>
+    </button>
     <button class="btn-logout" (click)="onLogout()">
       <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
     </button>
