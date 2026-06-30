@@ -18,6 +18,8 @@
   width: 30%;
   min-width: 400px;
   background: #ffffff;
+  color: #0f172a;
+  --placeholder-color: #94a3b8;
 
   display: flex;
   flex-direction: column;
@@ -27,13 +29,11 @@
 }
 
 .logo {
-  position: absolute;
-  top: 35px;
-  left: 50px;
-
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
+  margin-bottom: 15px;
 }
 
 .logo img {
@@ -112,6 +112,7 @@
   background: #F9FFFA;
 
   font-size: 15px;
+  color: #0f172a;
 }
 
 .input-group input:focus {

@@ -49,22 +49,14 @@ export const routes: Routes = [
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: ReportesComponent },
 
-      // RUTA HIJA NUEVA: Materia Prima (/panel/materia-prima)
-      { 
-        path: 'materia-prima', 
-        loadComponent: () => import('./features/materia-prima/materia-prima.component').then(m => m.MateriaPrimaComponent) 
-      },
+      // RUTA HIJA: Proveedores (/panel/proveedores)
+      { path: 'proveedores', loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component').then(c => c.ProveedoresListComponent) },
+      { path: 'proveedores/nuevo', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
+      { path: 'proveedores/editar/:id', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
 
-      // RUTA HIJA NUEVA: Panel del Cliente (/panel/cliente)
-      { 
-        path: 'cliente', 
-        loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
-        children: [
-          { path: 'perfil', loadComponent: () => import('./features/cliente-panel/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
-          { path: 'mis-compras', loadComponent: () => import('./features/cliente-panel/mis-compras/mis-compras.component').then(m => m.MisComprasComponent) },
-          { path: '', redirectTo: 'perfil', pathMatch: 'full' }
-        ]
-      },
+      // RUTA HIJA: Compras a Proveedores (/panel/compras-proveedores)
+      { path: 'compras-proveedores', loadComponent: () => import('./features/compras-proveedores/compras-list/compras-list.component').then(c => c.ComprasListComponent) },
+      { path: 'compras-proveedores/nueva', loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component').then(c => c.ComprasFormComponent) },
 
       // Redirección por defecto al entrar a /panel (Te manda a dashboard)
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

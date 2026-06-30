@@ -14,30 +14,30 @@
       </div>
 
       <div class="d-flex flex-wrap gap-2">
-        <button class="btn btn-outline-danger fw-semibold px-3 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2" 
-                style="font-size: 0.9rem;" (click)="exportarPDF()">
-          <i class="fa-regular fa-file-pdf"></i> Exportar a PDF
+        <button class="btn btn-outline-danger btn-sm fw-semibold px-2 py-1 rounded-3 shadow-sm d-flex align-items-center gap-1" 
+                (click)="exportarPDF()">
+          <i class="fa-regular fa-file-pdf"></i> PDF
         </button>
-        <button class="btn btn-outline-success fw-semibold px-3 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2" 
-                style="font-size: 0.9rem;" (click)="exportarExcel()">
-          <i class="fa-regular fa-file-excel"></i> Exportar a Excel
+        <button class="btn btn-outline-success btn-sm fw-semibold px-2 py-1 rounded-3 shadow-sm d-flex align-items-center gap-1" 
+                (click)="exportarExcel()">
+          <i class="fa-regular fa-file-excel"></i> Excel
         </button>
-        <button class="btn text-white fw-semibold px-4 py-2 rounded-3 shadow-sm d-flex align-items-center gap-2" 
-                style="background-color: var(--primary-color); font-size: 0.9rem;" (click)="crearNuevaRecompensa()">
+        <button class="btn btn-sm text-white fw-semibold px-3 py-1 rounded-3 shadow-sm d-flex align-items-center gap-1" 
+                style="background-color: var(--primary-color);" (click)="crearNuevaRecompensa()">
           <i class="fa-solid fa-plus"></i> Nueva Recompensa
         </button>
       </div>
     </div>
 
     <!-- Barra de Búsqueda y Paginador Superior -->
-    <div class="card shadow-sm border-0 rounded-4 bg-white p-3 mb-4">
+    <div class="card shadow-sm border-0 rounded-4 card-modern p-3 mb-4">
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
         <!-- Búsqueda -->
         <div class="input-group" style="max-width: 400px;">
-          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill">
+          <span class="input-group-text bg-transparent text-muted px-3 rounded-start-pill" style="border-color: var(--border);">
             <i class="fa-solid fa-search"></i>
           </span>
-          <input type="text" class="form-control border-start-0 ps-0 bg-light rounded-end-pill" 
+          <input type="text" class="form-control ps-0 bg-transparent text-white rounded-end-pill" style="border-color: var(--border); border-left: none;" 
                  placeholder="Buscar por nombre o descripción..." 
                  [(ngModel)]="terminoBusqueda" (input)="aplicarFiltrosYOrden()">
         </div>
@@ -45,11 +45,11 @@
         <!-- Paginador -->
         <div class="d-flex align-items-center gap-2">
           <span class="text-muted small fw-semibold">Mostrar:</span>
-          <select class="form-select form-select-sm border-0 bg-light fw-bold text-center rounded-pill shadow-sm cursor-pointer" 
-                  style="width: 70px;" (change)="cambiarItemsPorPagina($event)">
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
+          <select class="form-select form-select-sm bg-transparent text-white text-center rounded-pill shadow-sm cursor-pointer" 
+                  style="width: 70px; border-color: var(--border);" (change)="cambiarItemsPorPagina($event)">
+            <option style="color: black;" value="10" selected>10</option>
+            <option style="color: black;" value="20">20</option>
+            <option style="color: black;" value="50">50</option>
           </select>
           <span class="text-muted small fw-semibold ms-2">filas</span>
         </div>
@@ -57,10 +57,10 @@
     </div>
 
     <!-- Tabla de Resultados -->
-    <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden hover-lift">
+    <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 card-modern p-0 overflow-hidden hover-lift">
       <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
-          <thead style="background-color: #f8fafc;">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+          <thead>
             <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
               <th class="ps-4 py-3 fw-bold border-bottom-0">Icono</th>
               <th class="py-3 fw-bold border-bottom-0">Nombre Comercial</th>
@@ -72,18 +72,18 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of paginados" 
-                class="bg-white border-bottom cursor-pointer" 
+                class="border-bottom cursor-pointer" 
                 style="transition: all 0.2s ease;"
                 (click)="editarRecompensa(item)">
               
               <td class="ps-4 py-3">
-                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm border overflow-hidden" 
-                     style="width: 48px; height: 48px; background-color: #f8fafc;"
+                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm overflow-hidden" 
+                     style="width: 48px; height: 48px; background-color: rgba(255,255,255,0.05); border: 1px solid var(--border);"
                      [ngClass]="{'cursor-pointer hover-scale': item.imagenUrl}"
                      [title]="item.imagenUrl ? 'Ver imagen en grande' : ''"
                      (click)="item.imagenUrl ? abrirImagen(item, $event) : null">
                   <img *ngIf="item.imagenUrl" [src]="item.imagenUrl" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
-                  <div *ngIf="!item.imagenUrl" class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; color: #854d0e; font-size: 1.2rem; background-color: #fef08a;">
+                  <div *ngIf="!item.imagenUrl" class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; color: var(--text); font-size: 1.2rem;">
                     {{ obtenerEmoji(item.nombre) }}
                   </div>
                 </div>
@@ -91,7 +91,7 @@
 
               <td class="py-3">
                 <div class="d-flex flex-column">
-                  <span class="fw-bold" style="color: #1e293b; font-size: 0.95rem;">{{ item.nombre }}</span>
+                  <span class="fw-bold" style="font-size: 0.95rem;">{{ item.nombre }}</span>
                   <span class="text-muted text-truncate" style="font-size: 0.8rem; max-width: 250px;" [title]="item.descripcion">{{ item.descripcion || 'Sin descripción' }}</span>
                 </div>
               </td>
@@ -144,7 +144,7 @@
       </div>
 
       <!-- Paginador Footer -->
-      <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top" *ngIf="paginados.length > 0">
+      <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border) !important;" *ngIf="paginados.length > 0">
         <span class="text-muted small fw-medium">Mostrando {{ resumenPaginacion }}</span>
         
         <div class="d-flex gap-1">
@@ -184,11 +184,9 @@
   .cursor-pointer { cursor: pointer; }
   .btn-action { transition: all 0.2s ease; }
   .btn-action:hover { transform: scale(1.1); }
+</style>
+<style>
   tr.cursor-pointer:hover {
-    background-color: #f8fafc !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    z-index: 10;
-    position: relative;
+    background-color: rgba(255, 255, 255, 0.05) !important;
   }
 </style>
