@@ -31,6 +31,24 @@ export const routes: Routes = [
     component: PanelComponent, 
     canActivate: [authGuard], // Protege el panel y automáticamente a todas sus rutas hijas
     children: [
+  
+  // RUTA HIJA NUEVA: Materia Prima (/panel/materia-prima)
+  { 
+    path: 'materia-prima', 
+    loadComponent: () => import('./features/materia-prima/materia-prima.component').then(m => m.MateriaPrimaComponent) 
+  },
+
+  // RUTA HIJA NUEVA: Panel del Cliente (/panel/cliente)
+  { 
+    path: 'cliente', 
+    loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
+    children: [
+      { path: 'perfil', loadComponent: () => import('./features/cliente-panel/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
+      { path: 'mis-compras', loadComponent: () => import('./features/cliente-panel/mis-compras/mis-compras.component').then(m => m.MisComprasComponent) },
+      { path: '', redirectTo: 'perfil', pathMatch: 'full' }
+    ]
+  },
+
       // RUTA HIJA: Dashboard Global (/panel/dashboard)
       { path: 'dashboard', component: DashboardGlobalComponent },
 
