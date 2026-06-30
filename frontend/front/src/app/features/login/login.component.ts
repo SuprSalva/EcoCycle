@@ -35,20 +35,23 @@ export class LoginComponent {
     ).subscribe({
       next: (perfil) => {
         this.notificationService.hideLoading();
+        
         const rol = (perfil?.rol || '').toLowerCase();
+        
+        // Redirigir según el rol
         if (rol === 'admin' || rol === 'administrador') {
-          this.notificationService.toastSuccess('¡Inicio de sesión exitoso!');
-          this.router.navigate(['/panel']); 
+          this.notificationService.toastSuccess('¡Bienvenido Administrador!');
+          this.router.navigate(['/panel']); // Panel de administración
         } else {
-          this.notificationService.error('Acceso Denegado', 'Solo los administradores pueden ingresar al panel web.');
-          this.authService.logout().subscribe(); // Cerramos la sesión que Firebase acababa de abrir
+          this.notificationService.toastSuccess('¡Inicio de sesión exitoso!');
+          this.router.navigate(['/dashboard']); // O la ruta que quieras para usuarios normales
         }
       },
       error: (err) => {
         this.notificationService.hideLoading();
         console.error(err);
         this.notificationService.error('Error de Autenticación', 'Credenciales incorrectas o el usuario no existe.');
-        this.authService.logout().subscribe(); // Cerramos sesión por seguridad si falla el perfil
+        this.authService.logout().subscribe();
       }
     });
   }
