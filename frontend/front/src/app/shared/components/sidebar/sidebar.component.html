@@ -3,15 +3,14 @@
   <div class="sidebar-header">
     <div class="logo-seccion">
       <img src="/logos.png" alt="EcoCycle Logo">
-
       <div class="logo-text">
         <h2>EcoCycle</h2>
         <span>Panel</span>
       </div>
     </div>
-
-    <button class="menu-btn" (click)="toggleSidebar()">
+    <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
       <i class="fa-solid fa-bars"></i>
+      <span class="sr-only">Abrir menú</span>
     </button>
   </div>
 
@@ -77,6 +76,14 @@
       <span>Compras a Proveedores</span>
     </a>
 
+    <!-- 🔥 SOPORTE TÉCNICO (tu agregaste) -->
+    <a routerLink="/panel/soporte" 
+       class="item-menu" 
+       routerLinkActive="activo">
+      <i class="fa-solid fa-headset"></i> 
+      <span>Soporte Técnico</span>
+    </a>
+
     <div class="menu-section mt-3">Análisis</div>
 
     <a routerLink="/panel/reportes"
@@ -106,23 +113,19 @@
 
   </nav>
 
-
   <!-- Parte inferior -->
   <div class="sidebar-bottom">
 
     <a class="item-menu">
       <i class="fa-solid fa-bell"></i>
       <span>Notificaciones</span>
-
       <small>12</small>
     </a>
-
 
     <a class="item-menu">
       <i class="fa-solid fa-circle-question"></i>
       <span>Soporte</span>
     </a>
-
 
     <a class="item-menu">
       <i class="fa-solid fa-gear"></i>
@@ -130,19 +133,14 @@
     </a>
 
     <div class="usuario">
-
       <img src="/usuario.png">
-
       <div>
         <strong>Eco Admin</strong>
         <span>adminecocycle.com</span>
       </div>
-
       <i class="fa-solid fa-ellipsis-vertical"></i>
-
     </div>
 
   </div>
-
 
 </aside>

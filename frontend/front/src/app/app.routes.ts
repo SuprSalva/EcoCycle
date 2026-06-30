@@ -3,6 +3,7 @@ import { LoginComponent } from './features/login/login.component';
 import { RegistroComponent } from './features/registro/registro.component';
 import { PanelComponent } from './features/panel/panel.component'; 
 import { UsuariosComponent } from './features/usuarios/usuarios.component';
+import { SoporteComponent } from './features/soporte/soporte.component';
 import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-reciclaje.component';
 // 🌟 IMPORTAMOS EL COMPONENTE DEL CATÁLOGO MAESTRO
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
@@ -66,6 +67,8 @@ export const routes: Routes = [
 
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: ReportesComponent },
+      { path: 'soporte', component: SoporteComponent },
+      
 
       // RUTA HIJA: Proveedores (/panel/proveedores)
       { path: 'proveedores', loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component').then(c => c.ProveedoresListComponent) },

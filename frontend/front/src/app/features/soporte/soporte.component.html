@@ -1,0 +1,145 @@
+<div class="container my-5">
+  <div class="row">
+    
+    <!-- PANEL PRINCIPAL -->
+    <div class="col-md-12">
+      
+      <!-- Si es ADMIN - Panel de administración -->
+      <div *ngIf="esAdmin" class="card shadow-sm border-0 p-4 mb-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="text-primary mb-1">📬 Buzón de Valoraciones y Comentarios</h3>
+            <p class="text-muted small mb-0">Panel de auditoría global para revisar las incidencias y sugerencias enviadas por los clientes.</p>
+          </div>
+          <span class="badge bg-primary px-3 py-2 fs-6">{{ misComentarios.length }} Registros</span>
+        </div>
+      </div>
+
+      <!-- Si NO es ADMIN - Panel de usuario con formulario -->
+      <div *ngIf="!esAdmin" class="card shadow-sm border-0 p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="text-success mb-1">📝 Centro de Soporte</h3>
+            <p class="text-muted small mb-0">Envía tus comentarios y sugerencias para mejorar el servicio.</p>
+          </div>
+          <button class="btn btn-success btn-sm" (click)="toggleFormulario()">
+            {{ mostrandoFormulario ? '📋 Ver mis comentarios' : '✏️ Nuevo comentario' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Spinner de carga -->
+      <div *ngIf="cargando" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2">Consultando registros...</p>
+      </div>
+
+      <!-- FORMULARIO PARA NUEVO COMENTARIO (solo usuarios normales) -->
+      <div *ngIf="!esAdmin && mostrandoFormulario && !cargando" class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Nuevo Comentario</h5>
+          <form (ngSubmit)="enviarComentario()">
+            <div class="mb-3">
+              <label class="form-label">Asunto *</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                [(ngModel)]="nuevoComentario.asunto" 
+                name="asunto"
+                required
+                placeholder="Breve descripción del tema">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Categoría *</label>
+              <select class="form-select" [(ngModel)]="nuevoComentario.categoria" name="categoria">
+                <option value="Sugerencia">💡 Sugerencia</option>
+                <option value="Reporte de Fallo">🐛 Reporte de Fallo</option>
+                <option value="Problema con Puntos">🎯 Problema con Puntos</option>
+                <option value="Otro">📌 Otro</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Mensaje *</label>
+              <textarea 
+                class="form-control" 
+                rows="4"
+                [(ngModel)]="nuevoComentario.mensaje" 
+                name="mensaje"
+                required
+                placeholder="Describe detalladamente tu comentario..."></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success" [disabled]="cargando">
+                <span *ngIf="cargando" class="spinner-border spinner-border-sm me-2"></span>
+                Enviar
+              </button>
+              <button type="button" class="btn btn-secondary" (click)="toggleFormulario()">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay comentarios -->
+      <div *ngIf="!cargando && misComentarios.length === 0 && !mostrandoFormulario" class="alert alert-light text-center border p-5 shadow-sm">
+        <i class="fa-solid fa-folder-open text-muted fs-1 mb-3"></i>
+        <p class="mb-0 text-muted fw-bold">
+          {{ esAdmin ? 'No se han encontrado comentarios de clientes en el sistema.' : 'No has enviado ningún comentario aún.' }}
+        </p>
+      </div>
+
+      <!-- Listado de comentarios -->
+      <div *ngIf="misComentarios.length > 0 && !mostrandoFormulario" 
+           class="historial-container" 
+           style="max-height: 650px; overflow-y: auto; padding-right: 5px;">
+        <div *ngFor="let item of misComentarios" class="card mb-3 border-0 shadow-sm border-start border-4" 
+             [ngClass]="{
+               'border-success': item.estatus === 'Recibido' || item.estatus === 'Resuelto',
+               'border-warning': item.estatus === 'En revisión',
+               'border-primary': !item.estatus
+             }">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <span class="badge bg-light text-dark border me-2 px-2 py-1">{{ item.categoria }}</span>
+                <h5 class="card-title d-inline-block mb-0 align-middle text-dark fw-bold">{{ item.asunto }}</h5>
+                
+                <!-- Identificador del cliente -->
+                <div class="text-secondary small mt-2">
+                  <i class="fa-solid fa-user me-1"></i> <strong>Cliente:</strong> {{ item.email || 'Usuario Anónimo' }} 
+                  <span class="mx-2 text-muted">|</span>
+                  <i class="fa-solid fa-id-badge me-1"></i> <strong>UID:</strong> <code class="text-dark">{{ item.usuarioId || item.id }}</code>
+                </div>
+              </div>
+              
+              <span class="badge px-3 py-1" 
+                    [ngClass]="{
+                      'bg-success': item.estatus === 'Recibido' || item.estatus === 'Resuelto',
+                      'bg-warning text-dark': item.estatus === 'En revisión',
+                      'bg-primary': !item.estatus
+                    }">
+                {{ item.estatus || 'Pendiente' }}
+              </span>
+            </div>
+            
+            <!-- Detalle del Mensaje -->
+            <p class="card-text text-muted my-3 bg-light p-3 rounded" style="font-size: 0.95rem; line-height: 1.5;">
+              {{ item.mensaje }}
+            </p>
+            
+            <!-- Metadata inferior -->
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
+              <small class="text-muted">
+                <i class="fa-solid fa-calendar-day me-1"></i> 
+                Fecha de recepción: {{ formatFecha(item.fecha) }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
