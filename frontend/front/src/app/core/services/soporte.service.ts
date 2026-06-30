@@ -22,9 +22,14 @@ export class SoporteService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Trae el histórico global de comentarios recibidos desde los clientes.
-   */
+  crearComentario(comentario: ComentarioItem): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/crear`, comentario);
+  }
+
+  obtenerMisComentarios(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/mis-comentarios`);
+  }
+
   obtenerTodosLosComentarios(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/todos`);
   }
