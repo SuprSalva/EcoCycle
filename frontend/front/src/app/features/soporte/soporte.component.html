@@ -1,0 +1,78 @@
+<div class="container my-5">
+  <div class="row">
+    
+    <!-- PANEL PRINCIPAL DE ADMINISTRACIÓN (100% del ancho) -->
+    <div class="col-md-12">
+      <div class="card shadow-sm border-0 p-4 mb-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="text-primary mb-1">📬 Buzón de Valoraciones y Comentarios</h3>
+            <p class="text-muted small mb-0">Panel de auditoría global para revisar las incidencias y sugerencias enviadas por los clientes.</p>
+          </div>
+          <span class="badge bg-primary px-3 py-2 fs-6">{{ misComentarios.length }} Registros</span>
+        </div>
+      </div>
+
+      <!-- Spinner de carga -->
+      <div *ngIf="cargando && misComentarios.length === 0" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2">Consultando registros en base de datos...</p>
+      </div>
+
+      <!-- Mensaje si la colección de Firebase está vacía -->
+      <div *ngIf="!cargando && misComentarios.length === 0" class="alert alert-light text-center border p-5 shadow-sm">
+        <i class="fa-solid fa-folder-open text-muted fs-1 mb-3"></i>
+        <p class="mb-0 text-muted fw-bold">No se han encontrado comentarios o valoraciones de clientes en el sistema.</p>
+      </div>
+
+      <!-- Listado de comentarios a ancho completo -->
+      <div *ngIf="misComentarios.length > 0" class="historial-container" style="max-height: 650px; overflow-y: auto; padding-right: 5px;">
+        <div *ngFor="let item of misComentarios" class="card mb-3 border-0 shadow-sm border-start border-4" 
+             [ngClass]="{
+               'border-success': item.estatus === 'Recibido' || item.estatus === 'Resuelto',
+               'border-warning': item.estatus === 'En revisión',
+               'border-primary': !item.estatus
+             }">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <span class="badge bg-light text-dark border me-2 px-2 py-1">{{ item.categoria }}</span>
+                <h5 class="card-title d-inline-block mb-0 align-middle text-dark fw-bold">{{ item.asunto }}</h5>
+                
+                <!-- Identificador del cliente -->
+                <div class="text-secondary small mt-2">
+                  <i class="fa-solid fa-user me-1"></i> <strong>Cliente:</strong> {{ item.email || 'Usuario Anónimo' }} 
+                  <span class="mx-2 text-muted">|</span>
+                  <i class="fa-solid fa-id-badge me-1"></i> <strong>UID:</strong> <code class="text-dark">{{ item.usuarioId || item.id }}</code>
+                </div>
+              </div>
+              
+              <span class="badge px-3 py-1" 
+                    [ngClass]="{
+                      'bg-success': item.estatus === 'Recibido' || item.estatus === 'Resuelto',
+                      'bg-warning text-dark': item.estatus === 'En revisión',
+                      'bg-primary': !item.estatus
+                    }">
+                {{ item.estatus || 'Pendiente' }}
+              </span>
+            </div>
+            
+            <!-- Detalle del Mensaje -->
+            <p class="card-text text-muted my-3 bg-light p-3 rounded" style="font-size: 0.95rem; line-height: 1.5;">
+              {{ item.mensaje }}
+            </p>
+            
+            <!-- Metadata inferior -->
+            <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light">
+              <small class="text-muted">
+                <i class="fa-solid fa-calendar-day me-1"></i> 
+                Fecha de recepción: {{ (item.fecha?.seconds ? (item.fecha.seconds * 1000) : item.fecha) | date:'dd MMM yyyy, h:mm a' }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

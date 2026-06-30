@@ -3,6 +3,7 @@ import { LoginComponent } from './features/login/login.component';
 import { RegistroComponent } from './features/registro/registro.component';
 import { PanelComponent } from './features/panel/panel.component'; 
 import { UsuariosComponent } from './features/usuarios/usuarios.component';
+import { SoporteComponent } from './features/soporte/soporte.component';
 import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-reciclaje.component';
 // 🌟 IMPORTAMOS EL COMPONENTE DEL CATÁLOGO MAESTRO
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
@@ -40,6 +41,8 @@ export const routes: Routes = [
 
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: ReportesComponent },
+      { path: 'soporte', component: SoporteComponent },
+      
 
       // Redirección por defecto al entrar a /panel (Te manda a dashboard)
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
