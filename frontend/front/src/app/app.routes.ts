@@ -13,15 +13,18 @@ import { HistorialRecompensasComponent } from './features/historial-recompensas/
 import { ErrorPageComponent } from './features/error-page/error-page.component';
 import { NosotrosComponent } from './features/nosotros/nosotros.component';
 import { ContactoComponent } from './features/contacto/contacto.component';
+import { ProductoComponent } from './features/producto/producto.component';
 
 
 export const routes: Routes = [
+ 
   // 1. Rutas Públicas (Cualquiera puede entrar)
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
-  
+  { path: 'producto', component: ProductoComponent },
+ 
   // 2. Ruta Padre del Panel (PROTEGIDA BAJO LLAVE)
   { 
     path: 'panel', 
