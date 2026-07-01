@@ -62,6 +62,9 @@ export const routes: Routes = [
       // 🌟 RUTA HIJA NUEVA: Catálogo Maestro (/panel/catalogo)
       { path: 'catalogo', component: CatalogoComponent },
 
+      // RUTA HIJA: Notificaciones (/panel/notificaciones)
+      { path: 'notificaciones', loadComponent: () => import('./features/notificaciones/notificaciones.component').then(c => c.NotificacionesComponent) },
+
       // RUTA HIJA: Historial de Recompensas (/panel/historial-recompensas)
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
 

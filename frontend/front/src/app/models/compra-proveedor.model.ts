@@ -1,6 +1,6 @@
 export interface DetalleCompra {
-  recompensaId: string;
-  nombreRecompensa: string;
+  materiaPrimaId?: string;
+  nombreMateriaPrima: string;
   cantidad: number;
   precioUnitario: number;
 }

@@ -16,111 +16,30 @@
 
   <div class="search-box">
     <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" placeholder="Buscar">
+    <input type="text" placeholder="Buscar" [(ngModel)]="searchTerm">
   </div>
 
   <nav class="menu-navegacion">
+    <ng-container *ngFor="let group of filteredMenu">
+      <div class="menu-section mt-3">{{ group.section }}</div>
+      
+      <a *ngFor="let item of group.items" 
+         [routerLink]="item.route"
+         class="item-menu"
+         routerLinkActive="activo">
+        <i [class]="item.icon"></i>
+        <span>{{ item.name }}</span>
+      </a>
+    </ng-container>
 
-    <div class="menu-section">Principal</div>
-
-    <a routerLink="/panel/dashboard"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-house"></i>
-      <span>Dashboard</span>
-    </a>
-
-    <a routerLink="/panel/usuarios"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-users"></i>
-      <span>Usuarios</span>
-    </a>
-
-    <div class="menu-section mt-3">Operaciones</div>
-
-    <a routerLink="/panel/reciclaje"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-cube"></i>
-      <span>Terminal IoT</span>
-    </a>
-
-    <a routerLink="/panel/catalogo"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-box"></i>
-      <span>Catálogo</span>
-    </a>
-
-    <a routerLink="/panel/historial-recompensas"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-layer-group"></i>
-      <span>Recompensas</span>
-    </a>
-
-    <div class="menu-section mt-3">Abastecimiento</div>
-
-    <a routerLink="/panel/proveedores"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-truck"></i>
-      <span>Proveedores</span>
-    </a>
-
-    <a routerLink="/panel/compras-proveedores"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-cart-shopping"></i>
-      <span>Compras a Proveedores</span>
-    </a>
-
-    <!-- 🔥 SOPORTE TÉCNICO (tu agregaste) -->
-    <a routerLink="/panel/soporte" 
-       class="item-menu" 
-       routerLinkActive="activo">
-      <i class="fa-solid fa-headset"></i> 
-      <span>Soporte Técnico</span>
-    </a>
-
-    <div class="menu-section mt-3">Análisis</div>
-
-    <a routerLink="/panel/reportes"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-chart-column"></i>
-      <span>Reportes</span>
-    </a>
-
-    <a routerLink="/panel/materia-prima"
-       class="item-menu"
-       routerLinkActive="activo">
-
-      <i class="fa-solid fa-warehouse"></i>
-      <span>Materia Prima</span>
-
-    </a>
-
-    <a routerLink="/panel/cliente"
-       class="item-menu"
-       routerLinkActive="activo">
-
-      <i class="fa-solid fa-user-circle"></i>
-      <span>Portal Cliente</span>
-
-    </a>
-
+    <div *ngIf="filteredMenu.length === 0" class="text-center py-4 px-3 text-muted">
+      <i class="fa-solid fa-ghost fs-3 mb-2" style="opacity: 0.3;"></i>
+      <p class="small mb-0">No se encontraron resultados para "{{ searchTerm }}"</p>
+    </div>
   </nav>
 
   <!-- Parte inferior -->
   <div class="sidebar-bottom">
-
-    <a class="item-menu">
-      <i class="fa-solid fa-bell"></i>
-      <span>Notificaciones</span>
-      <small>12</small>
-    </a>
 
     <a class="item-menu">
       <i class="fa-solid fa-circle-question"></i>
@@ -132,11 +51,11 @@
       <span>Configuración</span>
     </a>
 
-    <div class="usuario">
+    <div class="usuario" *ngIf="perfil">
       <img src="/usuario.png">
       <div>
-        <strong>Eco Admin</strong>
-        <span>adminecocycle.com</span>
+        <strong>{{ perfil.nombre || 'Eco Admin' }}</strong>
+        <span>{{ perfil.correo || 'admin@ecocycle.com' }}</span>
       </div>
       <i class="fa-solid fa-ellipsis-vertical"></i>
     </div>

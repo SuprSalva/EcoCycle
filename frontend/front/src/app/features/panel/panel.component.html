@@ -1,6 +1,6 @@
 <div class="dashboard-container">
 
-  <app-sidebar></app-sidebar>
+  <app-sidebar [perfil]="perfil"></app-sidebar>
 
   <main class="contenido-principal">
     <app-navbar [perfil]="perfil" (logout)="logout()"></app-navbar>

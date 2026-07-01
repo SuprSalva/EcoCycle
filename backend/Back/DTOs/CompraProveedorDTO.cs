@@ -2,8 +2,8 @@ namespace Back.DTOs;
 
 public class DetalleCompraDTO
 {
-    public string RecompensaId { get; set; } = string.Empty;
-    public string NombreRecompensa { get; set; } = string.Empty;
+    public string MateriaPrimaId { get; set; } = string.Empty;
+    public string NombreMateriaPrima { get; set; } = string.Empty;
     public int Cantidad { get; set; }
     public double PrecioUnitario { get; set; }
 }

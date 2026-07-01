@@ -15,9 +15,49 @@
         <span class="puntos"><i class="fa-solid fa-coins"></i> {{ perfil?.saldoPuntos || 0 }} pts</span>
       </div>
     </div>
-    <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isLightTheme ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'">
-      <i class="fa-solid" [ngClass]="isLightTheme ? 'fa-moon' : 'fa-sun'"></i>
-    </button>
+    <div class="position-relative">
+      <button class="btn-theme-toggle" title="Notificaciones" (click)="toggleNotifications()">
+        <i class="fa-solid fa-bell"></i>
+        <span *ngIf="unreadCount > 0" class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="width: 10px; height: 10px;">
+          <span class="visually-hidden">Nuevas notificaciones</span>
+        </span>
+      </button>
+
+      <!-- Dropdown de notificaciones -->
+      <div *ngIf="showNotifications" class="dropdown-menu-custom shadow-sm bg-white" style="position: absolute; top: calc(100% + 10px); right: 0; width: 320px; border-radius: 16px; border: 1px solid var(--border); z-index: 1050; padding: 0;">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="border-radius: 16px 16px 0 0;">
+          <h6 class="m-0 fw-bold">Notificaciones</h6>
+          <span *ngIf="unreadCount > 0" class="badge bg-primary rounded-pill">{{ unreadCount }} nuevas</span>
+        </div>
+        
+        <div class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+          <!-- Real notifications -->
+          <a *ngFor="let notif of notificaciones | slice:0:5" 
+             [ngClass]="notif.leida ? 'bg-transparent' : 'bg-light'"
+             class="list-group-item list-group-item-action p-3 border-bottom" style="cursor: pointer;">
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1 fw-bold text-dark" style="font-size: 0.85rem;">
+                <i [class]="getIcono(notif.icono) + ' me-2'"></i>{{ notif.titulo }}
+              </h6>
+              <small class="text-muted" style="font-size: 0.7rem;">{{ formatearFecha(notif.fecha) }}</small>
+            </div>
+            <p class="mb-1 text-muted text-truncate" style="font-size: 0.8rem; max-width: 250px;">{{ notif.descripcion }}</p>
+          </a>
+
+          <!-- Empty state -->
+          <div *ngIf="notificaciones.length === 0" class="text-center py-4 text-muted">
+            <i class="fa-regular fa-bell-slash fs-4 mb-2" style="opacity: 0.4;"></i>
+            <p class="mb-0 small">No hay notificaciones</p>
+          </div>
+        </div>
+        
+        <div class="p-2 border-top text-center" style="border-radius: 0 0 16px 16px; background-color: #F8FAFC;">
+          <a routerLink="/panel/notificaciones" (click)="toggleNotifications()" class="text-primary fw-bold text-decoration-none" style="font-size: 0.85rem;">
+            Ver todas las notificaciones
+          </a>
+        </div>
+      </div>
+    </div>
     <button class="btn-logout" (click)="onLogout()">
       <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
     </button>
