@@ -22,6 +22,9 @@ export class HistorialRecompensasComponent implements OnInit {
   fechaInicio: string = '';
   fechaFin: string = '';
 
+  // Búsqueda
+  busquedaCodigo: string = '';
+
   // Paginación
   paginaActual: number = 1;
   itemsPorPagina: number = 10;
@@ -57,7 +60,7 @@ export class HistorialRecompensasComponent implements OnInit {
     this.recompensaService.obtenerHistorialCanjesAdmin(inicioIso, finIso).subscribe({
       next: (response: any) => {
         this.notificationService.hideLoading();
-        if (response && response.succeeded) {
+        if (response && response.suceso) {
           this.listaCanjesOriginal = response.data;
         } else {
           this.listaCanjesOriginal = response?.data || [];
@@ -87,11 +90,20 @@ export class HistorialRecompensasComponent implements OnInit {
   limpiarFiltros(): void {
     this.fechaInicio = '';
     this.fechaFin = '';
+    this.busquedaCodigo = '';
     this.cargarHistorial();
   }
 
   aplicarFiltrosYOrden(): void {
     let filtrados = [...this.listaCanjesOriginal];
+    
+    if (this.busquedaCodigo && this.busquedaCodigo.trim() !== '') {
+      const termino = this.busquedaCodigo.toLowerCase().trim();
+      filtrados = filtrados.filter(c => 
+        c.codigoCanje && c.codigoCanje.toLowerCase().includes(termino)
+      );
+    }
+    
     this.listaCanjesFiltrada = filtrados;
     this.totalPaginas = Math.ceil(this.listaCanjesFiltrada.length / this.itemsPorPagina);
     if (this.paginaActual > this.totalPaginas && this.totalPaginas > 0) {
@@ -111,13 +123,27 @@ export class HistorialRecompensasComponent implements OnInit {
     }
   }
 
-  marcarComoReclamado(id: string): void {
-    if (confirm('¿Estás seguro de marcar esta recompensa como entregada/reclamada?')) {
+  canjeSeleccionadoParaReclamar: string | null = null;
+  mostrarModalReclamar: boolean = false;
+
+  abrirModalReclamar(id: string): void {
+    this.canjeSeleccionadoParaReclamar = id;
+    this.mostrarModalReclamar = true;
+  }
+
+  cerrarModalReclamar(): void {
+    this.mostrarModalReclamar = false;
+    this.canjeSeleccionadoParaReclamar = null;
+  }
+
+  confirmarReclamar(): void {
+    if (this.canjeSeleccionadoParaReclamar) {
       this.notificationService.showLoading('Procesando...', 'Marcando como reclamado');
-      this.recompensaService.marcarCanjeReclamado(id).subscribe({
+      this.recompensaService.marcarCanjeReclamado(this.canjeSeleccionadoParaReclamar).subscribe({
         next: (response: any) => {
           this.notificationService.hideLoading();
-          if (response && response.succeeded) {
+          this.cerrarModalReclamar();
+          if (response && response.suceso) {
             this.notificationService.success('Éxito', 'Recompensa marcada como entregada.');
             this.cargarHistorial();
           } else {
@@ -126,6 +152,7 @@ export class HistorialRecompensasComponent implements OnInit {
         },
         error: (err: any) => {
           this.notificationService.hideLoading();
+          this.cerrarModalReclamar();
           console.error(err);
           this.notificationService.error('Error', 'Ocurrió un error al actualizar el estado.');
         }
