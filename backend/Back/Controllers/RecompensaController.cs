@@ -3,7 +3,6 @@ using Back.DTOs.Request;
 using Back.DTOs.Response;
 using Back.Entities;
 using Back.Repositories.Interfaces;
-using Back.Repositories.Interfaces;
 using Back.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +12,19 @@ namespace Back.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class RecompensaController(Back.Repositories.Interfaces.IRecompensaRepository recompensaRepository, Back.Repositories.Interfaces.IUsuarioRepository usuarioRepository) : ControllerBase
+public class RecompensaController(IRecompensaRepository recompensaRepository, IUsuarioRepository usuarioRepository) : ControllerBase
 {
     private string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value ?? string.Empty;
+
+    /// <summary>
+    /// Genera un código de canje corto de 6 caracteres (letras y números, sin ambiguos 0/O/1/I).
+    /// </summary>
+    private static string GenerarCodigoCanje()
+    {
+        const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetRecompensas()
@@ -56,7 +65,10 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
             UsuarioId = usuario.Id,
             RecompensaId = recompensa.Id,
             PuntosUsados = recompensa.CostoPuntos,
-            Fecha = DateTime.UtcNow
+            Fecha = DateTime.UtcNow,
+            CodigoCanje = GenerarCodigoCanje(),
+            Reclamado = false,
+            FechaReclamado = null
         };
 
         // Guardar cambios
@@ -64,7 +76,71 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
         await recompensaRepository.GuardarAsync(recompensa);
         await recompensaRepository.RegistrarCanjeAsync(canje);
 
-        return Ok(ApiResponse<object>.Ok(new { canjeId = canje.Id, nuevoSaldo = usuario.SaldoPuntos }, "Canje realizado correctamente."));
+        return Ok(ApiResponse<object>.Ok(new
+        {
+            canjeId = canje.Id,
+            codigoCanje = canje.CodigoCanje,
+            nuevoSaldo = usuario.SaldoPuntos,
+            recompensaNombre = recompensa.Nombre
+        }, "Canje realizado correctamente."));
+    }
+
+    /// <summary>
+    /// Devuelve todos los canjes del usuario autenticado, incluyendo estado de reclamación y código.
+    /// </summary>
+    [HttpGet("mis-canjes")]
+    public async Task<IActionResult> GetMisCanjes()
+    {
+        var userId = GetUserId();
+        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+        var canjes = await recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
+
+        var recompensasCache = new Dictionary<string, Recompensa?>();
+        var responseList = new List<CanjeUsuarioResponse>();
+
+        foreach (var canje in canjes.OrderByDescending(c => c.Fecha))
+        {
+            if (!recompensasCache.ContainsKey(canje.RecompensaId))
+            {
+                recompensasCache[canje.RecompensaId] = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
+            }
+            var recompensa = recompensasCache[canje.RecompensaId];
+
+            responseList.Add(new CanjeUsuarioResponse
+            {
+                Id = canje.Id,
+                CodigoCanje = canje.CodigoCanje,
+                RecompensaId = canje.RecompensaId,
+                RecompensaNombre = recompensa?.Nombre ?? "Premio Eliminado",
+                RecompensaImagenUrl = recompensa?.ImagenUrl,
+                PuntosUsados = canje.PuntosUsados,
+                Fecha = canje.Fecha,
+                Reclamado = canje.Reclamado,
+                FechaReclamado = canje.FechaReclamado
+            });
+        }
+
+        return Ok(ApiResponse<List<CanjeUsuarioResponse>>.Ok(responseList));
+    }
+
+    /// <summary>
+    /// Endpoint para que el ADMIN marque un canje como reclamado (cuando el usuario va a recoger su premio).
+    /// </summary>
+    [HttpPut("canjes/{canjeId}/reclamar")]
+    public async Task<IActionResult> MarcarReclamado(string canjeId)
+    {
+        var canje = await recompensaRepository.ObtenerCanjePorIdAsync(canjeId);
+        if (canje == null) return NotFound(ApiResponse<object>.Fail("Canje no encontrado."));
+
+        if (canje.Reclamado)
+            return BadRequest(ApiResponse<object>.Fail("Este canje ya fue marcado como reclamado."));
+
+        canje.Reclamado = true;
+        canje.FechaReclamado = DateTime.UtcNow;
+        await recompensaRepository.ActualizarCanjeAsync(canje);
+
+        return Ok(ApiResponse<object>.Ok(new { canjeId = canje.Id, fechaReclamado = canje.FechaReclamado }, "Canje marcado como reclamado correctamente."));
     }
 
     [HttpGet("admin")]
@@ -78,13 +154,13 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
     public async Task<IActionResult> GetCanjesAdmin([FromQuery] DateTime? inicio, [FromQuery] DateTime? fin)
     {
         var todosLosCanjes = await recompensaRepository.ObtenerTodosLosCanjesAsync();
-        
+
         // Filtrar por fecha si vienen los parámetros
         if (inicio.HasValue)
         {
             todosLosCanjes = todosLosCanjes.Where(c => c.Fecha.Date >= inicio.Value.Date).ToList();
         }
-        
+
         if (fin.HasValue)
         {
             todosLosCanjes = todosLosCanjes.Where(c => c.Fecha.Date <= fin.Value.Date).ToList();
@@ -92,11 +168,6 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
 
         var responseList = new List<CanjeAdminResponse>();
 
-        // Para evitar múltiples consultas a BD innecesarias si hay muchos canjes del mismo usuario/recompensa,
-        // podríamos usar un diccionario en memoria, pero para mantener la simplicidad y ya que Firestore
-        // cachea en el contexto de la solicitud, haremos las consultas por Id.
-        
-        // Optimización básica con diccionarios:
         var usuariosCache = new Dictionary<string, Usuario?>();
         var recompensasCache = new Dictionary<string, Recompensa?>();
 
@@ -117,13 +188,16 @@ public class RecompensaController(Back.Repositories.Interfaces.IRecompensaReposi
             responseList.Add(new CanjeAdminResponse
             {
                 Id = canje.Id,
+                CodigoCanje = canje.CodigoCanje,
                 UsuarioId = canje.UsuarioId,
                 UsuarioNombre = usuario != null ? $"{usuario.Nombre} {usuario.Apellidos}".Trim() : "Usuario Desconocido",
                 UsuarioEmail = usuario?.Email ?? "Sin Email",
                 RecompensaId = canje.RecompensaId,
                 RecompensaNombre = recompensa?.Nombre ?? "Recompensa Eliminada/Desconocida",
                 PuntosUsados = canje.PuntosUsados,
-                Fecha = canje.Fecha
+                Fecha = canje.Fecha,
+                Reclamado = canje.Reclamado,
+                FechaReclamado = canje.FechaReclamado
             });
         }
 
