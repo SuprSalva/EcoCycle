@@ -1,0 +1,313 @@
+.producto-container {
+    width: 100%;
+    overflow: hidden;
+}
+
+.navbar-login {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+    background: #ffffff;
+}
+
+.navbar-login a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: .3s;
+}
+
+.navbar-login a:hover {
+    color: #4caf50;
+}
+
+
+/* HERO */
+
+.hero {
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    color: white;
+    z-index: 2;
+}
+
+.hero-content h1 {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.hero-content p {
+    font-size: 22px;
+}
+
+.hero-content button,
+.btn-primary {
+    margin-top: 20px;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    background: #4caf50;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+
+/* GALERIA */
+
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    padding: 50px;
+}
+
+.galeria img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+
+
+/* INFORMACION */
+
+.informacion {
+    padding: 60px 8%;
+    text-align: center;
+}
+
+.informacion h2,
+.titulo-valores h2 {
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+
+.card {
+    width: 320px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    transition: .3s;
+}
+
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+
+.card img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+}
+
+
+.card-content {
+    padding: 20px;
+}
+
+
+
+/* SECCIONES DOBLES */
+
+.mision-section,
+.vision-section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    padding: 70px 8%;
+}
+
+
+.promo-card {
+    width: 50%;
+}
+
+
+.text-card-mision,
+.text-card-vision {
+    padding: 40px;
+}
+
+
+.text-card-mision h2,
+.text-card-vision h2 {
+    font-size: 35px;
+}
+
+
+.image-card img {
+    width: 100%;
+    border-radius: 25px;
+}
+
+
+
+/* BENEFICIOS */
+
+.valores-section {
+    padding: 70px 8%;
+    text-align: center;
+}
+
+
+.contenedor-valores {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+
+.card-valor {
+    width: 300px;
+    padding: 35px 25px;
+    border-radius: 20px;
+    background: #f5f5f5;
+}
+
+
+.card-valor i {
+    font-size: 35px;
+    margin-bottom: 15px;
+}
+
+
+
+/* FINAL */
+
+.final-section {
+    height: 450px;
+    position: relative;
+}
+
+
+.final-section .background {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.final-content {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color:white;
+    text-align:center;
+}
+
+
+.final-content h2 {
+    font-size:45px;
+}
+
+
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+
+    .galeria {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .mision-section,
+    .vision-section {
+        flex-direction: column;
+    }
+
+    .promo-card {
+        width:100%;
+    }
+
+    .contenedor-valores {
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .hero-content h1 {
+        font-size:40px;
+    }
+
+}
+
+
+@media(max-width:600px){
+
+    .galeria {
+        grid-template-columns:1fr;
+        padding:25px;
+    }
+
+    .navbar-login {
+        gap:15px;
+        flex-wrap:wrap;
+    }
+
+    .hero {
+        height:450px;
+    }
+
+}
+
+.navbar-login {
+    position: absolute;
+    top: 35px;
+    right: 60px;
+    display: flex;
+    gap: 50px;
+    z-index: 3;
+  }
+  
+  .navbar-login a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    transition: .3s;
+  }
+  
+  .navbar-login a:hover {
+    color: #3CBD3D;
+  }
+  
