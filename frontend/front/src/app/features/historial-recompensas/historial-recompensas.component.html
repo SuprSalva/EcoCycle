@@ -59,6 +59,7 @@
             <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Recompensa Canjeada</th>
             <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Puntos Costo</th>
             <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Fecha y Hora</th>
+            <th class="pe-4 py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -92,11 +93,31 @@
                 <span class="text-muted small">{{ c.fecha | date:'shortTime' }}</span>
               </div>
             </td>
+
+            <td class="pe-4 py-3">
+              <div *ngIf="c.reclamado">
+                <span class="badge rounded-pill bg-success" style="padding: 6px 12px; font-size: 0.8rem;">
+                  <i class="fa-solid fa-check me-1"></i> Reclamado
+                </span>
+                <div *ngIf="c.fechaReclamado" class="small text-muted mt-1">{{ c.fechaReclamado | date:'dd MMM, shortTime' }}</div>
+              </div>
+              <div *ngIf="!c.reclamado" class="d-flex flex-column align-items-start">
+                <span class="badge rounded-pill bg-warning text-dark" style="padding: 6px 12px; font-size: 0.8rem;">
+                  <i class="fa-regular fa-clock me-1"></i> Pendiente
+                </span>
+                <div *ngIf="c.codigoCanje" class="fw-bold text-dark mt-1" style="font-family: monospace; font-size: 1rem; letter-spacing: 1px; background: #f8f9fa; padding: 2px 6px; border-radius: 4px; border: 1px solid #dee2e6;">
+                  {{ c.codigoCanje }}
+                </div>
+                <button class="btn btn-sm btn-outline-primary mt-2 shadow-sm rounded-3 hover-lift fw-medium" (click)="marcarComoReclamado(c.id)" style="font-size: 0.75rem; padding: 4px 10px;">
+                  <i class="fa-solid fa-clipboard-check me-1"></i> Marcar Entregado
+                </button>
+              </div>
+            </td>
           </tr>
 
           <!-- Estado Vacío -->
           <tr *ngIf="paginados.length === 0">
-            <td colspan="4" class="text-center py-5">
+            <td colspan="5" class="text-center py-5">
               <div class="d-flex flex-column align-items-center fade-in-up">
                 <div class="rounded-circle d-flex align-items-center justify-content-center mb-3 pulse-animation" 
                      style="width: 80px; height: 80px; background-color: #f1f5f9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);">

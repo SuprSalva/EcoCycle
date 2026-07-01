@@ -111,6 +111,28 @@ export class HistorialRecompensasComponent implements OnInit {
     }
   }
 
+  marcarComoReclamado(id: string): void {
+    if (confirm('¿Estás seguro de marcar esta recompensa como entregada/reclamada?')) {
+      this.notificationService.showLoading('Procesando...', 'Marcando como reclamado');
+      this.recompensaService.marcarCanjeReclamado(id).subscribe({
+        next: (response: any) => {
+          this.notificationService.hideLoading();
+          if (response && response.succeeded) {
+            this.notificationService.success('Éxito', 'Recompensa marcada como entregada.');
+            this.cargarHistorial();
+          } else {
+            this.notificationService.error('Error', response?.message || 'No se pudo actualizar el estado.');
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.hideLoading();
+          console.error(err);
+          this.notificationService.error('Error', 'Ocurrió un error al actualizar el estado.');
+        }
+      });
+    }
+  }
+
   get paginados(): any[] {
     const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
     const fin = inicio + this.itemsPorPagina;
@@ -126,25 +148,29 @@ export class HistorialRecompensasComponent implements OnInit {
 
   // --- EXPORTACIONES ---
   exportarPDF(): void {
-    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora'];
+    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora', 'Código', 'Estado'];
     const data = this.listaCanjesFiltrada.map(c => [
       c.usuarioNombre,
       c.usuarioEmail,
       c.recompensaNombre,
       `${c.puntosUsados} Pts`,
-      new Date(c.fecha).toLocaleString()
+      new Date(c.fecha).toLocaleString(),
+      c.codigoCanje || '-',
+      c.reclamado ? 'Reclamado' : 'Pendiente'
     ]);
     this.exportService.exportToPDF('Historial de Recompensas', headers, data, 'historial_recompensas.pdf');
   }
 
   exportarExcel(): void {
-    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora'];
+    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora', 'Código', 'Estado'];
     const data = this.listaCanjesFiltrada.map(c => [
       c.usuarioNombre,
       c.usuarioEmail,
       c.recompensaNombre,
       c.puntosUsados,
-      new Date(c.fecha).toLocaleString()
+      new Date(c.fecha).toLocaleString(),
+      c.codigoCanje || '-',
+      c.reclamado ? 'Reclamado' : 'Pendiente'
     ]);
     this.exportService.exportToExcel('Historial de Recompensas', headers, data, 'historial_recompensas.xlsx');
   }
