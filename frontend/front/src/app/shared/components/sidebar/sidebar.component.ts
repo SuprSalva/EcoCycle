@@ -1,22 +1,12 @@
-<<<<<<< HEAD
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-=======
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
->>>>>>> origin/main
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-<<<<<<< HEAD
-  imports: [RouterModule, CommonModule],
-=======
   imports: [CommonModule, RouterModule, FormsModule],
->>>>>>> origin/main
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
