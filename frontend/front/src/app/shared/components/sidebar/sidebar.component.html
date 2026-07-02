@@ -8,6 +8,15 @@
         <span>Panel</span>
       </div>
     </div>
+    
+    <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isLightTheme ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'">
+      <i class="fa-solid" [ngClass]="isLightTheme ? 'fa-moon' : 'fa-sun'"></i>
+    </button>
+
+    <button class="btn-logout" (click)="onLogout()">
+      <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+    </button>
+
     <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
       <i class="fa-solid fa-bars"></i>
       <span class="sr-only">Abrir menú</span>

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { BarComponent } from '../../shared/components/bar/bar.component';
 
 @Component({
   selector: 'app-contacto',
   standalone: true,
-  imports: [],
+  imports: [BarComponent],
   templateUrl: './contacto.component.html',
   styleUrl: './contacto.component.scss'
 })
