@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormArray } fr
 import { Router, RouterLink } from '@angular/router';
 import { CompraService } from '../../../core/services/compra.service';
 import { ProveedorService } from '../../../core/services/proveedor.service';
-import { RecompensaService } from '../../../core/services/recompensa.service';
+import { MateriaPrimaService, MateriaPrima } from '../../../core/services/materia-prima.service';
 import { Proveedor } from '../../../models/proveedor.model';
 import Swal from 'sweetalert2';
 
@@ -18,14 +18,14 @@ import Swal from 'sweetalert2';
 export class ComprasFormComponent implements OnInit {
   form: FormGroup;
   proveedores: Proveedor[] = [];
-  recompensas: any[] = [];
+  materiasPrimas: MateriaPrima[] = [];
   guardando = false;
 
   constructor(
     private fb: FormBuilder,
     private compraService: CompraService,
     private proveedorService: ProveedorService,
-    private recompensaService: RecompensaService,
+    private materiaPrimaService: MateriaPrimaService,
     private router: Router
   ) {
     this.form = this.fb.group({
@@ -36,7 +36,7 @@ export class ComprasFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarProveedores();
-    this.cargarRecompensas();
+    this.cargarMateriasPrimas();
     this.agregarDetalle(); // Add one row by default
   }
 
@@ -46,7 +46,7 @@ export class ComprasFormComponent implements OnInit {
 
   agregarDetalle(): void {
     const detalleForm = this.fb.group({
-      recompensaId: ['', Validators.required],
+      nombreMateriaPrima: ['', Validators.required],
       cantidad: [1, [Validators.required, Validators.min(1)]],
       precioUnitario: [0, [Validators.required, Validators.min(0.01)]]
     });
@@ -65,9 +65,9 @@ export class ComprasFormComponent implements OnInit {
     });
   }
 
-  cargarRecompensas(): void {
-    this.recompensaService.obtenerRecompensas().subscribe((res: any) => {
-      this.recompensas = res.data;
+  cargarMateriasPrimas(): void {
+    this.materiaPrimaService.obtenerTodas().subscribe((res: any) => {
+      this.materiasPrimas = res;
     });
   }
 
@@ -97,10 +97,8 @@ export class ComprasFormComponent implements OnInit {
       proveedorId: proveedor.id,
       proveedorNombre: proveedor.nombre,
       detalles: val.detalles.map((d: any) => {
-        const rec = this.recompensas.find(r => r.id === d.recompensaId);
         return {
-          recompensaId: d.recompensaId,
-          nombreRecompensa: rec ? rec.nombre : '',
+          nombreMateriaPrima: d.nombreMateriaPrima,
           cantidad: d.cantidad,
           precioUnitario: d.precioUnitario
         };
@@ -112,9 +110,9 @@ export class ComprasFormComponent implements OnInit {
         Swal.fire('Éxito', 'Compra registrada y stock actualizado correctamente', 'success');
         this.router.navigate(['/panel/compras-proveedores']);
       },
-      error: () => {
+      error: (err) => {
         this.guardando = false;
-        Swal.fire('Error', 'No se pudo registrar la compra', 'error');
+        Swal.fire('Error', err.error?.message || 'No se pudo registrar la compra', 'error');
       }
     });
   }

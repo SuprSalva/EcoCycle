@@ -63,11 +63,9 @@
     border-radius:30px;
     overflow:hidden;
     transition:.3s ease;
-
 }
 
 .search-box input{
-
     flex:1;
     padding:12px 20px;
     background:transparent;
@@ -95,15 +93,11 @@
 }
 
 .search-box button{
-
     width:50px;
     height:45px;
-
     border:none;
     background:transparent;
-
     color:white;
-
     cursor:pointer;
 
     display:flex;
@@ -116,7 +110,6 @@
 .search-box button i{
 
     font-size:18px;
-
     transition:.3s ease;
 
 }

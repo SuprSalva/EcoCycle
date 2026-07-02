@@ -18,6 +18,19 @@ public class MateriaPrimaRepository(FirestoreDb firestoreDb) : Interfaces.IMater
         return mp.Activo ? mp : null;
     }
 
+    public async Task<MateriaPrima?> ObtenerPorNombreAsync(string nombre)
+    {
+        var normalizedNombre = nombre.Trim().ToLowerInvariant();
+        var query = _collection.WhereEqualTo("activo", true);
+        var snapshot = await query.GetSnapshotAsync();
+        
+        var mp = snapshot.Documents
+            .Select(d => d.ConvertTo<MateriaPrima>())
+            .FirstOrDefault(m => m.Nombre.Trim().ToLowerInvariant() == normalizedNombre);
+            
+        return mp;
+    }
+
     public async Task<List<MateriaPrima>> ObtenerTodasAsync()
     {
         var query = _collection.WhereEqualTo("activo", true);

@@ -53,4 +53,8 @@ export class RecompensaService {
   cambiarEstatus(id: string, activa: boolean): Observable<any> {
     return this.http.put<any>(`${this.API_URL}/${id}/estatus`, { activa });
   }
+
+  marcarCanjeReclamado(id: string): Observable<any> {
+    return this.http.put<any>(`${this.API_URL}/canjes/${id}/reclamar`, {});
+  }
 }

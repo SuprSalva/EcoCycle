@@ -4,10 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RecompensaService, Recompensa } from '../../core/services/recompensa.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { RecompensaFormComponent } from './recompensa-form/recompensa-form.component';
-
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
+import { ExportService } from '../../core/services/export.service';
 
 @Component({
   selector: 'app-catalogo',
@@ -34,7 +31,8 @@ export class CatalogoComponent implements OnInit {
 
   constructor(
     private recompensaService: RecompensaService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private exportService: ExportService
   ) {}
 
   ngOnInit(): void {
@@ -177,17 +175,7 @@ export class CatalogoComponent implements OnInit {
 
   // --- MÉTODOS DE EXPORTACIÓN ---
   exportarPDF(): void {
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.setTextColor(17, 28, 67); 
-    doc.text('Catálogo Maestro de Recompensas', 14, 22);
-    
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text('Reporte generado el: ' + new Date().toLocaleDateString(), 14, 30);
-
-    const headers = [['Nombre Comercial', 'Descripción', 'Costo (Pts)', 'Stock', 'Estatus']];
+    const headers = ['Nombre Comercial', 'Descripción', 'Costo (Pts)', 'Stock', 'Estatus'];
     const data = this.listaRecompensasFiltrada.map(r => [
       r.nombre,
       r.descripcion || 'Sin descripción',
@@ -195,45 +183,19 @@ export class CatalogoComponent implements OnInit {
       r.stock === -1 ? 'Ilimitado' : r.stock.toString(),
       r.activa ? 'Activa' : 'Inactiva'
     ]);
-
-    autoTable(doc, {
-      startY: 40,
-      head: headers,
-      body: data,
-      theme: 'grid',
-      headStyles: { fillColor: [13, 99, 27] },
-      alternateRowStyles: { fillColor: [244, 247, 254] },
-      styles: { fontSize: 10, cellPadding: 4 }
-    });
-
-    doc.save('recompensas_ecocycle.pdf');
+    this.exportService.exportToPDF('Catálogo Maestro de Recompensas', headers, data, 'recompensas_ecocycle.pdf');
   }
 
   exportarExcel(): void {
-    const data = this.listaRecompensasFiltrada.map(r => ({
-      'ID Recompensa': r.id,
-      'Nombre Comercial': r.nombre,
-      'Descripción': r.descripcion || '',
-      'Costo en EcoPts': r.costoPuntos,
-      'Stock Disponible': r.stock === -1 ? 'Ilimitado' : r.stock,
-      'Estatus': r.activa ? 'Activa' : 'Inactiva'
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(data);
-
-    const wscols = [
-      { wch: 30 }, 
-      { wch: 35 }, 
-      { wch: 50 }, 
-      { wch: 15 }, 
-      { wch: 15 }, 
-      { wch: 10 }  
-    ];
-    worksheet['!cols'] = wscols;
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Recompensas');
-
-    XLSX.writeFile(workbook, 'recompensas_ecocycle.xlsx');
+    const headers = ['ID Recompensa', 'Nombre Comercial', 'Descripción', 'Costo en EcoPts', 'Stock Disponible', 'Estatus'];
+    const data = this.listaRecompensasFiltrada.map(r => [
+      r.id,
+      r.nombre,
+      r.descripcion || '',
+      r.costoPuntos,
+      r.stock === -1 ? 'Ilimitado' : r.stock,
+      r.activa ? 'Activa' : 'Inactiva'
+    ]);
+    this.exportService.exportToExcel('Catálogo Maestro de Recompensas', headers, data, 'recompensas_ecocycle.xlsx');
   }
 }

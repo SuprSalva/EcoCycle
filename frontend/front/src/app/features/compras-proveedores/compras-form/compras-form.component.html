@@ -30,7 +30,7 @@
 
         <div class="mb-4">
           <label class="form-label fw-bold fs-5 border-bottom pb-2 mb-3 w-100 text-secondary d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-box-seam me-2"></i>2. Productos (Recompensas a reabastecer)</span>
+            <span><i class="bi bi-box-seam me-2"></i>2. Materias Primas a reabastecer</span>
             <button type="button" class="btn btn-sm btn-primary rounded-pill" (click)="agregarDetalle()">
               <i class="bi bi-plus-lg me-1"></i>Añadir Línea
             </button>
@@ -41,11 +41,14 @@
                  *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
               
               <div class="col-md-5">
-                <label class="form-label small text-muted mb-1">Recompensa</label>
-                <select class="form-select" formControlName="recompensaId">
-                  <option value="">Seleccionar...</option>
-                  <option *ngFor="let r of recompensas" [value]="r.id">{{ r.nombre }} (Stock actual: {{ r.stock }})</option>
-                </select>
+                <label class="form-label small text-muted mb-1">Materia Prima</label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light"><i class="bi bi-box"></i></span>
+                  <select class="form-select" formControlName="nombreMateriaPrima">
+                    <option value="">Seleccionar...</option>
+                    <option *ngFor="let m of materiasPrimas" [value]="m.nombre">{{ m.nombre }} (Stock actual: {{ m.stockActual }} {{ m.unidad }})</option>
+                  </select>
+                </div>
               </div>
 
               <div class="col-md-2">

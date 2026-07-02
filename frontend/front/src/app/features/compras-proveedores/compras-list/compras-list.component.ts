@@ -40,7 +40,7 @@ export class ComprasListComponent implements OnInit {
     let html = `<ul class="list-group text-start">`;
     compra.detalles.forEach((d: any) => {
       html += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                  ${d.nombreRecompensa} (x${d.cantidad})
+                  ${d.nombreMateriaPrima} (x${d.cantidad})
                   <span class="badge bg-primary rounded-pill">$${d.precioUnitario * d.cantidad}</span>
                </li>`;
     });

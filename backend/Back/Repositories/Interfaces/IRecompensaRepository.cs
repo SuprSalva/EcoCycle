@@ -11,4 +11,6 @@ public interface IRecompensaRepository
     Task RegistrarCanjeAsync(Canje canje);
     Task<List<Canje>> ObtenerCanjesPorUsuarioAsync(string userId);
     Task<List<Canje>> ObtenerTodosLosCanjesAsync();
+    Task<Canje?> ObtenerCanjePorIdAsync(string canjeId);
+    Task ActualizarCanjeAsync(Canje canje);
 }

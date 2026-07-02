@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   backend:
@@ -7,15 +6,11 @@ services:
     working_dir: /app
     volumes:
       - ./backend/Back:/app
-    # Usamos dotnet watch run para que tenga hot-reload (como start:dev)
     command: dotnet watch run --urls "http://0.0.0.0:5000"
     ports:
       - "5000:5000"
     environment:
-      # Configuramos la variable para que busque el archivo dentro del contenedor
       - GOOGLE_APPLICATION_CREDENTIALS=/app/firebase-key.json
-      # Puedes poner aquí otras variables si quieres evitar usar el archivo
-      # - FIREBASE_PROJECT_ID=ecocycle-e9c04
 
   frontend:
    image: node:20

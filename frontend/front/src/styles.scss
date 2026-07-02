@@ -1,97 +1,125 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Quicksand:wght@300..700&display=swap');
 @import 'styles/_animations.scss';
 @import 'flatpickr/dist/flatpickr.min.css';
 @import 'flatpickr/dist/themes/airbnb.css';
 
 :root {
-  /* Modern Sleek Dark Eco Theme - Natural Greens */
-  --primary-color: #2E7D32;       /* Trustworthy green */
-  --primary-dark: #1B5E20;
+  /* AppMovil Design System - Light Theme */
+  --primary-color: #10B981;       /* Vibrant Emerald Green */
+  --primary-dark: #059669;        /* Slightly darker for hover states */
   --on-primary-color: #FFFFFF;
-  --primary-container-color: rgba(46, 125, 50, 0.15); 
-  --on-primary-container-color: #81C784;
+  --primary-container-color: #A7F3D0; 
+  --on-primary-container-color: #064E3B;
 
-  --accent-color: #8BC34A;        /* Light green accent */
-  --secondary-color: #94A3B8;     /* Slate */
+  --accent-color: #84CC16;        /* Lime Green */
+  --secondary-color: #94A3B8;     /* Slate (Outline) */
   
-  --sidebar-bg: rgba(16, 42, 31, 0.85); /* Based on original #102A1F */
-  --card-bg: rgba(22, 58, 42, 0.6);     /* Based on original #163A2A */
-  --hover-bg: rgba(255, 255, 255, 0.08);
-  --active-bg: #2E7D32;
+  --sidebar-bg: #FFFFFF;          /* Pure white */
+  --card-bg: #FFFFFF;             /* Pure white for cards */
+  --hover-bg: #F1F5F9;            /* Surface variant */
+  --active-bg: #10B981;
 
-  --primary: #4CAF50;
-  --accent: #8BC34A;
+  --primary: #10B981;
+  --accent: #34D399;
 
-  --text: #F8FAFC;
-  --text-muted: #94A3B8;
+  --text: #0F172A;                /* On Background */
+  --text-muted: #64748B;          /* Text Secondary */
 
-  --border: rgba(255, 255, 255, 0.08);
+  --border: #E2E8F0;              /* Outline variant */
+  --border-neutral-color: #E2E8F0;
 
   /* Backgrounds */
-  --background-color: #060908;    /* Deep dark */
-  --surface-color: #0F1714;
-  --surface-hover: rgba(255, 255, 255, 0.03);
-  --on-surface-color: #F8FAFC;
+  --background-color: #F8FAFC;    /* Slate 50 */
+  --surface-color: #FFFFFF;
+  --surface-hover: #F1F5F9;
+  --on-surface-color: #0F172A;
   
-  --border-neutral-color: rgba(255, 255, 255, 0.05);
-  --text-secondary-color: #94A3B8;
+  --text-secondary-color: #64748B;
   
-  /* Modern Soft Shadows */
-  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
-  --shadow-neon: 0 0 15px rgba(76, 175, 80, 0.3);
+  /* Shapes / Border Radius matching AppMovil */
+  --border-radius-sm: 16px;
+  --border-radius-md: 24px;
+  --border-radius-lg: 32px;
+  --border-radius-pill: 50rem;
+
+  /* Soft Shadows for Light Theme */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-neon: 0 0 15px rgba(16, 185, 129, 0.2);
 }
 
 body {
   background-color: var(--background-color) !important; 
   color: var(--on-surface-color);
-  font-family: 'Outfit', sans-serif !important;
+  font-family: 'Nunito Sans', sans-serif !important;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
-  background-image: radial-gradient(circle at 15% 50%, rgba(76, 175, 80, 0.05), transparent 25%), 
-                    radial-gradient(circle at 85% 30%, rgba(129, 199, 132, 0.05), transparent 25%);
-  background-attachment: fixed;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Quicksand', sans-serif;
   letter-spacing: -0.01em;
+  font-weight: 700;
+  color: var(--text);
 }
+
+/* Glass panel can still exist but clearer */
 .glass-panel {
-  background: var(--glass-bg, rgba(16, 26, 23, 0.45));
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.05));
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-md);
 }
 
 .card-modern {
   background: var(--card-bg);
-  border-radius: 16px;
+  border-radius: var(--border-radius-md);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-md);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card-modern:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), var(--shadow-neon);
-  border-color: rgba(76, 175, 80, 0.4);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-container-color);
+}
+
+/* Buttons matching AppMovil */
+.btn {
+  border-radius: var(--border-radius-pill) !important; /* Pill shaped buttons */
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bounce animation */
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-primary {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--on-primary-color) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark) !important;
+  border-color: var(--primary-dark) !important;
+  box-shadow: var(--shadow-neon);
 }
 
 .table {
   --bs-table-bg: transparent;
   --bs-table-color: var(--text);
   --bs-table-border-color: var(--border);
-  --bs-table-hover-bg: var(--table-hover-bg, rgba(255, 255, 255, 0.05));
+  --bs-table-hover-bg: var(--hover-bg);
   --bs-table-hover-color: var(--text);
   color: var(--text);
-}
-
-.table-dark {
-  --bs-table-bg: transparent;
 }
 
 .text-muted {
@@ -103,7 +131,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-secondary {
-  color: var(--secondary-color) !important;
+  color: var(--text-muted) !important;
 }
 
 .text-dark {
@@ -111,28 +139,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::placeholder, .form-control::placeholder, .form-select::placeholder {
-  color: var(--placeholder-color, rgba(255, 255, 255, 0.6)) !important;
+  color: #94A3B8 !important;
   opacity: 1 !important;
 }
 
-body.light-theme {
-  --background-color: #F1F5F9;
-  --surface-color: #FFFFFF;
-  --surface-hover: rgba(0, 0, 0, 0.03);
-  --on-surface-color: #0F1714;
-  --border-neutral-color: rgba(0, 0, 0, 0.08);
-  --text-secondary-color: #64748B;
-  --sidebar-bg: rgba(255, 255, 255, 0.95);
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --hover-bg: rgba(0, 0, 0, 0.05);
-  --text: #1E293B;
-  --text-muted: #64748B;
-  --border: rgba(0, 0, 0, 0.08);
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
-  --glass-bg: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.05);
-  --placeholder-color: rgba(0, 0, 0, 0.4);
-  --table-hover-bg: rgba(0, 0, 0, 0.03);
+/* Forms and Inputs */
+.form-control, .form-select {
+  background-color: #F1F5F9 !important; /* inputBackground */
+  border: 1px solid var(--border) !important;
+  border-radius: var(--border-radius-sm); /* Small component radius */
+  color: var(--text) !important;
+}
+
+.form-control {
+  padding: 0.6rem 1rem;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
+  background-color: #FFFFFF !important;
+}
+
+.input-group-text {
+  background-color: #F1F5F9 !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-muted) !important;
+  border-radius: var(--border-radius-sm);
 }

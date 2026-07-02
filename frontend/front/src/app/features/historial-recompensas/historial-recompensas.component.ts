@@ -4,9 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RecompensaService } from '../../core/services/recompensa.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { FlatpickrDirective } from '../../shared/directives/flatpickr.directive';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
+import { ExportService } from '../../core/services/export.service';
 
 @Component({
   selector: 'app-historial-recompensas',
@@ -24,6 +22,9 @@ export class HistorialRecompensasComponent implements OnInit {
   fechaInicio: string = '';
   fechaFin: string = '';
 
+  // Búsqueda
+  busquedaCodigo: string = '';
+
   // Paginación
   paginaActual: number = 1;
   itemsPorPagina: number = 10;
@@ -31,7 +32,8 @@ export class HistorialRecompensasComponent implements OnInit {
 
   constructor(
     private recompensaService: RecompensaService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private exportService: ExportService
   ) {}
 
   ngOnInit(): void {
@@ -58,7 +60,7 @@ export class HistorialRecompensasComponent implements OnInit {
     this.recompensaService.obtenerHistorialCanjesAdmin(inicioIso, finIso).subscribe({
       next: (response: any) => {
         this.notificationService.hideLoading();
-        if (response && response.succeeded) {
+        if (response && response.suceso) {
           this.listaCanjesOriginal = response.data;
         } else {
           this.listaCanjesOriginal = response?.data || [];
@@ -88,11 +90,20 @@ export class HistorialRecompensasComponent implements OnInit {
   limpiarFiltros(): void {
     this.fechaInicio = '';
     this.fechaFin = '';
+    this.busquedaCodigo = '';
     this.cargarHistorial();
   }
 
   aplicarFiltrosYOrden(): void {
     let filtrados = [...this.listaCanjesOriginal];
+    
+    if (this.busquedaCodigo && this.busquedaCodigo.trim() !== '') {
+      const termino = this.busquedaCodigo.toLowerCase().trim();
+      filtrados = filtrados.filter(c => 
+        c.codigoCanje && c.codigoCanje.toLowerCase().includes(termino)
+      );
+    }
+    
     this.listaCanjesFiltrada = filtrados;
     this.totalPaginas = Math.ceil(this.listaCanjesFiltrada.length / this.itemsPorPagina);
     if (this.paginaActual > this.totalPaginas && this.totalPaginas > 0) {
@@ -112,6 +123,43 @@ export class HistorialRecompensasComponent implements OnInit {
     }
   }
 
+  canjeSeleccionadoParaReclamar: string | null = null;
+  mostrarModalReclamar: boolean = false;
+
+  abrirModalReclamar(id: string): void {
+    this.canjeSeleccionadoParaReclamar = id;
+    this.mostrarModalReclamar = true;
+  }
+
+  cerrarModalReclamar(): void {
+    this.mostrarModalReclamar = false;
+    this.canjeSeleccionadoParaReclamar = null;
+  }
+
+  confirmarReclamar(): void {
+    if (this.canjeSeleccionadoParaReclamar) {
+      this.notificationService.showLoading('Procesando...', 'Marcando como reclamado');
+      this.recompensaService.marcarCanjeReclamado(this.canjeSeleccionadoParaReclamar).subscribe({
+        next: (response: any) => {
+          this.notificationService.hideLoading();
+          this.cerrarModalReclamar();
+          if (response && response.suceso) {
+            this.notificationService.success('Éxito', 'Recompensa marcada como entregada.');
+            this.cargarHistorial();
+          } else {
+            this.notificationService.error('Error', response?.message || 'No se pudo actualizar el estado.');
+          }
+        },
+        error: (err: any) => {
+          this.notificationService.hideLoading();
+          this.cerrarModalReclamar();
+          console.error(err);
+          this.notificationService.error('Error', 'Ocurrió un error al actualizar el estado.');
+        }
+      });
+    }
+  }
+
   get paginados(): any[] {
     const inicio = (this.paginaActual - 1) * this.itemsPorPagina;
     const fin = inicio + this.itemsPorPagina;
@@ -127,73 +175,30 @@ export class HistorialRecompensasComponent implements OnInit {
 
   // --- EXPORTACIONES ---
   exportarPDF(): void {
-    const doc = new jsPDF();
-
-    doc.setFontSize(18);
-    doc.setTextColor(17, 28, 67); 
-    doc.text('Historial Global de Recompensas Canjeadas', 14, 22);
-    
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text('Reporte generado el: ' + new Date().toLocaleDateString(), 14, 30);
-    
-    let subtextoFiltro = 'Mostrando todos los registros.';
-    if (this.fechaInicio && this.fechaFin) {
-      subtextoFiltro = `Rango: ${this.fechaInicio} a ${this.fechaFin}`;
-    } else if (this.fechaInicio) {
-      subtextoFiltro = `Desde: ${this.fechaInicio}`;
-    } else if (this.fechaFin) {
-      subtextoFiltro = `Hasta: ${this.fechaFin}`;
-    }
-    doc.text(subtextoFiltro, 14, 36);
-
-    const headers = [['Usuario', 'Correo', 'Recompensa', 'Pts Usados', 'Fecha']];
+    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora', 'Código', 'Estado'];
     const data = this.listaCanjesFiltrada.map(c => [
       c.usuarioNombre,
       c.usuarioEmail,
       c.recompensaNombre,
-      c.puntosUsados.toString(),
-      new Date(c.fecha).toLocaleString()
+      `${c.puntosUsados} Pts`,
+      new Date(c.fecha).toLocaleString(),
+      c.codigoCanje || '-',
+      c.reclamado ? 'Reclamado' : 'Pendiente'
     ]);
-
-    autoTable(doc, {
-      startY: 42,
-      head: headers,
-      body: data,
-      theme: 'grid',
-      headStyles: { fillColor: [13, 99, 27] },
-      alternateRowStyles: { fillColor: [244, 247, 254] },
-      styles: { fontSize: 10, cellPadding: 4 }
-    });
-
-    doc.save('historial_recompensas.pdf');
+    this.exportService.exportToPDF('Historial de Recompensas', headers, data, 'historial_recompensas.pdf');
   }
 
   exportarExcel(): void {
-    const data = this.listaCanjesFiltrada.map(c => ({
-      'ID Canje': c.id,
-      'Usuario': c.usuarioNombre,
-      'Correo': c.usuarioEmail,
-      'Recompensa': c.recompensaNombre,
-      'Puntos Usados': c.puntosUsados,
-      'Fecha y Hora': new Date(c.fecha).toLocaleString()
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(data);
-
-    const wscols = [
-      { wch: 25 }, 
-      { wch: 30 }, 
-      { wch: 30 }, 
-      { wch: 35 }, 
-      { wch: 15 }, 
-      { wch: 22 }  
-    ];
-    worksheet['!cols'] = wscols;
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Historial Canjes');
-
-    XLSX.writeFile(workbook, 'historial_recompensas.xlsx');
+    const headers = ['Usuario', 'Email', 'Recompensa Canjeada', 'Puntos', 'Fecha y Hora', 'Código', 'Estado'];
+    const data = this.listaCanjesFiltrada.map(c => [
+      c.usuarioNombre,
+      c.usuarioEmail,
+      c.recompensaNombre,
+      c.puntosUsados,
+      new Date(c.fecha).toLocaleString(),
+      c.codigoCanje || '-',
+      c.reclamado ? 'Reclamado' : 'Pendiente'
+    ]);
+    this.exportService.exportToExcel('Historial de Recompensas', headers, data, 'historial_recompensas.xlsx');
   }
 }

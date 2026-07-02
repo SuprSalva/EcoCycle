@@ -6,7 +6,7 @@ using Back.Wrappers;
 using Google.Cloud.Firestore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using Back.Models.DTOs.Request;
 namespace Back.Controllers;
 
 [ApiController]
