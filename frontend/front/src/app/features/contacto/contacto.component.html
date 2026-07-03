@@ -12,8 +12,6 @@
 
 </section>
 
-
-
 <section class="ubicacion-section">
     <div class="ubicacion-container">
         
@@ -136,34 +134,34 @@
 
         <h3 class="titulo-formulario">Envíanos un mensaje</h3>
 
-        <form>
+        <form [formGroup]="formulario" (ngSubmit)="enviarReporte()">
 
             <div class="grupo">
                 <label>Nombre</label>
-                <input type="text" placeholder="Ingrese su nombre">
+                <input type="text" formControlName="nombre" placeholder="Ingrese su nombre">
             </div>
 
             <div class="grupo">
                 <label>Apellidos</label>
-                <input type="text" placeholder="Ingrese sus Apellidos">
+                <input type="text" formControlName="apellidos" placeholder="Ingrese sus Apellidos">
             </div>
 
             <div class="grupo">
                 <label>Correo electrónico</label>
-                <input type="email" placeholder="Ingrese su correo">
+                <input type="email" formControlName="correo" placeholder="Ingrese su correo">
             </div>
 
             <div class="grupo">
                 <label>Teléfono</label>
-                <input type="tel" placeholder="Ingrese su telefono">
+                <input type="tel"  formControlName="telefono" placeholder="Ingrese su telefono">
             </div>
 
             <div class="grupo">
                 <label>Mensaje</label>
-                <textarea rows="5" placeholder="Ingrese el motivo del mensaje...."></textarea>
+                <textarea rows="5" formControlName="mensaje" placeholder="Ingrese el motivo del mensaje...."></textarea>
             </div>
 
-            <button>Enviar mensaje</button>
+            <button type="submit">Enviar mensaje</button>
         </form>
     </div>
 </section>

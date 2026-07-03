@@ -101,6 +101,8 @@ public class RecompensaController(IRecompensaRepository recompensaRepository, IU
 
         foreach (var canje in canjes.OrderByDescending(c => c.Fecha))
         {
+            if (string.IsNullOrWhiteSpace(canje.RecompensaId)) continue;
+
             if (!recompensasCache.ContainsKey(canje.RecompensaId))
             {
                 recompensasCache[canje.RecompensaId] = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
@@ -173,24 +175,34 @@ public class RecompensaController(IRecompensaRepository recompensaRepository, IU
 
         foreach (var canje in todosLosCanjes.OrderByDescending(c => c.Fecha))
         {
+            // 🛠️ PROTECCIÓN: Si el canje no tiene un UsuarioId asignado, saltamos este bucle para evitar errores latentes.
+            if (string.IsNullOrWhiteSpace(canje.UsuarioId))
+            {
+                continue; 
+            }
+
             if (!usuariosCache.ContainsKey(canje.UsuarioId))
             {
                 usuariosCache[canje.UsuarioId] = await usuarioRepository.ObtenerPorIdAsync(canje.UsuarioId);
             }
-            if (!recompensasCache.ContainsKey(canje.RecompensaId))
+
+            // Validación adicional para prevenir fallos si RecompensaId estuviera vacío en algún documento viejo
+            if (!string.IsNullOrWhiteSpace(canje.RecompensaId) && !recompensasCache.ContainsKey(canje.RecompensaId))
             {
                 recompensasCache[canje.RecompensaId] = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
             }
 
             var usuario = usuariosCache[canje.UsuarioId];
-            var recompensa = recompensasCache[canje.RecompensaId];
+            var recompensa = !string.IsNullOrWhiteSpace(canje.RecompensaId) && recompensasCache.ContainsKey(canje.RecompensaId) 
+                ? recompensasCache[canje.RecompensaId] 
+                : null;
 
             responseList.Add(new CanjeAdminResponse
             {
                 Id = canje.Id,
                 CodigoCanje = canje.CodigoCanje,
                 UsuarioId = canje.UsuarioId,
-                UsuarioNombre = usuario != null ? $"{usuario.Nombre} {usuario.Apellidos}".Trim() : "Usuario Desconocido",
+                UsuarioNombre = usuario != null ? $"{usuario.Nombre} {usuario.Apellidos}".Trim() : "Usuario Desconocido / Inactivo",
                 UsuarioEmail = usuario?.Email ?? "Sin Email",
                 RecompensaId = canje.RecompensaId,
                 RecompensaNombre = recompensa?.Nombre ?? "Recompensa Eliminada/Desconocida",

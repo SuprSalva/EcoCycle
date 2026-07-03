@@ -73,6 +73,7 @@ builder.Services.AddScoped<Back.Repositories.Interfaces.ISesionReciclajeReposito
 builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, Back.Repositories.RecompensaRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IProveedorRepository, Back.Repositories.ProveedorRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProveedorRepository, Back.Repositories.CompraProveedorRepository>();
+builder.Services.AddScoped<IReporteRepository, ReporteRepository>();
 
 // Repositorios adicionales (Migrados de Infrastructure)
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();

@@ -40,11 +40,12 @@
   
       font-size:4rem;
       margin-bottom:20px;
-  
+      color:white;
     }
   
   
     p {
+      color:white;
       font-size:1.5rem;
     }
   
@@ -102,7 +103,7 @@
     color: #1a1a1a;
   
     h2 {
-  
+      color:white;
       font-family: Georgia, 'Times New Roman', serif;
       font-size: 42px;
       font-weight: 700;
@@ -194,6 +195,7 @@
     align-items: center;
 
     h2 {
+      color:white;
         text-align: center;
         font-size: 40px;
         margin-bottom: 50px;
@@ -269,6 +271,7 @@
 }
 
 .card-box h3 {
+  color:white;
     font-size: 24px;
     font-weight: 300;
     margin: 0;
@@ -315,7 +318,9 @@
     padding:80px;
     color:white;
   
+
     h2 {
+      color:white;
       font-size:50px;
     }
   
@@ -333,6 +338,7 @@
     justify-content: center;
     align-items: center;
     gap: 35px;
+    color:white;
     background: #fff;
 }
 
@@ -344,6 +350,7 @@
     justify-content: center;
     align-items: center;
     gap: 35px;
+    color:white;
     background: #fff;
 }
 
@@ -385,7 +392,8 @@
 .text-card-vision h2 {
   font-size: 2rem;           
   font-weight: 700;          
-  margin-bottom: 16px;       
+  margin-bottom: 16px;
+  color:white;       
   letter-spacing: -0.5px;     
 }
 
@@ -418,7 +426,8 @@
 
 .text-card-mision h2 {
   font-size: 2rem;           
-  font-weight: 700;          
+  font-weight: 700;  
+  color:white;        
   margin-bottom: 16px;       
   letter-spacing: -0.5px;     
 }
@@ -436,30 +445,6 @@
     padding: 90px 8%;
     background: #f3f3f3;
 }
-
-
-.navbar-login {
-  position: absolute;
-  top: 35px;
-  right: 60px;
-  display: flex;
-  gap: 50px;
-  z-index: 3;
-}
-
-.navbar-login a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: .5px;
-  transition: .3s;
-}
-
-.navbar-login a:hover {
-  color: #3CBD3D;
-}
-
 
 .titulo-valores{
     width: 100%;

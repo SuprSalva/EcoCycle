@@ -18,6 +18,9 @@ export class HistorialRecompensasComponent implements OnInit {
   listaCanjesFiltrada: any[] = [];
   cargando: boolean = true;
 
+
+
+  
   // Filtros de fecha
   fechaInicio: string = '';
   fechaFin: string = '';
@@ -44,7 +47,6 @@ export class HistorialRecompensasComponent implements OnInit {
     this.cargando = true;
     this.notificationService.showLoading('Cargando historial...', 'Obteniendo registros del servidor');
     
-    // Si la fechaFin existe, añadirle la hora 23:59:59 para incluir todo ese día
     let finIso = '';
     if (this.fechaFin) {
       const finDate = new Date(this.fechaFin);
