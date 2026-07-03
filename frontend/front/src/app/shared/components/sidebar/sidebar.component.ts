@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
+<<<<<<< HEAD
 export class SidebarComponent implements OnInit {
 
   @Input() perfil: any;
@@ -94,8 +95,12 @@ export class SidebarComponent implements OnInit {
     this.logout.emit();
     this.showUserMenu = false;
   }
+=======
+export class SidebarComponent {
+  isCollapsed = false;  // ← ¡NECESARIO!
+>>>>>>> origin/nueva-roles
 
-  toggleSidebar() {
+  toggleSidebar() {     // ← ¡NECESARIO!
     this.isCollapsed = !this.isCollapsed;
   }
 

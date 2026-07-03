@@ -17,9 +17,10 @@ import { switchMap } from 'rxjs';
 export class LoginComponent {
   email = '';
   password = '';
+  isLoading = false;
 
   constructor(
-    private authService: AuthService, 
+    private authService: AuthService,
     private router: Router,
     private notificationService: NotificationService
   ) {}
@@ -30,29 +31,53 @@ export class LoginComponent {
       return;
     }
 
+    this.isLoading = true;
     this.notificationService.showLoading('Iniciando sesión...', 'Autenticando credenciales');
 
-    this.authService.login(this.email, this.password).pipe(
-      switchMap(() => this.authService.obtenerPerfilUsuario())
-    ).subscribe({
-      next: (perfil) => {
+    this.authService.login(this.email, this.password).subscribe({
+      next: (response) => {
+        this.isLoading = false;
         this.notificationService.hideLoading();
-        
-        const rol = (perfil?.rol || '').toLowerCase();
-        
-        // Redirigir según el rol
-        if (rol === 'admin' || rol === 'administrador') {
-          this.notificationService.toastSuccess('¡Bienvenido Administrador!');
-          this.router.navigate(['/panel']); // Panel de administración
+
+        console.log('Respuesta completa:', response);
+        console.log('suceso:', response.suceso); // 
+        console.log('Data:', response.data);
+        console.log('Rol:', response.data?.rol);
+
+        if (response.suceso && response.data) {
+          const usuario = response.data;
+          const rol = (usuario.rol || '').toLowerCase();
+          localStorage.setItem('userRol', rol);
+          this.notificationService.hideLoading();
+          this.notificationService.showLoading('Redirigiendo...', `Bienvenido ${usuario.nombre || 'Usuario'}`);
+          setTimeout(() => {
+            this.notificationService.hideLoading();
+            
+            if (rol === 'admin' || rol === 'administrador') {
+              console.log('Redirigiendo a ADMIN');
+              this.router.navigate(['/admin/dashboard']);
+            } else {
+              console.log('Redirigiendo a CLIENTE');
+              this.router.navigate(['/cliente/dashboard']);
+            }
+          }, 1000);
+          
         } else {
-          this.notificationService.toastSuccess('¡Inicio de sesión exitoso!');
-          this.router.navigate(['/dashboard']); // O la ruta que quieras para usuarios normales
+          this.notificationService.hideLoading();
+          this.notificationService.error('Error', response.message || 'Error al iniciar sesión.');
         }
       },
       error: (err) => {
+        this.isLoading = false;
         this.notificationService.hideLoading();
-        console.error(err);
-        this.notificationService.error('Error de Autenticación', 'Credenciales incorrectas o el usuario no existe.');
+        console.error('Error en login:', err);
+        
+        let mensajeError = 'Credenciales incorrectas o usuario no existe.';
+        if (err.error?.message) {
+          mensajeError = err.error.message;
+        }
+        
+        this.notificationService.error('Error de Autenticación', mensajeError);
         this.authService.logout().subscribe();
       }
     });

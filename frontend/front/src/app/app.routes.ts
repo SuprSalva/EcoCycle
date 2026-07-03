@@ -4,11 +4,13 @@ import { RegistroComponent } from './features/registro/registro.component';
 import { PanelComponent } from './features/panel/panel.component'; 
 import { UsuariosComponent } from './features/usuarios/usuarios.component';
 import { SoporteComponent } from './features/soporte/soporte.component';
+import { PanelClienteComponent } from './features/panel-cliente/panel-cliente.component';
 import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-reciclaje.component';
-// 🌟 IMPORTAMOS EL COMPONENTE DEL CATÁLOGO MAESTRO
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
 import { DashboardGlobalComponent } from './features/dashboard-global/dashboard-global.component';
-import { authGuard } from './core/guards/auth.guard';
+// ✅ IMPORTAR DashboardClienteComponent
+import { DashboardClienteComponent } from './features/dashboard-cliente/dashboard-cliente.component';
+import { authGuard, adminGuard, clienteGuard } from './core/guards/auth.guard';
 import { ReportesComponent } from './features/reportes/reportes.component';
 import { HistorialRecompensasComponent } from './features/historial-recompensas/historial-recompensas.component';
 import { ErrorPageComponent } from './features/error-page/error-page.component';
@@ -19,27 +21,25 @@ import { ProductoComponent } from './features/producto/producto.component';
 
 export const routes: Routes = [
  
-  // 1. Rutas Públicas (Cualquiera puede entrar)
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
- 
-  // 2. Ruta Padre del Panel (PROTEGIDA BAJO LLAVE)
+  { path: 'catalogo', component: CatalogoComponent }, // ✅ RUTA PÚBLICA FALTANTE
+
   { 
-    path: 'panel', 
-    component: PanelComponent, 
-    canActivate: [authGuard], // Protege el panel y automáticamente a todas sus rutas hijas
+    path: 'cliente',
+    component: PanelClienteComponent,  // ✅ LAYOUT CLIENTE
+    canActivate: [clienteGuard],
     children: [
   
-  // RUTA HIJA NUEVA: Materia Prima (/panel/materia-prima)
+
   { 
     path: 'materia-prima', 
     loadComponent: () => import('./features/materia-prima/materia-prima.component').then(m => m.MateriaPrimaComponent) 
   },
 
-  // RUTA HIJA NUEVA: Panel del Cliente (/panel/cliente)
   { 
     path: 'cliente', 
     loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
@@ -50,10 +50,8 @@ export const routes: Routes = [
     ]
   },
 
-      // RUTA HIJA: Dashboard Global (/panel/dashboard)
       { path: 'dashboard', component: DashboardGlobalComponent },
 
-      // RUTA HIJA: Control de Usuarios (/panel/usuarios)
       { path: 'usuarios', component: UsuariosComponent },
 
       // RUTA HIJA: Terminal Ingesta IoT (/panel/reciclaje)
@@ -70,28 +68,85 @@ export const routes: Routes = [
 
       // RUTA HIJA: Reportes Núcleo (/panel/reportes)
       { path: 'reportes', component: ReportesComponent },
+      { path: 'dashboard', component: DashboardClienteComponent },
       { path: 'soporte', component: SoporteComponent },
-      
-
-      // RUTA HIJA: Proveedores (/panel/proveedores)
-      { path: 'proveedores', loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component').then(c => c.ProveedoresListComponent) },
-      { path: 'proveedores/nuevo', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
-      { path: 'proveedores/editar/:id', loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component').then(c => c.ProveedoresFormComponent) },
-
-      // RUTA HIJA: Compras a Proveedores (/panel/compras-proveedores)
-      { path: 'compras-proveedores', loadComponent: () => import('./features/compras-proveedores/compras-list/compras-list.component').then(c => c.ComprasListComponent) },
-      { path: 'compras-proveedores/nueva', loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component').then(c => c.ComprasFormComponent) },
-
-      // Redirección por defecto al entrar a /panel (Te manda a dashboard)
+      { path: 'historial-recompensas', component: HistorialRecompensasComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
-  
-  // 3. Rutas de Error
+
+  // ============================================
+  // 3. RUTAS DEL ADMINISTRADOR (Solo usuarios con rol "admin")
+  // ============================================
+  { 
+    path: 'admin', 
+    component: PanelComponent,
+    canActivate: [adminGuard],
+    children: [
+      // Dashboard
+      { path: 'dashboard', component: DashboardGlobalComponent }, // ✅ CORREGIDO
+
+      // Gestión de Usuarios
+      { path: 'usuarios', component: UsuariosComponent },
+
+      // Gestión de Reciclaje
+      { path: 'reciclaje', component: SesionReciclajeComponent },
+
+      // Catálogo de Productos
+      { path: 'catalogo', component: CatalogoComponent },
+
+      // Historial de Recompensas
+      { path: 'historial-recompensas', component: HistorialRecompensasComponent },
+
+      // Reportes
+      { path: 'reportes', component: ReportesComponent },
+      
+      // Soporte
+      { path: 'soporte', component: SoporteComponent },
+      
+      // Gestión de Proveedores
+      { 
+        path: 'proveedores', 
+        loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component')
+          .then(c => c.ProveedoresListComponent) 
+      },
+      { 
+        path: 'proveedores/nuevo', 
+        loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component')
+          .then(c => c.ProveedoresFormComponent) 
+      },
+      { 
+        path: 'proveedores/editar/:id', 
+        loadComponent: () => import('./features/proveedores/proveedores-form/proveedores-form.component')
+          .then(c => c.ProveedoresFormComponent) 
+      },
+
+      // Gestión de Compras a Proveedores
+      { 
+        path: 'compras-proveedores', 
+        loadComponent: () => import('./features/compras-proveedores/compras-list/compras-list.component')
+          .then(c => c.ComprasListComponent) 
+      },
+      { 
+        path: 'compras-proveedores/nueva', 
+        loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component')
+          .then(c => c.ComprasFormComponent) 
+      },
+
+      // Redirección por defecto dentro de /admin
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+    ]
+  },
+
+  // ============================================
+  // 4. RUTAS DE ERROR
+  // ============================================
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
-  // 4. Redirecciones de control del Sistema
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'error/404' } 
+  // ============================================
+  // 5. REDIRECCIONES POR DEFECTO
+  // ============================================
+  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
+  { path: '**', redirectTo: 'error/404' }
 ];
