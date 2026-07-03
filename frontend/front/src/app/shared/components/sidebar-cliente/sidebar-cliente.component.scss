@@ -1,0 +1,296 @@
+// 📁 src/app/shared/components/sidebar-cliente/sidebar-cliente.component.scss
+:host { display: contents; }
+
+.sidebar {
+  width: 320px;
+  height: 100vh;
+  background: var(--sidebar-bg);
+  color: var(--text);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-seccion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-seccion img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.separador {
+  height: 1px;
+  background: var(--border);
+  opacity: 0.6;
+  margin: 18px 0;
+}
+
+.logo-text h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+}
+
+.logo-text span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.menu-btn {
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: var(--hover-bg);
+}
+
+.search-box {
+  height: 40px;
+  margin: 25px 0;
+  background: var(--card-bg);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.search-box i {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  color: white;
+  font-size: 14px;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.menu-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-left: 14px;
+  font-weight: 600;
+}
+
+.menu-navegacion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.menu-navegacion::-webkit-scrollbar {
+  width: 4px;
+}
+.menu-navegacion::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.item-menu {
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.item-menu i {
+  width: 18px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.item-menu span {
+  white-space: nowrap;
+}
+
+.item-menu:hover {
+  background: var(--hover-bg);
+  color: white;
+}
+
+.item-menu.activo {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--primary);
+  font-weight: 600;
+  border-left: 4px solid var(--primary);
+}
+
+.item-menu.activo i {
+  color: var(--primary);
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+}
+
+.sidebar-bottom .item-menu {
+  margin-bottom: 8px;
+}
+
+.sidebar-bottom small {
+  margin-left: auto;
+  background: var(--accent);
+  color: #102A1F;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+
+.usuario {
+  margin-top: 20px;
+  padding: 12px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+}
+
+.usuario img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.usuario div {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.usuario strong {
+  color: white;
+  font-size: 13px;
+}
+
+.usuario span {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.usuario i {
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+/* MODO COLLAPSED */
+.sidebar.collapsed {
+  width: 80px;
+  padding: 20px 12px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar.collapsed .logo-seccion {
+  display: none;
+}
+
+.sidebar.collapsed .menu-section {
+  display: none;
+}
+
+.sidebar.collapsed .item-menu {
+  justify-content: center;
+  padding: 0;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.sidebar.collapsed .item-menu.activo {
+  border-left: none;
+}
+
+.sidebar.collapsed .item-menu i {
+  font-size: 18px;
+  margin: 0;
+}
+
+.sidebar.collapsed .usuario {
+  justify-content: center;
+  padding: 10px;
+}
+
+.sidebar.collapsed .usuario img {
+  margin: 0;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .search-box,
+.sidebar.collapsed .item-menu span,
+.sidebar.collapsed .item-menu small,
+.sidebar.collapsed .usuario div,
+.sidebar.collapsed .usuario i {
+  display: none;
+}

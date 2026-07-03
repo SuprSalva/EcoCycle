@@ -11,7 +11,7 @@ namespace Back.Controllers;
 public class CompraProveedorController(
     ICompraProveedorRepository compraRepository,
     IProveedorRepository proveedorRepository,
-    IRecompensaRepository recompensaRepository) : ControllerBase
+    IMateriaPrimaRepository materiaPrimaRepository) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetCompras()
@@ -27,8 +27,8 @@ public class CompraProveedorController(
             Estado = c.Estado,
             Detalles = c.Detalles.Select(d => new DetalleCompraDTO
             {
-                RecompensaId = d.RecompensaId,
-                NombreRecompensa = d.NombreRecompensa,
+                MateriaPrimaId = d.MateriaPrimaId,
+                NombreMateriaPrima = d.NombreMateriaPrima,
                 Cantidad = d.Cantidad,
                 PrecioUnitario = d.PrecioUnitario
             }).ToList()
@@ -57,24 +57,29 @@ public class CompraProveedorController(
 
         foreach (var detalleDto in dto.Detalles)
         {
-            var recompensa = await recompensaRepository.ObtenerPorIdAsync(detalleDto.RecompensaId);
-            if (recompensa != null)
+            var materiaPrima = await materiaPrimaRepository.ObtenerPorNombreAsync(detalleDto.NombreMateriaPrima);
+            if (materiaPrima == null)
             {
-                // Increment stock
-                recompensa.Stock += detalleDto.Cantidad;
-                await recompensaRepository.GuardarAsync(recompensa);
-                
-                var detalle = new DetalleCompra
-                {
-                    RecompensaId = recompensa.Id,
-                    NombreRecompensa = recompensa.Nombre,
-                    Cantidad = detalleDto.Cantidad,
-                    PrecioUnitario = detalleDto.PrecioUnitario
-                };
-                
-                compra.Detalles.Add(detalle);
-                total += detalle.Cantidad * detalle.PrecioUnitario;
+                return BadRequest(ApiResponse<string>.Fail($"La materia prima '{detalleDto.NombreMateriaPrima}' no existe en el sistema. Por favor, agrégala primero en el módulo de Materia Prima."));
             }
+
+            // Calculate new average cost
+            double totalValue = (materiaPrima.StockActual * materiaPrima.CostoPromedioUnitario) + (detalleDto.Cantidad * detalleDto.PrecioUnitario);
+            materiaPrima.StockActual += detalleDto.Cantidad;
+            materiaPrima.CostoPromedioUnitario = totalValue / materiaPrima.StockActual;
+            
+            await materiaPrimaRepository.GuardarAsync(materiaPrima);
+            
+            var detalle = new DetalleCompra
+            {
+                MateriaPrimaId = materiaPrima.Id,
+                NombreMateriaPrima = materiaPrima.Nombre,
+                Cantidad = detalleDto.Cantidad,
+                PrecioUnitario = detalleDto.PrecioUnitario
+            };
+            
+            compra.Detalles.Add(detalle);
+            total += detalle.Cantidad * detalle.PrecioUnitario;
         }
 
         compra.Total = total;

@@ -5,19 +5,22 @@ import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth   = inject(AuthService);
+  const auth = inject(AuthService);
   const router = inject(Router);
-  const token  = auth.getToken();
+  const token = auth.getToken();
 
   let authReq = req;
-  if (!req.headers.has('Authorization') && token) {
+  
+  // No agregar token para el endpoint de login
+  if (!req.url.includes('/Auth/login') && !req.headers.has('Authorization') && token) {
     authReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
   }
 
   return next(authReq).pipe(
     catchError((err: HttpErrorResponse) => {
       if (err.status === 401) {
-        localStorage.removeItem('token'); // BUG FIX: Limpiar token corrupto para evitar bucles
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
         router.navigate(['/login']);
       } else if (err.status === 403) {
         router.navigate(['/error/403']);

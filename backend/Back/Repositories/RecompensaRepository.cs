@@ -54,4 +54,16 @@ public class RecompensaRepository(FirestoreDb firestoreDb) : IRecompensaReposito
         var snapshot = await _canjes.GetSnapshotAsync();
         return snapshot.Documents.Select(d => d.ConvertTo<Canje>()).ToList();
     }
+
+    public async Task<Canje?> ObtenerCanjePorIdAsync(string canjeId)
+    {
+        var doc = await _canjes.Document(canjeId).GetSnapshotAsync();
+        return doc.Exists ? doc.ConvertTo<Canje>() : null;
+    }
+
+    public async Task ActualizarCanjeAsync(Canje canje)
+    {
+        await _canjes.Document(canje.Id).SetAsync(canje, SetOptions.MergeAll);
+    }
 }
+

@@ -1,41 +1,41 @@
-// panel.component.ts
+// 📁 src/app/features/panel-cliente/panel-cliente.component.ts
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
-import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
+import { SidebarClienteComponent } from '../../shared/components/sidebar-cliente/sidebar-cliente.component';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 
 @Component({
-  selector: 'app-panel',
+  selector: 'app-panel-cliente',
   standalone: true,
   imports: [
     RouterOutlet,
     RouterModule,
     CommonModule,
-    SidebarComponent,
-    NavbarComponent  // ✅ Asegurar que esté importado
+    SidebarClienteComponent,
+    NavbarComponent
   ],
-  templateUrl: './panel.component.html',
-  styleUrl: './panel.component.scss'
+  templateUrl: './panel-cliente.component.html',  // ✅ ESTE ARCHIVO DEBE EXISTIR
+  styleUrls: ['./panel-cliente.component.scss']  // ✅ OPCIONAL
 })
-export class PanelComponent implements OnInit {
+export class PanelClienteComponent implements OnInit {
   perfil: any = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit() {
     this.authService.obtenerPerfilUsuario().subscribe({
-      next: (datos) => {
+      next: (datos: any) => {
         this.perfil = datos;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al obtener perfil', err);
         this.perfil = {
-          nombre: 'Usuario',
-          apellidos: 'No Registrado',
-          email: 'Falta completar registro',
-          rol: 'invitado',
+          nombre: 'Cliente',
+          apellidos: '',
+          email: 'cliente@ecocycle.com',
+          rol: 'cliente',
           saldoPuntos: 0
         };
       }

@@ -8,35 +8,53 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl = `${environment.apiUrl}/Auth`; 
+  private authUrl = `${environment.apiUrl}/Auth`;
   private usuarioUrl = `${environment.apiUrl}/Usuario`;
 
-  constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {
-    // BUG FIX: El token de Firebase expira a la hora. Con esto, Angular escucha silenciosamente
-    // cada vez que Firebase refresca el token en el fondo y nosotros actualizamos localStorage.
+  constructor(
+    private auth: Auth,
+    private http: HttpClient,
+    private injector: Injector
+  ) {
     onIdTokenChanged(this.auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
         localStorage.setItem('token', token);
       } else {
         localStorage.removeItem('token');
+        localStorage.removeItem('userData');
       }
     });
   }
+
+  // ============================================
+  // MÉTODOS DE AUTENTICACIÓN
+  // ============================================
 
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  // 1. INICIAR SESIÓN (Corregido para mantener contexto de inyección)
-  login(email: string, password: string): Observable<string> {
-    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-      switchMap((userCredential) => {
-        // Ejecutamos getIdToken dentro del contexto de inyección de Angular
-        return runInInjectionContext(this.injector, () => 
-          from(getIdToken(userCredential.user)).pipe(
-            tap((token) => {
-              localStorage.setItem('token', token);
+  // ✅ 1. INICIAR SESIÓN
+  login(email: string, password: string): Observable<any> {
+  return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+    switchMap((userCredential) => {
+      return runInInjectionContext(this.injector, () =>
+        from(getIdToken(userCredential.user)).pipe(
+          tap((token) => {
+            localStorage.setItem('token', token);
+          }),
+          switchMap((token) => {
+            return this.http.post<any>(`${this.authUrl}/login`, { email, password });
+          }),
+          tap((response) => {
+            // ✅ CORREGIDO: Usar 'suceso' en lugar de 'success'
+            if (response.suceso && response.data) {
+              localStorage.setItem('userData', JSON.stringify(response.data));
+              console.log('✅ userData guardado:', response.data);
+            } else {
+              console.log('❌ No se pudo guardar userData:', response);
+            }
             })
           )
         );
@@ -44,27 +62,11 @@ export class AuthService {
     );
   }
 
-  // CERRAR SESIÓN
-  logout(): Observable<void> {
-    return from(this.auth.signOut()).pipe(
-      tap(() => {
-        localStorage.removeItem('token');
-      })
-    );
-  }
-
-  // OBTENER PERFIL DE USUARIO LOGUEADO
-  obtenerPerfilUsuario(): Observable<any> {
-    return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
-      map(res => res.data)
-    );
-  }
-
-  // 2. REGISTRO AUTÓNOMO (Corregido para mantener contexto de inyección)
+  // ✅ 2. REGISTRO (NUEVO USUARIO DESDE FRONTEND)
   registro(email: string, password: string, datosAdicionales: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((userCredential) => {
-        return runInInjectionContext(this.injector, () => 
+        return runInInjectionContext(this.injector, () =>
           from(getIdToken(userCredential.user)).pipe(
             switchMap((token) => {
               localStorage.setItem('token', token);
@@ -73,7 +75,8 @@ export class AuthService {
                 nombre: datosAdicionales.nombre,
                 apellidos: datosAdicionales.apellidos || '',
                 telefono: datosAdicionales.telefono || '',
-                direccion: datosAdicionales.direccion || ''
+                direccion: datosAdicionales.direccion || '',
+                rol: 'cliente' // Por defecto cliente
               };
 
               return this.http.post(`${this.authUrl}/registro`, body);
@@ -84,22 +87,20 @@ export class AuthService {
     );
   }
 
-  // 3. REGISTRO DESDE EL ADMIN (Crea la cuenta en Firebase Auth e impacta tu base de datos)
+  // ✅ 3. REGISTRO DESDE ADMIN (CREA USUARIO CON ROL ESPECÍFICO)
   registrarDesdeAdmin(usuarioNuevo: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, usuarioNuevo.email, usuarioNuevo.password)).pipe(
       switchMap((userCredential) => {
         return from(getIdToken(userCredential.user)).pipe(
-          switchMap((nuevoToken) => {            
+          switchMap((nuevoToken) => {
             const body = {
               nombre: usuarioNuevo.nombre,
               apellidos: usuarioNuevo.apellidos || '',
               telefono: usuarioNuevo.telefono || '',
               direccion: usuarioNuevo.direccion || '',
-              rol: usuarioNuevo.rol || 'usuario'
+              rol: usuarioNuevo.rol || 'cliente'
             };
 
-            // Enviamos el registro al backend con el token RECIÉN CREADO (del nuevo usuario)
-            // Esto evita que el interceptor mande el token del administrador y cause un 400 Bad Request
             return this.http.post(`${this.authUrl}/registro`, body, {
               headers: { Authorization: `Bearer ${nuevoToken}` }
             });
@@ -109,31 +110,79 @@ export class AuthService {
     );
   }
 
-  // 4. LEER: OBTENER TODOS LOS USUARIOS (Mantiene tu lógica funcional)
-  obtenerTodosLosUsuarios(): Observable<any[]> {
-    return this.http.get<any>(`${this.usuarioUrl}/todos`).pipe(
-      map(respuestaCsharp => {
-        console.log('Datos crudos llegados de C#:', respuestaCsharp);
-        return respuestaCsharp.data || []; 
+  // ✅ 4. CERRAR SESIÓN
+  logout(): Observable<void> {
+    return from(this.auth.signOut()).pipe(
+      tap(() => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userData');
       })
     );
   }
 
-  // OBTENER UN SOLO USUARIO POR ID
+  // ============================================
+  // MÉTODOS PARA OBTENER DATOS DEL USUARIO
+  // ============================================
+
+  // ✅ 5. OBTENER PERFIL DEL USUARIO LOGUEADO
+  obtenerPerfilUsuario(): Observable<any> {
+    return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
+      map(res => res.data)
+    );
+  }
+
+  // ✅ 6. OBTENER USUARIO POR ID (NUEVO - PARA ADMIN)
   obtenerUsuarioPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/${id}`).pipe(
       map(res => res.data)
     );
   }
 
-  // 5. ACTUALIZAR: CAMBIAR DATOS, ROLES O ESTATUS DESDE EL ADMIN
+  // ✅ 7. OBTENER TODOS LOS USUARIOS (SOLO ADMIN)
+  obtenerTodosLosUsuarios(): Observable<any[]> {
+    return this.http.get<any>(`${this.usuarioUrl}/todos`).pipe(
+      map(respuestaCsharp => {
+        console.log('Datos crudos llegados de C#:', respuestaCsharp);
+        return respuestaCsharp.data || [];
+      })
+    );
+  }
+
+  // ✅ 8. ACTUALIZAR USUARIO (SOLO ADMIN)
   actualizarUsuario(id: string, datos: any): Observable<any> {
-    // Mandamos el objeto modificado a C#
     return this.http.put(`${this.usuarioUrl}/${id}`, datos);
   }
 
-  // 6. ELIMINAR: BORRAR CUENTA PERMANENTEMENTE
+  // ✅ 9. ELIMINAR USUARIO (SOLO ADMIN)
   eliminarUsuario(id: string): Observable<any> {
     return this.http.delete(`${this.usuarioUrl}/${id}`);
+  }
+
+  // ============================================
+  // MÉTODOS PARA VERIFICAR ROL
+  // ============================================
+
+  getRolUsuario(): string | null {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const data = JSON.parse(userData);
+      return data.rol?.toLowerCase() || null;
+    }
+    return null;
+  }
+
+  esAdministrador(): boolean {
+    const rol = this.getRolUsuario();
+    return rol === 'admin' || rol === 'administrador';
+  }
+
+  esCliente(): boolean {
+    const rol = this.getRolUsuario();
+    return rol === 'cliente' || rol === 'usuario';
+  }
+
+  obtenerUsuarioActual(): any {
+    const userData = localStorage.getItem('userData');
+    return userData ? JSON.parse(userData) : null;
   }
 }

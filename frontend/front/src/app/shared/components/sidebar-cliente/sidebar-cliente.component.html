@@ -1,0 +1,81 @@
+<!-- sidebar-cliente.component.html -->
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+
+  <div class="sidebar-header">
+    <div class="logo-seccion">
+      <img src="/logos.png" alt="EcoCycle Logo">
+      <div class="logo-text">
+        <h2>EcoCycle</h2>
+        <span>Cliente</span>
+      </div>
+    </div>
+    <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-bars"></i>
+      <span class="sr-only">Abrir menú</span>
+    </button>
+  </div>
+
+  <div class="search-box">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Buscar">
+  </div>
+
+  <nav class="menu-navegacion">
+
+    <div class="menu-section">Principal</div>
+
+    <a routerLink="/cliente/dashboard"
+       class="item-menu"
+       routerLinkActive="activo">
+      <i class="fa-solid fa-house"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <div class="menu-section mt-3">Mis Actividades</div>
+
+    <a routerLink="/cliente/historial-recompensas"
+       class="item-menu"
+       routerLinkActive="activo">
+      <i class="fa-solid fa-trophy"></i>
+      <span>Recompensas</span>
+    </a>
+
+    <a routerLink="/cliente/catalogo"
+       class="item-menu"
+       routerLinkActive="activo">
+      <i class="fa-solid fa-box"></i>
+      <span>Catálogo</span>
+    </a>
+
+    <div class="menu-section mt-3">Soporte</div>
+
+    <a routerLink="/cliente/soporte" 
+       class="item-menu" 
+       routerLinkActive="activo">
+      <i class="fa-solid fa-headset"></i> 
+      <span>Soporte Técnico</span>
+    </a>
+
+  </nav>
+
+  <div class="sidebar-bottom">
+
+    <a class="item-menu">
+      <i class="fa-solid fa-bell"></i>
+      <span>Notificaciones</span>
+      <small>12</small>
+    </a>
+
+    <div class="usuario">
+      <img src="/usuario.png" alt="Avatar del usuario" title="Avatar">
+      <div>
+        <strong>Cliente</strong>
+        <!-- ✅ CORREGIDO: Usar la entidad HTML &#64; -->
+        <span>cliente&#64;ecocycle.com</span>
+      </div>
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+
+  </div>
+
+</aside>

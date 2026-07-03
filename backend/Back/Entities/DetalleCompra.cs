@@ -5,6 +5,13 @@ namespace Back.Entities;
 [FirestoreData]
 public class DetalleCompra
 {
+    [FirestoreProperty("materia_prima_id")]
+    public string MateriaPrimaId { get; set; } = string.Empty;
+
+    [FirestoreProperty("nombre_materia_prima")]
+    public string NombreMateriaPrima { get; set; } = string.Empty;
+
+    // Propiedades legacy para compatibilidad con datos viejos en Firestore
     [FirestoreProperty("recompensa_id")]
     public string RecompensaId { get; set; } = string.Empty;
 

@@ -1,3 +1,4 @@
+<!-- sidebar.component.html -->
 <aside class="sidebar" [class.collapsed]="isCollapsed">
 
   <div class="sidebar-header">
@@ -14,25 +15,24 @@
     </button>
   </div>
 
-  <!-- Buscador -->
   <div class="search-box">
     <i class="fa-solid fa-magnifying-glass"></i>
     <input type="text" placeholder="Buscar">
   </div>
 
-  <!-- Navegación -->
   <nav class="menu-navegacion">
 
     <div class="menu-section">Principal</div>
 
-    <a routerLink="/panel/dashboard"
+    <!-- ✅ RUTAS CORREGIDAS -->
+    <a routerLink="/admin/dashboard"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-house"></i>
       <span>Dashboard</span>
     </a>
 
-    <a routerLink="/panel/usuarios"
+    <a routerLink="/admin/usuarios"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-users"></i>
@@ -41,21 +41,21 @@
 
     <div class="menu-section mt-3">Operaciones</div>
 
-    <a routerLink="/panel/reciclaje"
+    <a routerLink="/admin/reciclaje"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-cube"></i>
       <span>Terminal IoT</span>
     </a>
 
-    <a routerLink="/panel/catalogo"
+    <a routerLink="/admin/catalogo"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-box"></i>
       <span>Catálogo</span>
     </a>
 
-    <a routerLink="/panel/historial-recompensas"
+    <a routerLink="/admin/historial-recompensas"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-layer-group"></i>
@@ -64,22 +64,21 @@
 
     <div class="menu-section mt-3">Abastecimiento</div>
 
-    <a routerLink="/panel/proveedores"
+    <a routerLink="/admin/proveedores"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-truck"></i>
       <span>Proveedores</span>
     </a>
 
-    <a routerLink="/panel/compras-proveedores"
+    <a routerLink="/admin/compras-proveedores"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-cart-shopping"></i>
       <span>Compras a Proveedores</span>
     </a>
 
-    <!-- 🔥 SOPORTE TÉCNICO (tu agregaste) -->
-    <a routerLink="/panel/soporte" 
+    <a routerLink="/admin/soporte" 
        class="item-menu" 
        routerLinkActive="activo">
       <i class="fa-solid fa-headset"></i> 
@@ -88,7 +87,7 @@
 
     <div class="menu-section mt-3">Análisis</div>
 
-    <a routerLink="/panel/reportes"
+    <a routerLink="/admin/reportes"
        class="item-menu"
        routerLinkActive="activo">
       <i class="fa-solid fa-chart-column"></i>
@@ -97,7 +96,6 @@
 
   </nav>
 
-  <!-- Parte inferior -->
   <div class="sidebar-bottom">
 
     <a class="item-menu">

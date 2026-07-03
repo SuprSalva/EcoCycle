@@ -9,9 +9,9 @@ import { RouterModule } from '@angular/router';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
-  isCollapsed = false;
+  isCollapsed = false;  // ← ¡NECESARIO!
 
-  toggleSidebar() {
+  toggleSidebar() {     // ← ¡NECESARIO!
     this.isCollapsed = !this.isCollapsed;
   }
 }
