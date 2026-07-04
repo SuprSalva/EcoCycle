@@ -1,3 +1,4 @@
+// app.routes.ts - CORREGIDO
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
 import { RegistroComponent } from './features/registro/registro.component';
@@ -8,38 +9,38 @@ import { PanelClienteComponent } from './features/panel-cliente/panel-cliente.co
 import { SesionReciclajeComponent } from './features/sesion-reciclaje/sesion-reciclaje.component';
 import { CatalogoComponent } from './features/catalogo/catalogo.component';
 import { DashboardGlobalComponent } from './features/dashboard-global/dashboard-global.component';
-// ✅ IMPORTAR DashboardClienteComponent
 import { DashboardClienteComponent } from './features/dashboard-cliente/dashboard-cliente.component';
 import { authGuard, adminGuard, clienteGuard } from './core/guards/auth.guard';
 import { ReportesComponent } from './features/reportes/reportes.component';
 import { HistorialRecompensasComponent } from './features/historial-recompensas/historial-recompensas.component';
 import { ErrorPageComponent } from './features/error-page/error-page.component';
+import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
+import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
 
 export const routes: Routes = [
-  // ============================================
-  // 1. RUTAS PÚBLICAS (Sin autenticación)
-  // ============================================
+
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
-  { path: 'catalogo', component: CatalogoComponent }, // ✅ RUTA PÚBLICA FALTANTE
+  { path: 'catalogo', component: CatalogoComponent },
 
   // ============================================
-  // 2. RUTAS DEL CLIENTE (Solo usuarios con rol "cliente")
+  // RUTAS DEL CLIENTE
   // ============================================
   { 
     path: 'cliente',
-    component: PanelClienteComponent,  // ✅ LAYOUT CLIENTE
+    component: PanelClienteComponent,  
     canActivate: [clienteGuard],
     children: [
       { path: 'dashboard', component: DashboardClienteComponent },
       { path: 'soporte', component: SoporteComponent },
+      { path: 'mis-compras', component: ComprasClienteComponent },
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
 
   // ============================================
-  // 3. RUTAS DEL ADMINISTRADOR (Solo usuarios con rol "admin")
+  // RUTAS DEL ADMINISTRADOR
   // ============================================
   { 
     path: 'admin', 
@@ -47,7 +48,7 @@ export const routes: Routes = [
     canActivate: [adminGuard],
     children: [
       // Dashboard
-      { path: 'dashboard', component: DashboardGlobalComponent }, // ✅ CORREGIDO
+      { path: 'dashboard', component: DashboardGlobalComponent },
 
       // Gestión de Usuarios
       { path: 'usuarios', component: UsuariosComponent },
@@ -66,6 +67,9 @@ export const routes: Routes = [
       
       // Soporte
       { path: 'soporte', component: SoporteComponent },
+      
+      // ✅ CORREGIDO: La ruta es 'compras' (no 'admin/compras')
+      { path: 'compras', component: AdminComprasComponent },
       
       // Gestión de Proveedores
       { 
@@ -102,13 +106,13 @@ export const routes: Routes = [
   },
 
   // ============================================
-  // 4. RUTAS DE ERROR
+  // RUTAS DE ERROR
   // ============================================
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
   // ============================================
-  // 5. REDIRECCIONES POR DEFECTO
+  // REDIRECCIONES
   // ============================================
   { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }

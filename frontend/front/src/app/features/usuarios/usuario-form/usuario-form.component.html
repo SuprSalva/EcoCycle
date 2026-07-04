@@ -130,45 +130,18 @@
           </div>
         </div>
 
-        <ng-container *ngIf="!esEdicion">
-          <div class="col-12 mt-5 pt-3 border-top" style="border-top: 1px solid var(--surface-variant-color) !important;">
-            <h5 class="fw-bold m-0" style="color: var(--on-surface-color) !important; font-size: 1.1rem; letter-spacing: -0.01em;">
-              Seguridad de la Cuenta
-            </h5>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
-              CONTRASEÑA ACCESO <span class="text-danger">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
-                <span class="material-symbols-outlined fs-5">lock</span>
-              </span>
-              <input type="password" 
-                     formControlName="password"
-                     class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
-                     style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
-                     placeholder="••••••••">
+        <!-- ✅ MENSAJE INFORMATIVO: LA CONTRASEÑA SE GENERA AUTOMÁTICAMENTE -->
+        <div *ngIf="!esEdicion" class="col-12 mt-3">
+          <div class="alert alert-info d-flex align-items-center gap-3 p-3 rounded-3" style="background-color: #e8f4fd; border: 1px solid #b8d4e8;">
+            <span class="material-symbols-outlined fs-3" style="color: #0D631B;">info</span>
+            <div>
+              <strong style="color: #0D631B;">🔑 La contraseña se genera automáticamente</strong>
+              <p class="mb-0 small text-muted" style="font-size: 0.85rem;">
+                El usuario recibirá un correo electrónico con su contraseña temporal y un enlace para iniciar sesión.
+              </p>
             </div>
           </div>
-
-          <div class="col-md-6">
-            <label class="form-label fw-bold mb-1" style="color: var(--on-surface-color); font-size: 0.85rem; letter-spacing: 0.03em;">
-              CONFIRMAR CONTRASEÑA <span class="text-danger">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text border-end-0 rounded-start-3 text-muted" style="background-color: var(--surface-variant-color); border: 1px solid var(--surface-variant-color);">
-                <span class="material-symbols-outlined fs-5">enhanced_encryption</span>
-              </span>
-              <input type="password" 
-                     formControlName="confirmarPassword"
-                     class="form-control rounded-end-3 px-3 py-2 border-start-0 shadow-none fs-6" 
-                     style="border: 1px solid var(--surface-variant-color); color: var(--on-surface-color); font-weight: 500; background-color: var(--background-color);"
-                     placeholder="••••••••">
-            </div>
-          </div>
-        </ng-container>
+        </div>
 
       </div>
 

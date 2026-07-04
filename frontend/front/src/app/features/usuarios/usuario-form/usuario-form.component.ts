@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { UsuarioService } from '../../../core/services/Usuario.service';
 
 // Interface para tipado
 export interface UsuarioData {
@@ -35,7 +36,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
   constructor(
     private authService: AuthService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
@@ -52,8 +54,11 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
         this.esEdicion = false;
         if (this.usuarioForm) {
           this.usuarioForm.reset({ rol: 'usuario' });
-          this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
+          // ✅ SOLO ELIMINAR VALIDACIONES DE PASSWORD PARA NUEVOS USUARIOS
+          this.usuarioForm.get('password')?.clearValidators();
           this.usuarioForm.get('password')?.updateValueAndValidity();
+          this.usuarioForm.get('confirmarPassword')?.clearValidators();
+          this.usuarioForm.get('confirmarPassword')?.updateValueAndValidity();
         }
       }
     }
@@ -72,10 +77,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
       confirmarPassword: ['']
     });
 
-    if (!this.idSeleccionado) {
-      this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
-      this.usuarioForm.get('password')?.updateValueAndValidity();
-    }
+    // ✅ NO AGREGAR VALIDACIONES DE PASSWORD PARA NUEVOS USUARIOS
+    // La contraseña la genera el backend automáticamente
   }
 
   cargarUsuario(id: string): void {
@@ -132,13 +135,14 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
 
     const valores = this.usuarioForm.getRawValue();
 
-    if (!this.esEdicion || (this.esEdicion && valores.password)) {
+    // ✅ SOLO VALIDAR CONTRASEÑA EN EDICIÓN
+    if (this.esEdicion && valores.password) {
       if (valores.password !== valores.confirmarPassword) {
         this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
         return;
       }
       
-      if (valores.password && valores.password.length < 6) {
+      if (valores.password.length < 6) {
         this.notificationService.error('Error de Seguridad', 'La contraseña debe tener al menos 6 caracteres.');
         return;
       }
@@ -180,31 +184,36 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
     });
   }
 
+  // ✅ CREAR USUARIO - SIN CONTRASEÑA (EL BACKEND LA GENERA)
   private crearUsuario(valores: any): void {
-    if (!valores.password) {
-      this.notificationService.warning('Contraseña Requerida', 'Debes establecer una contraseña para el nuevo usuario.');
-      return;
-    }
-
+    // ✅ NO enviamos la contraseña, el backend la genera automáticamente
     const payloadNuevo = {
       nombre: valores.nombre,
       apellidos: valores.apellidos,
       email: valores.email,
       telefono: valores.telefono || '',
       direccion: valores.direccion || '',
-      password: valores.password,
       rol: valores.rol
     };
 
     this.cargando = true;
     this.notificationService.showLoading('Guardando...', 'Registrando al nuevo usuario');
 
-    this.authService.registrarDesdeAdmin(payloadNuevo).subscribe({
+    this.usuarioService.crearCliente(payloadNuevo).subscribe({
       next: (respuesta: any) => {
         this.cargando = false;
         this.notificationService.hideLoading();
-        this.notificationService.success('¡Creado!', 'El usuario ha sido insertado con éxito en el sistema.');
-        this.volver();
+        
+        if (respuesta.suceso) {
+          const mensajeCorreo = respuesta.data?.CorreoEnviado 
+            ? '✅ Las credenciales han sido enviadas al correo del usuario.' 
+            : '⚠️ No se pudo enviar el correo. Revisa la configuración.';
+          
+          this.notificationService.success('¡Creado!', `Usuario creado exitosamente. ${mensajeCorreo}`);
+          this.volver();
+        } else {
+          this.notificationService.error('Error', respuesta.message || 'No se pudo crear el usuario.');
+        }
       },
       error: (err: any) => {
         this.cargando = false;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { UsuarioService } from '../../core/services/Usuario.service';
 import { UsuarioFormComponent } from './usuario-form/usuario-form.component';
 import { NotificationService } from '../../core/services/notification.service';
 
@@ -38,6 +39,7 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private usuarioService: UsuarioService,
     private notificationService: NotificationService
   ) {}
 
@@ -48,9 +50,9 @@ export class UsuariosComponent implements OnInit {
   obtenerLista(): void {
     this.cargando = true;
     this.notificationService.showLoading('Cargando usuarios...', 'Sincronizando usuarios con el servidor');
-    this.authService.obtenerTodosLosUsuarios().subscribe({
-      next: (data: any[]) => {
-        this.usuarios = data;
+    this.usuarioService.obtenerTodos().subscribe({
+      next: (response: any) => {
+        this.usuarios = response.data || [];
         this.cargando = false;
         this.notificationService.hideLoading();
       },
@@ -85,6 +87,7 @@ export class UsuariosComponent implements OnInit {
     return Math.ceil(this.usuariosFiltrados.length / this.itemsPerPage) || 1;
   }
 
+  // ✅ MÉTODO PARA CAMBIAR DE PÁGINA
   cambiarPagina(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -95,6 +98,13 @@ export class UsuariosComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     this.itemsPerPage = Number(selectElement.value);
     this.currentPage = 1;
+  }
+
+  // ✅ MÉTODO PARA VOLVER DEL FORMULARIO
+  volverDeFormulario(): void {
+    this.vistaActual = 'lista';
+    this.idEdicion = null;
+    this.obtenerLista();
   }
 
   exportToExcel(): void {
@@ -208,12 +218,6 @@ export class UsuariosComponent implements OnInit {
     this.vistaActual = 'formulario';
   }
 
-  volverDeFormulario(): void {
-    this.vistaActual = 'lista';
-    this.idEdicion = null;
-    this.obtenerLista();
-  }
-
   alternarEstado(usuario: any, event: Event): void {
     event.stopPropagation();
     const esSuspendido = usuario.rol === 'suspendido';
@@ -235,7 +239,7 @@ export class UsuariosComponent implements OnInit {
         };
 
         this.notificationService.showLoading('Actualizando...', 'Modificando estatus del usuario');
-        this.authService.actualizarUsuario(usuario.id, bodyActualizado).subscribe({
+        this.usuarioService.actualizar(usuario.id, bodyActualizado).subscribe({
           next: () => {
             this.notificationService.hideLoading();
             this.notificationService.toastSuccess('Estatus modificado exitosamente.');
