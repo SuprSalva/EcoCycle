@@ -173,7 +173,7 @@ export class AdminComprasComponent implements OnInit {
     return '⭐'.repeat(calificacion) + '☆'.repeat(5 - calificacion);
   }
 
- cambiarEstado(compra: CompraProducto, nuevoEstado: string): void {
+ cambiarEstado(compra: CompraProducto, nuevoEstado: string = 'Pendiente'): void {
   const estadosValidos = ['Pendiente', 'Completada', 'Cancelada'];
   if (!estadosValidos.includes(nuevoEstado)) {
     this.notificationService.error('Error', 'Estado inválido');

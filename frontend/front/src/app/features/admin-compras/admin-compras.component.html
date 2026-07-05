@@ -127,16 +127,16 @@
                   Cliente: {{ compra.usuarioId | slice:0:8 }}
                 </span>
               </div>
+              
+              <!-- ✅ PARTE CORREGIDA -->
               <div class="d-flex align-items-center gap-2">
-                <!-- ✅ SELECT DE ESTADO CORREGIDO -->
-                <select class="form-select form-select-sm" 
-        style="width: auto; min-width: 140px;"
-        [(ngModel)]="compra.estado"
-        (change)="cambiarEstado(compra, compra.estado)">
-  <option value="Pendiente">⏳ Pendiente</option>
-  <option value="Completada">✅ Completada</option>
-  <option value="Cancelada">❌ Cancelada</option>
-</select>
+                <select class="form-select form-select-sm" style="width: auto; min-width: 140px;"
+                        [(ngModel)]="compra.estado"
+                        (change)="cambiarEstado(compra, compra.estado || 'Pendiente')">
+                  <option value="Pendiente">⏳ Pendiente</option>
+                  <option value="Completada">✅ Completada</option>
+                  <option value="Cancelada">❌ Cancelada</option>
+                </select>
                 <span class="fw-bold fs-5 text-success">${{ compra.total | number:'1.2' }}</span>
               </div>
             </div>

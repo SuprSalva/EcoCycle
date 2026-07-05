@@ -1,7 +1,16 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged } from '@angular/fire/auth';
-import { from, Observable, switchMap, tap, map } from 'rxjs';
+import { 
+  Auth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  getIdToken, 
+  onIdTokenChanged,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider
+} from '@angular/fire/auth';
+import { from, Observable, switchMap, tap, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -35,26 +44,24 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // ✅ 1. INICIAR SESIÓN
   login(email: string, password: string): Observable<any> {
-  return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
-    switchMap((userCredential) => {
-      return runInInjectionContext(this.injector, () =>
-        from(getIdToken(userCredential.user)).pipe(
-          tap((token) => {
-            localStorage.setItem('token', token);
-          }),
-          switchMap((token) => {
-            return this.http.post<any>(`${this.authUrl}/login`, { email, password });
-          }),
-          tap((response) => {
-            // ✅ CORREGIDO: Usar 'suceso' en lugar de 'success'
-            if (response.suceso && response.data) {
-              localStorage.setItem('userData', JSON.stringify(response.data));
-              console.log('✅ userData guardado:', response.data);
-            } else {
-              console.log('❌ No se pudo guardar userData:', response);
-            }
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      switchMap((userCredential) => {
+        return runInInjectionContext(this.injector, () =>
+          from(getIdToken(userCredential.user)).pipe(
+            tap((token) => {
+              localStorage.setItem('token', token);
+            }),
+            switchMap((token) => {
+              return this.http.post<any>(`${this.authUrl}/login`, { email, password });
+            }),
+            tap((response) => {
+              if (response.suceso && response.data) {
+                localStorage.setItem('userData', JSON.stringify(response.data));
+                console.log('✅ userData guardado:', response.data);
+              } else {
+                console.log('❌ No se pudo guardar userData:', response);
+              }
             })
           )
         );
@@ -62,7 +69,6 @@ export class AuthService {
     );
   }
 
-  // ✅ 2. REGISTRO (NUEVO USUARIO DESDE FRONTEND)
   registro(email: string, password: string, datosAdicionales: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((userCredential) => {
@@ -76,7 +82,8 @@ export class AuthService {
                 apellidos: datosAdicionales.apellidos || '',
                 telefono: datosAdicionales.telefono || '',
                 direccion: datosAdicionales.direccion || '',
-                rol: 'cliente' // Por defecto cliente
+                rol: datosAdicionales.rol || 'cliente',
+                contrasena: password
               };
 
               return this.http.post(`${this.authUrl}/registro`, body);
@@ -87,7 +94,6 @@ export class AuthService {
     );
   }
 
-  // ✅ 3. REGISTRO DESDE ADMIN (CREA USUARIO CON ROL ESPECÍFICO)
   registrarDesdeAdmin(usuarioNuevo: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, usuarioNuevo.email, usuarioNuevo.password)).pipe(
       switchMap((userCredential) => {
@@ -110,7 +116,6 @@ export class AuthService {
     );
   }
 
-  // ✅ 4. CERRAR SESIÓN
   logout(): Observable<void> {
     return from(this.auth.signOut()).pipe(
       tap(() => {
@@ -124,21 +129,18 @@ export class AuthService {
   // MÉTODOS PARA OBTENER DATOS DEL USUARIO
   // ============================================
 
-  // ✅ 5. OBTENER PERFIL DEL USUARIO LOGUEADO
   obtenerPerfilUsuario(): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
       map(res => res.data)
     );
   }
 
-  // ✅ 6. OBTENER USUARIO POR ID (NUEVO - PARA ADMIN)
   obtenerUsuarioPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/${id}`).pipe(
       map(res => res.data)
     );
   }
 
-  // ✅ 7. OBTENER TODOS LOS USUARIOS (SOLO ADMIN)
   obtenerTodosLosUsuarios(): Observable<any[]> {
     return this.http.get<any>(`${this.usuarioUrl}/todos`).pipe(
       map(respuestaCsharp => {
@@ -148,12 +150,10 @@ export class AuthService {
     );
   }
 
-  // ✅ 8. ACTUALIZAR USUARIO (SOLO ADMIN)
   actualizarUsuario(id: string, datos: any): Observable<any> {
     return this.http.put(`${this.usuarioUrl}/${id}`, datos);
   }
 
-  // ✅ 9. ELIMINAR USUARIO (SOLO ADMIN)
   eliminarUsuario(id: string): Observable<any> {
     return this.http.delete(`${this.usuarioUrl}/${id}`);
   }
@@ -184,5 +184,35 @@ export class AuthService {
   obtenerUsuarioActual(): any {
     const userData = localStorage.getItem('userData');
     return userData ? JSON.parse(userData) : null;
+  }
+
+  // ============================================
+  // ✅ CAMBIAR CONTRASEÑA (CORREGIDO)
+  // ============================================
+
+  cambiarPassword(passwordActual: string, nuevaPassword: string): Observable<any> {
+    // ✅ Usar of() en lugar de from() para manejar null
+    return of(this.auth.currentUser).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new Error('Usuario no autenticado');
+        }
+        
+        if (!user.email) {
+          throw new Error('El usuario no tiene email');
+        }
+
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          passwordActual
+        );
+
+        return from(reauthenticateWithCredential(user, credential)).pipe(
+          switchMap(() => {
+            return from(updatePassword(user, nuevaPassword));
+          })
+        );
+      })
+    );
   }
 }

@@ -16,7 +16,7 @@ import { HistorialRecompensasComponent } from './features/historial-recompensas/
 import { ErrorPageComponent } from './features/error-page/error-page.component';
 import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
 import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
-
+import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -33,6 +33,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardClienteComponent },
       { path: 'soporte', component: SoporteComponent },
+      { path: 'perfil', component: PerfilClienteComponent },
       { path: 'mis-compras', component: ComprasClienteComponent },
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
