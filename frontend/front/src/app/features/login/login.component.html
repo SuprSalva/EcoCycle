@@ -6,9 +6,7 @@
       <span class="logo-texto">EcoCycle</span>
     </div>
 
-    <div class="avatar">
-      <i class="fa-regular fa-user"></i>
-    </div>
+
 
     <div class="encabezado-login">
       <h2>Iniciar Sesión</h2>
@@ -35,6 +33,10 @@
           [(ngModel)]="password"
           placeholder="Contraseña"
           required>
+      </div>
+
+      <div class="opciones-extra" style="text-align: right; margin-bottom: 15px; font-size: 0.9rem;">
+        <a href="#" (click)="onForgotPassword($event)" style="color: #2b7a0b; text-decoration: none;">¿Olvidaste tu contraseña?</a>
       </div>
 
       <button type="submit">

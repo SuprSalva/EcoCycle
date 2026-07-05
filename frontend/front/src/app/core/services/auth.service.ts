@@ -1,6 +1,6 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged, sendPasswordResetEmail } from '@angular/fire/auth';
 import { from, Observable, switchMap, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -58,6 +58,11 @@ export class AuthService {
     return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
       map(res => res.data)
     );
+  }
+
+  // RECUPERAR CONTRASEÑA
+  resetPassword(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.auth, email));
   }
 
   // 2. REGISTRO AUTÓNOMO (Corregido para mantener contexto de inyección)
