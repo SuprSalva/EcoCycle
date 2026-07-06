@@ -26,6 +26,8 @@ export class SidebarClienteComponent  implements OnInit {
       section: 'Principal',
       items: [
         { name: 'Dashboard', icon: 'fa-solid fa-house', route: '/cliente/dashboard' },
+        {name: 'Mis Productos', icon: 'fa-solid fa-box', route: '/cliente/mis-productos'},
+        {name: 'Mis Compras', icon: 'fa-solid fa-receipt', route: '/cliente/mis-compras'},
       ]
     },
     {

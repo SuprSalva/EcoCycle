@@ -1,7 +1,16 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged, sendPasswordResetEmail } from '@angular/fire/auth';
-import { from, Observable, switchMap, tap, map } from 'rxjs';
+import { 
+  Auth, 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  getIdToken, 
+  onIdTokenChanged,
+  updatePassword,
+  reauthenticateWithCredential,
+  EmailAuthProvider
+} from '@angular/fire/auth';
+import { from, Observable, switchMap, tap, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -73,7 +82,8 @@ export class AuthService {
                 apellidos: datosAdicionales.apellidos || '',
                 telefono: datosAdicionales.telefono || '',
                 direccion: datosAdicionales.direccion || '',
-                rol: 'cliente' // Por defecto cliente
+                rol: datosAdicionales.rol || 'cliente',
+                contrasena: password
               };
 
               return this.http.post(`${this.authUrl}/registro`, body);
@@ -114,6 +124,7 @@ export class AuthService {
       })
     );
   }
+
 
   obtenerPerfilUsuario(): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
@@ -166,5 +177,31 @@ export class AuthService {
   obtenerUsuarioActual(): any {
     const userData = localStorage.getItem('userData');
     return userData ? JSON.parse(userData) : null;
+  }
+
+ 
+  cambiarPassword(passwordActual: string, nuevaPassword: string): Observable<any> {
+    return of(this.auth.currentUser).pipe(
+      switchMap((user) => {
+        if (!user) {
+          throw new Error('Usuario no autenticado');
+        }
+        
+        if (!user.email) {
+          throw new Error('El usuario no tiene email');
+        }
+
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          passwordActual
+        );
+
+        return from(reauthenticateWithCredential(user, credential)).pipe(
+          switchMap(() => {
+            return from(updatePassword(user, nuevaPassword));
+          })
+        );
+      })
+    );
   }
 }

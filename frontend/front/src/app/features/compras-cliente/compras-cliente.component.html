@@ -1,0 +1,270 @@
+<!-- compras-cliente.component.html -->
+<div class="container-fluid p-4">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="fw-bold m-0">🛒 Mis Compras</h2>
+      <p class="text-muted small">Historial de tus compras y opiniones sobre productos.</p>
+    </div>
+    <div class="d-flex gap-3 align-items-center">
+      <button class="btn btn-success" (click)="toggleFormularioCompra()">
+        <i class="fa-solid fa-plus me-2"></i>Nueva Compra
+      </button>
+      <span class="badge bg-primary px-3 py-2">{{ totalCompras }} Compras</span>
+      <span class="badge bg-success px-3 py-2">${{ totalGastado | number:'1.2' }}</span>
+    </div>
+  </div>
+
+  <!-- FORMULARIO DE NUEVA COMPRA -->
+  <div *ngIf="mostrarFormularioCompra" class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h5 class="card-title fw-bold">📦 Nueva Compra</h5>
+      
+      <div class="row g-3">
+       <div class="col-md-6">
+  <label class="form-label fw-bold">Producto *</label>
+  <select class="form-select" [(ngModel)]="nuevaCompra.productoId" (change)="seleccionarProducto(nuevaCompra.productoId || '')">
+    <option value="">Selecciona un producto...</option>
+    <option *ngFor="let p of productosDisponibles" [value]="p.id">
+      {{ p.nombre }} - ${{ p.precio }} (Stock: {{ p.stock }})
+    </option>
+  </select>
+</div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Cantidad *</label>
+          <input type="number" class="form-control" [(ngModel)]="nuevaCompra.cantidad" min="1">
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label fw-bold">Precio Unitario</label>
+          <input type="number" class="form-control" [(ngModel)]="nuevaCompra.precioUnitario" readonly disabled>
+        </div>
+
+        <div class="col-12">
+          <div class="bg-light p-3 rounded-3 text-end">
+            <h5 class="mb-0">Total: ${{ calcularTotal() | number:'1.2' }}</h5>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="d-flex gap-2 justify-content-end">
+            <button class="btn btn-secondary" (click)="toggleFormularioCompra()">Cancelar</button>
+            <button class="btn btn-success" (click)="registrarCompra()" [disabled]="!nuevaCompra.productoId || nuevaCompra.cantidad < 1">
+              <i class="fa-solid fa-cart-plus me-2"></i>Realizar Compra
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTADÍSTICAS RÁPIDAS -->
+  <div class="row g-3 mb-4" *ngIf="totalCompras > 0">
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="icon-circle bg-primary bg-opacity-10 p-3 rounded-circle">
+            <i class="fa-solid fa-box text-primary fs-4"></i>
+          </div>
+          <div>
+            <h6 class="text-muted mb-0">Productos comprados</h6>
+            <h4 class="mb-0">{{ totalProductos }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="icon-circle bg-success bg-opacity-10 p-3 rounded-circle">
+            <i class="fa-solid fa-star text-success fs-4"></i>
+          </div>
+          <div>
+            <h6 class="text-muted mb-0">Opiniones enviadas</h6>
+            <h4 class="mb-0">{{ totalOpiniones }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body d-flex align-items-center gap-3">
+          <div class="icon-circle bg-warning bg-opacity-10 p-3 rounded-circle">
+            <i class="fa-solid fa-clock text-warning fs-4"></i>
+          </div>
+          <div>
+            <h6 class="text-muted mb-0">Compras pendientes</h6>
+            <h4 class="mb-0">{{ totalPendientes }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="card shadow-sm border-0 p-3 mb-4">
+    <div class="d-flex flex-wrap gap-2">
+      <button class="btn btn-sm" [class.btn-primary]="filtroEstado === 'Todas'" [class.btn-outline-secondary]="filtroEstado !== 'Todas'" (click)="cambiarFiltro('Todas')">
+        Todas <span class="badge bg-light text-dark ms-1">{{ countTodas }}</span>
+      </button>
+      <button class="btn btn-sm" [class.btn-success]="filtroEstado === 'Completada'" [class.btn-outline-secondary]="filtroEstado !== 'Completada'" (click)="cambiarFiltro('Completada')">
+        ✅ Completadas <span class="badge bg-light text-dark ms-1">{{ countCompletadas }}</span>
+      </button>
+      <button class="btn btn-sm" [class.btn-warning]="filtroEstado === 'Pendiente'" [class.btn-outline-secondary]="filtroEstado !== 'Pendiente'" (click)="cambiarFiltro('Pendiente')">
+        ⏳ Pendientes <span class="badge bg-light text-dark ms-1">{{ countPendientes }}</span>
+      </button>
+      <button class="btn btn-sm" [class.btn-danger]="filtroEstado === 'Cancelada'" [class.btn-outline-secondary]="filtroEstado !== 'Cancelada'" (click)="cambiarFiltro('Cancelada')">
+        ❌ Canceladas <span class="badge bg-light text-dark ms-1">{{ countCanceladas }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-2">Cargando tu historial...</p>
+  </div>
+
+  <!-- Lista de compras -->
+  <div *ngIf="!cargando">
+    <div *ngIf="comprasFiltradas.length === 0" class="alert alert-light text-center border p-5">
+      <i class="fa-solid fa-shopping-bag text-muted fs-1 mb-3"></i>
+      <p class="mb-0 text-muted">No tienes compras {{ filtroEstado !== 'Todas' ? 'con estado "' + filtroEstado + '"' : '' }}.</p>
+    </div>
+
+    <div class="row g-4">
+      <div *ngFor="let compra of comprasFiltradas" class="col-12">
+        <div class="card shadow-sm border-0 hover-lift">
+          <div class="card-body">
+            <!-- Cabecera -->
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+              <div>
+                <span class="fw-bold me-3">#{{ compra.id | slice:0:8 }}</span>
+                <span class="text-muted small">
+                  <i class="fa-solid fa-calendar me-1"></i>
+                  {{ compra.fechaCompra | date:'dd/MM/yyyy HH:mm' }}
+                </span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge {{ getEstadoClass(compra.estado || 'Pendiente') }} px-3 py-2">
+                  <i class="fa-solid {{ getEstadoIcon(compra.estado || 'Pendiente') }} me-1"></i>
+                  {{ compra.estado || 'Pendiente' }}
+                </span>
+                <span class="fw-bold fs-5 text-success">${{ compra.total | number:'1.2' }}</span>
+              </div>
+            </div>
+
+            <!-- Producto -->
+            <div class="mt-3">
+              <div class="d-flex justify-content-between border-bottom py-1">
+                <span>
+                  <strong>{{ compra.nombreProducto }}</strong>
+                  <span class="text-muted ms-2">x{{ compra.cantidad }}</span>
+                </span>
+                <span class="fw-bold">${{ compra.total | number:'1.2' }}</span>
+              </div>
+            </div>
+
+            <!-- ✅ OPINIÓN - CORREGIDO (DENTRO DEL *ngFor) -->
+            <div class="mt-3 pt-2 border-top">
+              <!-- Si ya tiene opinión -->
+              <div *ngIf="compra.opinion" class="bg-light p-3 rounded">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                  <div class="d-flex align-items-center gap-1">
+                    <span *ngFor="let star of [1,2,3,4,5]" 
+                          class="fs-5"
+                          [class.text-warning]="star <= (compra.calificacion || 0)"
+                          [class.text-secondary]="star > (compra.calificacion || 0)">
+                      ⭐
+                    </span>
+                    <span class="text-muted small ms-1">({{ compra.calificacion || 0 }}/5)</span>
+                  </div>
+                  <span class="text-muted small flex-1">{{ compra.opinion }}</span>
+                  <span class="text-muted small ms-auto">{{ compra.fechaCompra | date:'dd/MM/yyyy' }}</span>
+                </div>
+              </div>
+
+              <!-- ✅ Botón para dejar opinión SOLO cuando está COMPLETADA -->
+              <button *ngIf="!compra.opinion && compra.estado === 'Completada'" 
+                      class="btn btn-outline-primary btn-sm mt-2"
+                      (click)="abrirOpinion(compra)">
+                <i class="fa-solid fa-star me-1"></i> Dejar opinión
+              </button>
+
+              <!-- ✅ Mensaje cuando está PENDIENTE -->
+              <div *ngIf="compra.estado === 'Pendiente'" class="text-muted small">
+                <i class="fa-solid fa-clock me-1"></i> 
+                <span class="fw-semibold">No puedes opinar aún</span>
+                <span class="d-block text-muted mt-1" style="font-size: 0.8rem;">
+                  Tu compra está en proceso de confirmación. 
+                  Cuando el administrador la confirme, podrás dejar tu opinión.
+                </span>
+              </div>
+
+              <!-- ✅ Mensaje cuando está CANCELADA -->
+              <div *ngIf="compra.estado === 'Cancelada'" class="text-muted small">
+                <i class="fa-solid fa-times-circle me-1 text-danger"></i> 
+                <span class="fw-semibold text-danger">Compra cancelada</span>
+                <span class="d-block text-muted mt-1" style="font-size: 0.8rem;">
+                  Esta compra fue cancelada. No es posible dejar una opinión.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Opinión -->
+  <div class="modal" [class.show]="mostrandoOpinion" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="mostrandoOpinion">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">⭐ Dejar Opinión</h5>
+          <button type="button" class="btn-close" (click)="cerrarOpinion()"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted">Califica tu experiencia con <strong>{{ compraSeleccionada?.nombreProducto }}</strong></p>
+          
+          <div class="mb-3">
+            <label class="form-label fw-bold">Calificación</label>
+            <div class="d-flex align-items-center gap-2">
+              <button *ngFor="let star of [1,2,3,4,5]" 
+                      class="btn btn-lg p-1"
+                      [class.btn-warning]="star <= opinionForm.calificacion"
+                      [class.btn-outline-secondary]="star > opinionForm.calificacion"
+                      (click)="opinionForm.calificacion = star"
+                      title="{{ star }} estrellas">
+                ⭐
+              </button>
+              <span class="text-muted small ms-2">
+                {{ opinionForm.calificacion === 1 ? 'Muy malo' : 
+                   opinionForm.calificacion === 2 ? 'Malo' :
+                   opinionForm.calificacion === 3 ? 'Regular' :
+                   opinionForm.calificacion === 4 ? 'Bueno' :
+                   opinionForm.calificacion === 5 ? 'Excelente' : 'Selecciona' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">Comentario</label>
+            <textarea class="form-control" rows="4"
+                      [(ngModel)]="opinionForm.comentario"
+                      placeholder="Comparte tu experiencia con este producto..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cerrarOpinion()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="enviarOpinion()">
+            <i class="fa-solid fa-paper-plane me-2"></i>Enviar Opinión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

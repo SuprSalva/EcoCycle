@@ -1,0 +1,221 @@
+<!-- 📁 src/app/features/perfil-cliente/perfil-cliente.component.html -->
+<div class="container-fluid p-4">
+  <!-- Encabezado -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold m-0">👤 Mi Perfil</h2>
+      <p class="text-muted small">Administra tus datos personales y configuración de cuenta.</p>
+    </div>
+    <button *ngIf="!editando && !mostrandoCambioPassword" class="btn btn-primary" (click)="habilitarEdicion()">
+      <i class="fa-solid fa-pen me-2"></i>Editar Perfil
+    </button>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="text-muted mt-2">Cargando tu información...</p>
+  </div>
+
+  <!-- Tarjeta de Perfil -->
+  <div *ngIf="!cargando" class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      
+      <!-- Avatar y nombre -->
+      <div class="d-flex align-items-center gap-4 mb-4 pb-3 border-bottom">
+        <div class="avatar-circle bg-primary text-white">
+          {{ (perfil?.nombre?.charAt(0) || 'U') | uppercase }}{{ (perfil?.apellidos?.charAt(0) || '') | uppercase }}
+        </div>
+        <div>
+          <h4 class="mb-0">{{ perfil?.nombre }} {{ perfil?.apellidos }}</h4>
+          <span class="text-muted">{{ perfil?.email }}</span>
+          <span class="badge bg-success ms-2">{{ perfil?.rol | uppercase }}</span>
+        </div>
+      </div>
+
+      <!-- Formulario de perfil -->
+      <form [formGroup]="perfilForm">
+        <div class="row g-4">
+          
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Nombre *</label>
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="nombre"
+                   [readonly]="!editando"
+                   [class.bg-light]="!editando"
+                   placeholder="Tu nombre">
+            <div *ngIf="hasError('nombre', 'required')" class="text-danger small mt-1">
+              El nombre es obligatorio.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Apellidos *</label>
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="apellidos"
+                   [readonly]="!editando"
+                   [class.bg-light]="!editando"
+                   placeholder="Tus apellidos">
+            <div *ngIf="hasError('apellidos', 'required')" class="text-danger small mt-1">
+              Los apellidos son obligatorios.
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Teléfono</label>
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="telefono"
+                   [readonly]="!editando"
+                   [class.bg-light]="!editando"
+                   placeholder="Ej. 5512345678">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Correo Electrónico</label>
+            <input type="email" 
+                   class="form-control bg-light" 
+                   [value]="perfil?.email"
+                   readonly disabled>
+            <small class="text-muted">El correo no se puede modificar.</small>
+          </div>
+
+          <div class="col-12">
+            <label class="form-label fw-bold">Dirección</label>
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="direccion"
+                   [readonly]="!editando"
+                   [class.bg-light]="!editando"
+                   placeholder="Ej. Calle, número, colonia, ciudad">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Puntos</label>
+            <div class="input-group">
+              <span class="input-group-text bg-success text-white">
+                <i class="fa-solid fa-coins"></i>
+              </span>
+              <input type="number" 
+                     class="form-control bg-light fw-bold" 
+                     [value]="perfil?.saldoPuntos || 0"
+                     readonly disabled>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Rol</label>
+            <input type="text" 
+                   class="form-control bg-light text-capitalize" 
+                   [value]="perfil?.rol || 'usuario'"
+                   readonly disabled>
+          </div>
+
+        </div>
+
+        <!-- Botones de acción del perfil -->
+        <div *ngIf="editando" class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top">
+          <button type="button" class="btn btn-secondary px-4" (click)="cancelarEdicion()">
+            <i class="fa-solid fa-times me-2"></i>Cancelar
+          </button>
+          <button type="button" class="btn btn-success px-4" 
+                  (click)="guardarPerfil()" 
+                  [disabled]="perfilForm.invalid">
+            <i class="fa-solid fa-save me-2"></i>Guardar Cambios
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- ✅ SECCIÓN DE CAMBIO DE CONTRASEÑA -->
+  <div class="row g-4 mt-3">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <h6 class="card-title fw-bold"><i class="fa-solid fa-shield-alt text-primary me-2"></i>Seguridad</h6>
+          <p class="text-muted small">Tu cuenta está protegida con autenticación segura.</p>
+          <button class="btn btn-outline-primary btn-sm" (click)="mostrarCambioPassword()">
+            <i class="fa-solid fa-key me-1"></i>Cambiar Contraseña
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <h6 class="card-title fw-bold"><i class="fa-solid fa-info-circle text-info me-2"></i>Información</h6>
+          <p class="text-muted small">Última actualización: {{ (perfil?.creadoEn | date:'dd/MM/yyyy HH:mm') || 'No disponible' }}</p>
+          <p class="text-muted small mb-0">ID de usuario: {{ (perfil?.id | slice:0:12) || '---' }}...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ MODAL PARA CAMBIAR CONTRASEÑA -->
+  <div class="modal" [class.show]="mostrandoCambioPassword" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="mostrandoCambioPassword">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">🔑 Cambiar Contraseña</h5>
+          <button type="button" class="btn-close" (click)="cancelarCambioPassword()"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="passwordForm">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Contraseña Actual *</label>
+              <input type="password" 
+                     class="form-control" 
+                     formControlName="passwordActual"
+                     placeholder="Ingresa tu contraseña actual">
+              <div *ngIf="hasPasswordError('passwordActual', 'required')" class="text-danger small mt-1">
+                La contraseña actual es obligatoria.
+              </div>
+              <div *ngIf="hasPasswordError('passwordActual', 'minlength')" class="text-danger small mt-1">
+                Mínimo 6 caracteres.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nueva Contraseña *</label>
+              <input type="password" 
+                     class="form-control" 
+                     formControlName="nuevaPassword"
+                     placeholder="Ingresa tu nueva contraseña">
+              <div *ngIf="hasPasswordError('nuevaPassword', 'required')" class="text-danger small mt-1">
+                La nueva contraseña es obligatoria.
+              </div>
+              <div *ngIf="hasPasswordError('nuevaPassword', 'minlength')" class="text-danger small mt-1">
+                Mínimo 6 caracteres.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Confirmar Nueva Contraseña *</label>
+              <input type="password" 
+                     class="form-control" 
+                     formControlName="confirmarPassword"
+                     placeholder="Confirma tu nueva contraseña">
+              <div *ngIf="hasPasswordError('confirmarPassword', 'required')" class="text-danger small mt-1">
+                Confirmar la contraseña es obligatorio.
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="cancelarCambioPassword()">Cancelar</button>
+          <button type="button" class="btn btn-primary" 
+                  (click)="cambiarContrasena()" 
+                  [disabled]="passwordForm.invalid">
+            <i class="fa-solid fa-save me-2"></i>Cambiar Contraseña
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

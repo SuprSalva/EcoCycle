@@ -1,3 +1,4 @@
+// app.routes.ts - CORREGIDO
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/login/login.component';
 import { RegistroComponent } from './features/registro/registro.component';
@@ -16,8 +17,9 @@ import { ErrorPageComponent } from './features/error-page/error-page.component';
 import { NosotrosComponent } from './features/nosotros/nosotros.component';
 import { ContactoComponent } from './features/contacto/contacto.component';
 import { ProductoComponent } from './features/producto/producto.component';
-
-
+import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
+import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
+import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -25,11 +27,11 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
-  { path: 'catalogo', component: CatalogoComponent }, // ✅ RUTA PÚBLICA FALTANTE
-
-  {
+  { path: 'catalogo', component: CatalogoComponent }, 
+ 
+  { 
     path: 'cliente',
-    component: PanelClienteComponent,
+    component: PanelClienteComponent,  
     canActivate: [clienteGuard],
     children: [
 
@@ -67,16 +69,21 @@ export const routes: Routes = [
       { path: 'reportes', component: ReportesComponent },
       { path: 'dashboard', component: DashboardClienteComponent },
       { path: 'soporte', component: SoporteComponent },
+      { path: 'perfil', component: PerfilClienteComponent },
+      { path: 'mis-compras', component: ComprasClienteComponent },
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
 
-  {
-    path: 'admin',
+
+  { 
+    path: 'admin', 
     component: PanelComponent,
     canActivate: [adminGuard],
     children: [
+      // Dashboard
+      { path: 'dashboard', component: DashboardGlobalComponent },
 
       {
         path: 'mi-perfil',
@@ -104,9 +111,10 @@ export const routes: Routes = [
 
       // Soporte
       { path: 'soporte', component: SoporteComponent },
-
-      // Gestión de Proveedores
-      {
+      
+       { path: 'compras', component: AdminComprasComponent },
+      
+       {
         path: 'proveedores',
         loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component')
           .then(c => c.ProveedoresListComponent)
@@ -140,13 +148,13 @@ export const routes: Routes = [
   },
 
   // ============================================
-  // 4. RUTAS DE ERROR
+  // RUTAS DE ERROR
   // ============================================
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
   // ============================================
-  // 5. REDIRECCIONES POR DEFECTO
+  // REDIRECCIONES
   // ============================================
   { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }

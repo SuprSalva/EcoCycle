@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { UsuarioService } from '../../../core/services/Usuario.service';
 
 // Interface para tipado
 export interface UsuarioData {
@@ -35,7 +36,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
   constructor(
     private authService: AuthService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
@@ -52,8 +54,11 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
         this.esEdicion = false;
         if (this.usuarioForm) {
           this.usuarioForm.reset({ rol: 'usuario' });
+          // ✅ AGREGAR VALIDACIONES PARA NUEVOS USUARIOS (CONTRASEÑA OBLIGATORIA)
           this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
           this.usuarioForm.get('password')?.updateValueAndValidity();
+          this.usuarioForm.get('confirmarPassword')?.setValidators([Validators.required]);
+          this.usuarioForm.get('confirmarPassword')?.updateValueAndValidity();
         }
       }
     }
@@ -68,14 +73,9 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
       telefono: [''],
       direccion: [''],
       saldoPuntos: [0],
-      password: [''],
-      confirmarPassword: ['']
+      password: ['', [Validators.required, Validators.minLength(6)]], // ✅ REQUERIDO
+      confirmarPassword: ['', [Validators.required]] // ✅ REQUERIDO
     });
-
-    if (!this.idSeleccionado) {
-      this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
-      this.usuarioForm.get('password')?.updateValueAndValidity();
-    }
   }
 
   cargarUsuario(id: string): void {
@@ -106,9 +106,11 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
           this.usuarioForm.get('confirmarPassword')?.disable();
           this.usuarioForm.get('saldoPuntos')?.disable();
           
-          // Remover validaciones de password
+          // Remover validaciones de password en edición
           this.usuarioForm.get('password')?.clearValidators();
           this.usuarioForm.get('password')?.updateValueAndValidity();
+          this.usuarioForm.get('confirmarPassword')?.clearValidators();
+          this.usuarioForm.get('confirmarPassword')?.updateValueAndValidity();
         } else {
           this.notificationService.error('Error', 'Usuario no encontrado.');
           this.volver();
@@ -132,13 +134,27 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
 
     const valores = this.usuarioForm.getRawValue();
 
-    if (!this.esEdicion || (this.esEdicion && valores.password)) {
+    // ✅ VALIDAR CONTRASEÑA EN NUEVOS USUARIOS
+    if (!this.esEdicion) {
       if (valores.password !== valores.confirmarPassword) {
         this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
         return;
       }
       
-      if (valores.password && valores.password.length < 6) {
+      if (valores.password.length < 6) {
+        this.notificationService.error('Error de Seguridad', 'La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+    }
+
+    // ✅ VALIDAR CONTRASEÑA EN EDICIÓN (si se quiere cambiar)
+    if (this.esEdicion && valores.password) {
+      if (valores.password !== valores.confirmarPassword) {
+        this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
+        return;
+      }
+      
+      if (valores.password.length < 6) {
         this.notificationService.error('Error de Seguridad', 'La contraseña debe tener al menos 6 caracteres.');
         return;
       }
@@ -180,38 +196,47 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
     });
   }
 
+  // ✅ CREAR USUARIO CON CONTRASEÑA (FRONTEND LA MANEJA)
   private crearUsuario(valores: any): void {
-    if (!valores.password) {
-      this.notificationService.warning('Contraseña Requerida', 'Debes establecer una contraseña para el nuevo usuario.');
-      return;
-    }
-
+    // ✅ ENVIAR CONTRASEÑA AL BACKEND PARA EL CORREO
     const payloadNuevo = {
       nombre: valores.nombre,
       apellidos: valores.apellidos,
       email: valores.email,
       telefono: valores.telefono || '',
       direccion: valores.direccion || '',
-      password: valores.password,
       rol: valores.rol
     };
 
     this.cargando = true;
     this.notificationService.showLoading('Guardando...', 'Registrando al nuevo usuario');
 
-    this.authService.registrarDesdeAdmin(payloadNuevo).subscribe({
+    // ✅ PASO 1: Crear en Firebase Auth (frontend) y enviar al backend
+    this.authService.registro(valores.email, valores.password, payloadNuevo).subscribe({
       next: (respuesta: any) => {
         this.cargando = false;
         this.notificationService.hideLoading();
-        this.notificationService.success('¡Creado!', 'El usuario ha sido insertado con éxito en el sistema.');
-        this.volver();
+        
+        if (respuesta.suceso) {
+          this.notificationService.success('¡Creado!', 'Usuario creado exitosamente. Se enviaron las credenciales al correo.');
+          this.volver();
+        } else {
+          this.notificationService.error('Error', respuesta.message || 'No se pudo crear el usuario.');
+        }
       },
       error: (err: any) => {
         this.cargando = false;
         this.notificationService.hideLoading();
         console.error('Error al crear usuario:', err);
-        const errorMsg = err.error?.message || err.message || 'Error desconocido';
-        this.notificationService.error('Error en el Registro', errorMsg);
+        
+        let mensaje = 'Error al crear usuario.';
+        if (err.error?.message) {
+          mensaje = err.error.message;
+        } else if (err.message) {
+          mensaje = err.message;
+        }
+        
+        this.notificationService.error('Error en el Registro', mensaje);
       }
     });
   }

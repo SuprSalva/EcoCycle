@@ -1,7 +1,9 @@
+// 📁 Back/Controllers/AuthController.cs
 using System.Security.Claims;
 using Back.DTOs.Request;
 using Back.Entities;
 using Back.Repositories.Interfaces;
+using Back.Services;
 using Back.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +15,17 @@ namespace Back.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUsuarioRepository _usuarioRepository;
+    private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IUsuarioRepository usuarioRepository)
+    public AuthController(
+        IUsuarioRepository usuarioRepository,
+        IEmailService emailService,
+        IConfiguration configuration)
     {
         _usuarioRepository = usuarioRepository;
+        _emailService = emailService;
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -63,6 +72,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Registro([FromBody] RegistroRequest request)
     {
+        // ✅ OBTENER EMAIL DEL TOKEN (NO DEL REQUEST)
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value;
         var email = User.FindFirst("email")?.Value ?? User.FindFirst(ClaimTypes.Email)?.Value;
 
@@ -80,11 +90,11 @@ public class AuthController : ControllerBase
         var usuario = new Usuario
         {
             Id = userId,
-            Email = email,
+            Email = email,  // ✅ EMAIL DEL TOKEN
             Nombre = request.Nombre,
             Apellidos = request.Apellidos,
-            Telefono = request.Telefono,
-            Direccion = request.Direccion,
+            Telefono = request.Telefono ?? "",
+            Direccion = request.Direccion ?? "",
             Rol = request.Rol ?? "cliente",
             Activo = true,
             CreadoEn = DateTime.UtcNow,
@@ -93,10 +103,31 @@ public class AuthController : ControllerBase
 
         await _usuarioRepository.GuardarAsync(usuario);
 
+        // ✅ ENVIAR CORREO CON LA CONTRASEÑA
+        try
+        {
+            var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
+            var linkAcceso = $"{frontendUrl}/login";
+            
+            // ✅ USAR LA CONTRASEÑA DEL REQUEST
+            await _emailService.EnviarBienvenidaAsync(
+                email,  // ✅ EMAIL DEL TOKEN
+                request.Nombre,
+                request.Contrasena ?? "",  // ✅ CONTRASEÑA DEL REQUEST
+                linkAcceso
+            );
+            
+            Console.WriteLine($"✅ Correo de bienvenida enviado a {email}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"⚠️ Error al enviar correo: {ex.Message}");
+        }
+
         return Ok(ApiResponse<object>.Ok(new 
         { 
             id = usuario.Id,
             rol = usuario.Rol 
-        }, "Usuario registrado correctamente en la base de datos local."));
+        }, "Usuario registrado correctamente."));
     }
 }

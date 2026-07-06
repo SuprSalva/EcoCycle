@@ -1,8 +1,9 @@
-// 📁 Back/Controllers/UsuarioController.cs
 using System.Security.Claims;
 using Back.DTOs.Request;
 using Back.DTOs.Response;
+using Back.Entities;  // ✅ IMPORTANTE
 using Back.Repositories.Interfaces;
+using Back.Services;
 using Back.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,21 +18,114 @@ public class UsuarioController : ControllerBase
     private readonly IUsuarioRepository _usuarioRepository;
     private readonly ISesionReciclajeRepository _sesionRepository;
     private readonly IRecompensaRepository _recompensaRepository;
+    private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
 
     public UsuarioController(
         IUsuarioRepository usuarioRepository,
         ISesionReciclajeRepository sesionRepository,
-        IRecompensaRepository recompensaRepository)
+        IRecompensaRepository recompensaRepository,
+        IEmailService emailService,
+        IConfiguration configuration)
     {
         _usuarioRepository = usuarioRepository;
         _sesionRepository = sesionRepository;
         _recompensaRepository = recompensaRepository;
+        _emailService = emailService;
+        _configuration = configuration;
     }
 
     private string GetUserId() => 
         User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
         User.FindFirst("user_id")?.Value ?? 
         string.Empty;
+
+    // ✅ CREAR CLIENTE CON ENVÍO DE CORREO
+    [HttpPost("crear-cliente")]
+    public async Task<IActionResult> CrearCliente([FromBody] CrearClienteRequest request)
+    {
+        try
+        {
+            Console.WriteLine($"🔍 Intentando crear cliente: {request.Email}");
+
+            // Verificar que el usuario es admin
+            var adminId = GetUserId();
+            var admin = await _usuarioRepository.ObtenerPorIdAsync(adminId);
+            if (admin?.Rol?.ToLower() != "admin")
+                return Forbid("Acceso denegado. Solo administradores.");
+
+            // Verificar si el email ya existe
+            var existente = await _usuarioRepository.ObtenerPorEmailAsync(request.Email);
+            if (existente != null)
+                return BadRequest(ApiResponse<object>.Fail("El email ya está registrado."));
+
+            // Generar contraseña temporal
+            var passwordTemporal = GenerarPasswordTemporal();
+            Console.WriteLine($"🔑 Contraseña generada: {passwordTemporal}");
+
+            // Crear usuario en Firestore
+            var usuario = new Usuario
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = request.Email,
+                Nombre = request.Nombre,
+                Apellidos = request.Apellidos,
+                Telefono = request.Telefono ?? "",
+                Direccion = request.Direccion ?? "",
+                Rol = "cliente",
+                Activo = true,
+                CreadoEn = DateTime.UtcNow,
+                SaldoPuntos = 0
+            };
+
+            await _usuarioRepository.GuardarAsync(usuario);
+            Console.WriteLine($"✅ Usuario guardado en Firestore: {usuario.Id}");
+
+            // ✅ Enviar correo con credenciales
+            var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
+            var linkAcceso = $"{frontendUrl}/login";
+
+            Console.WriteLine($"📧 Enviando correo a {request.Email}...");
+            var enviado = await _emailService.EnviarCredencialesClienteAsync(
+                request.Email,
+                request.Nombre,
+                passwordTemporal,
+                linkAcceso
+            );
+
+            if (enviado)
+            {
+                Console.WriteLine($"✅ Correo enviado exitosamente a {request.Email}");
+            }
+            else
+            {
+                Console.WriteLine($"⚠️ No se pudo enviar el correo a {request.Email}");
+            }
+
+            return Ok(ApiResponse<object>.Ok(new
+            {
+                usuario.Id,
+                usuario.Email,
+                usuario.Nombre,
+                usuario.Apellidos,
+                usuario.Rol,
+                CorreoEnviado = enviado
+            }, "Cliente creado exitosamente."));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error al crear cliente: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error al crear cliente: {ex.Message}"));
+        }
+    }
+
+    private string GenerarPasswordTemporal()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 10)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 
     [HttpGet("perfil")]
     public async Task<IActionResult> GetPerfil()
@@ -163,3 +257,4 @@ public class UsuarioController : ControllerBase
         return Ok(ApiResponse<object>.Ok(null, "Usuario eliminado correctamente."));
     }
 }
+
