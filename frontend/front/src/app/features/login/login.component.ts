@@ -66,6 +66,8 @@ export class LoginComponent {
         } else {
           this.notificationService.hideLoading();
           this.notificationService.error('Error', response.message || 'Error al iniciar sesión.');
+          this.notificationService.toastSuccess('¡Inicio de sesión exitoso!');
+          this.router.navigate(['/panel/cliente']); // O la ruta que quieras para usuarios normales
         }
       },
       error: (err) => {
@@ -80,6 +82,28 @@ export class LoginComponent {
         
         this.notificationService.error('Error de Autenticación', mensajeError);
         this.authService.logout().subscribe();
+      }
+    });
+  }
+
+  onForgotPassword(event: Event) {
+    event.preventDefault(); // Evita que se envíe el formulario si está dentro de uno
+    if (!this.email) {
+      this.notificationService.warning('Correo requerido', 'Por favor, escribe tu correo arriba para recuperar la contraseña.');
+      return;
+    }
+
+    this.notificationService.showLoading('Enviando...', 'Enviando enlace de recuperación');
+    
+    this.authService.resetPassword(this.email).subscribe({
+      next: () => {
+        this.notificationService.hideLoading();
+        this.notificationService.toastSuccess('Correo enviado. Revisa tu bandeja de entrada o spam.');
+      },
+      error: (err) => {
+        this.notificationService.hideLoading();
+        console.error(err);
+        this.notificationService.error('Error', 'No se pudo enviar el correo. Verifica tu dirección.');
       }
     });
   }

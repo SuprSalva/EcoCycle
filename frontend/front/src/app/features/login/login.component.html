@@ -14,8 +14,14 @@
       <p class="subtitle">Sistema de Gestión Sostenible</p>
     </div>
 
+    <div class="encabezado-login">
+      <h2>Iniciar Sesión</h2>
+      <p>Accede al sistema de gestión EcoCycle</p>
+    </div>
+
+    
     <form class="login-form" (ngSubmit)="onLogin()">
-      
+
       <div class="input-group">
         <label for="email">Correo Electrónico</label>
         <div class="input-wrapper">
@@ -44,9 +50,12 @@
         </div>
       </div>
 
-      <button type="submit" class="btn-submit">
-        <span>Iniciar Sesión</span>
-        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+      <div class="opciones-extra" style="text-align: right; margin-bottom: 15px; font-size: 0.9rem;">
+        <a href="#" (click)="onForgotPassword($event)" style="color: #2b7a0b; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button type="submit">
+        Iniciar Sesión
       </button>
 
     </form>

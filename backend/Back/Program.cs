@@ -52,9 +52,10 @@ builder.Services.AddAuthorization();
 // CONFIGURAR FIRESTORE
 // ==========================================
 var firestoreKeyPath = builder.Configuration["Firestore:KeyPath"];
+string credentialsPath = null;
 if (!string.IsNullOrEmpty(firestoreKeyPath))
 {
-    var credentialsPath = Path.Combine(AppContext.BaseDirectory, firestoreKeyPath);
+    credentialsPath = Path.Combine(AppContext.BaseDirectory, firestoreKeyPath);
     if (!File.Exists(credentialsPath))
     {
         credentialsPath = Path.GetFullPath(firestoreKeyPath);
@@ -62,7 +63,12 @@ if (!string.IsNullOrEmpty(firestoreKeyPath))
 
     Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
 }
-var firestoreDb = FirestoreDb.Create(firebaseProjectId);
+
+var firestoreDb = new Google.Cloud.Firestore.FirestoreDbBuilder
+{
+    ProjectId = firebaseProjectId,
+    CredentialsPath = credentialsPath
+}.Build();
 builder.Services.AddSingleton(firestoreDb);
 
 // ==========================================
