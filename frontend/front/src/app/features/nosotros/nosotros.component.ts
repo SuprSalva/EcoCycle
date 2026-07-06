@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { BarComponent } from '../../shared/components/bar/bar.component';
 
 @Component({
   selector: 'app-nosotros',
   standalone: true,
-  imports: [],
+  imports: [ BarComponent],
   templateUrl: './nosotros.component.html',
   styleUrl: './nosotros.component.scss'
 })

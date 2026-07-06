@@ -1,0 +1,39 @@
+<nav class="navbar-login" [class.scrolled]="isScrolled">
+
+    <div class="navbar-container">
+
+        <div class="brand">
+
+            <div class="logo">
+                <img [src]="isScrolled ? '/logoo.png' : '/logoo_blanco.png'" alt="Logo">
+            </div>
+
+            <span class="company-name">
+                EcoCycle
+            </span>
+
+        </div>
+
+        <div class="search-box">
+
+            <input type="text" placeholder="Buscar...">
+
+            <button>
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+        </div>
+
+        <div class="menu">
+            <a routerLink="/">Inicio</a>
+            <a routerLink="/nosotros">Nosotros</a>
+            <a routerLink="/servicios">Servicios</a>
+            <a routerLink="/contacto">Contacto</a>
+        </div>
+
+        <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isLightTheme ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'">
+            <i class="fa-solid" [ngClass]="isLightTheme ? 'fa-moon' : 'fa-sun'"></i>
+        </button>
+    </div>
+
+</nav>

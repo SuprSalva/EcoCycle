@@ -26,7 +26,7 @@ public class SesionReciclajeController(Back.Repositories.Interfaces.ISesionRecic
             UsuarioId = request.UsuarioId,
             MaquinaId = request.MaquinaId,
             Botellas = request.Botellas,
-            Puntos = request.Botellas * 0.10, // 0.10 puntos por botella
+            Puntos = request.Botellas * 20, // 20 puntos por botella
             Fecha = DateTime.UtcNow
         };
 
