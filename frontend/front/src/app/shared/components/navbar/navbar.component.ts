@@ -1,24 +1,13 @@
-<<<<<<< HEAD
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NotificacionesApiService, NotificacionResponse } from '../../../core/services/notificaciones-api.service';
-=======
-// navbar.component.ts
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';  // ✅ ¡IMPORTANTE!
->>>>>>> origin/nueva-roles
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-<<<<<<< HEAD
   imports: [CommonModule, RouterModule],
   providers: [DatePipe],
-=======
-  imports: [CommonModule, RouterModule],  // ✅ Agregar RouterModule
->>>>>>> origin/nueva-roles
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
@@ -36,15 +25,11 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-<<<<<<< HEAD
-    this.cargarNotificaciones();
-=======
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light') {
-      this.isLightTheme = true;
+    //  this.isLightTheme = true;
       document.body.classList.add('light-theme');
     }
->>>>>>> origin/nueva-roles
   }
 
   cargarNotificaciones() {
@@ -71,7 +56,6 @@ export class NavbarComponent implements OnInit {
   onLogout() {
     this.logout.emit();
   }
-<<<<<<< HEAD
 
   formatearFecha(fecha: string): string {
     const d = new Date(fecha);
@@ -99,6 +83,3 @@ export class NavbarComponent implements OnInit {
     return 'fa-solid fa-bell text-primary';
   }
 }
-=======
-}
->>>>>>> origin/nueva-roles

@@ -1,9 +1,7 @@
-<!-- 📁 src/app/features/panel-cliente/panel-cliente.component.html -->
 <div class="dashboard-container">
-  <app-sidebar-cliente></app-sidebar-cliente>
+  <app-sidebar-cliente [perfil]="perfil" (logout)="logout()"></app-sidebar-cliente>
 
   <main class="contenido-principal">
-    <app-navbar [perfil]="perfil" (logout)="logout()"></app-navbar>
 
     <div class="contenido-router">
       <router-outlet></router-outlet>

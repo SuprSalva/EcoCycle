@@ -60,7 +60,7 @@
 
     <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
    
-      <button class="dropdown-item" routerLink='/panel/cliente'>
+      <button class="dropdown-item" routerLink='/admin/mi-perfil/perfil'>
         <i class="fa-solid fa-user" ></i>
         Perfil
       </button>
@@ -70,12 +70,12 @@
         Configuración
       </button>
   
-      <button class="dropdown-item">
+      <button class="dropdown-item" routerLink='/admin/reportes'>
         <i class="fa-solid fa-circle-question"></i>
         Ayuda
       </button>
 
-      <button class="dropdown-item" routerLink='/panel/soporte'>
+      <button class="dropdown-item" routerLink='/admin/soporte'>
         <i class="fa-solid fa-headset"></i>
         Soporte Tecnico
       </button>

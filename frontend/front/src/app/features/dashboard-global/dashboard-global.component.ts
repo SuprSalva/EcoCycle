@@ -3,11 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 
-import {
-  DashboardService,
-  DashboardResumen,
-  UltimaSesion
-} from '../../core/services/dashboard.service';
+import {DashboardService,DashboardResumen,UltimaSesion} from '../../core/services/dashboard.service';
 
 import { NotificationService } from '../../core/services/notification.service';
 

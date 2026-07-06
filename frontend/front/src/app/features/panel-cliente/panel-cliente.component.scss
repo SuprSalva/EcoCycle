@@ -1,25 +1,28 @@
-// panel-cliente.component.scss
 .dashboard-container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--background-color);
+  overflow: hidden;
 }
 
 .contenido-principal {
   flex: 1;
-  margin-left: 280px;
-  transition: margin-left 0.3s ease;
   display: flex;
   flex-direction: column;
-}
-
-@media (max-width: 768px) {
-  .contenido-principal {
-    margin-left: 0;
-  }
+  position: relative;
+  z-index: 1;
 }
 
 .contenido-router {
-  padding: 20px;
   flex: 1;
+  padding: 30px 40px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+  }
 }

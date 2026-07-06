@@ -1,5 +1,5 @@
 <!-- dashboard-cliente.component.html -->
-<div class="container-fluid p-4">
+<div class="container-fluid">
   <div class="row mb-4">
     <div class="col-12">
       <h2>¡Bienvenido, {{ perfil?.nombre || 'Cliente' }}!</h2>
@@ -7,78 +7,126 @@
     </div>
   </div>
 
-  <div class="row g-4 mb-4">
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="icon-circle bg-success bg-opacity-10 p-3 rounded-circle me-3">
-              <i class="fa-solid fa-recycle text-success fs-4"></i>
-            </div>
-            <div>
-              <h6 class="text-muted mb-1">Botellas Recicladas</h6>
-              <h3 class="mb-0">{{ estadisticas.totalReciclado }}</h3>
-            </div>
-          </div>
-        </div>
-      </div>
+<section class="tarjetas-grid">
+
+  <div class="tarjeta verde">
+    <p>TOTAL BOTELLAS RECICLADAS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalBotellas | number }}
+      <span>uds</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Actividad general
+    </small>
+
+  </div>
+
+  <div class="tarjeta azul">
+
+    <p>PUNTOS TOTALES EMITIDOS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalPuntosEmitidos | number:'1.2-2' }}
+      <span>pts</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Recompensas entregadas
+    </small>
+
+  </div>
+
+
+  <div class="tarjeta naranja">
+
+    <p>CANJES COMPLETADOS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalCanjes }}
+      <span>éxitos</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-circle-check"></i>
+      Canjes exitosos
+    </small>
+
+  </div>
+
+</section>
+
+<section class="dashboard">
+
+
+  <div class="card-dashboard grafica-principal">
+
+    <div class="card-header">
+
+      <h3>Monitoreo de Reciclaje</h3>
+
+      <span>Actividad registrada durante los últimos días</span>
+
     </div>
 
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="icon-circle bg-warning bg-opacity-10 p-3 rounded-circle me-3">
-              <i class="fa-solid fa-coins text-warning fs-4"></i>
-            </div>
-            <div>
-              <h6 class="text-muted mb-1">Puntos Acumulados</h6>
-              <h3 class="mb-0">{{ estadisticas.puntosAcumulados }}</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="icon-circle bg-info bg-opacity-10 p-3 rounded-circle me-3">
-              <i class="fa-solid fa-gift text-info fs-4"></i>
-            </div>
-            <div>
-              <h6 class="text-muted mb-1">Canjes Realizados</h6>
-              <h3 class="mb-0">{{ estadisticas.canjesRealizados }}</h3>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="chart-container">
+    <canvas #areaChart></canvas>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <h5 class="card-title">📝 Enviar Comentario</h5>
-          <p class="text-muted">Comparte tus sugerencias o reporta problemas.</p>
-          <a routerLink="/cliente/soporte" class="btn btn-success">
-            <i class="fa-solid fa-pen me-2"></i>Ir a Soporte
-          </a>
-        </div>
-      </div>
+
+
+  <div class="card-dashboard tabla-card">
+
+    <div class="card-header">
+
+      <h3>Últimas sesiones</h3>
+
+      <span>Reciclajes registrados recientemente</span>
+
     </div>
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0">
-        <div class="card-body">
-          <h5 class="card-title">🏆 Recompensas</h5>
-          <p class="text-muted">Consulta tus puntos y canjea recompensas.</p>
-          <a routerLink="/cliente/historial-recompensas" class="btn btn-primary">
-            <i class="fa-solid fa-trophy me-2"></i>Ver Recompensas
-          </a>
-        </div>
-      </div>
+
+    <div class="tabla-responsive">
+
+      <table>
+
+        <thead>
+
+          <tr>
+          
+          <th>Fecha</th>
+          
+          <th>Máquina</th>
+              
+          </tr>
+          
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let s of ultimasSesiones">
+            
+            <td>{{ s.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            
+            <td>{{ s.maquinaId }}</td>  
+      
+            </tr>
+            
+            </tbody>
+      </table>
+
     </div>
+
   </div>
+
+</section>
+
 </div>

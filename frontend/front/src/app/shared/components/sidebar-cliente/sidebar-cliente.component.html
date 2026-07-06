@@ -1,81 +1,89 @@
-<!-- sidebar-cliente.component.html -->
 <aside class="sidebar" [class.collapsed]="isCollapsed">
 
   <div class="sidebar-header">
     <div class="logo-seccion">
-      <img src="/logos.png" alt="EcoCycle Logo">
+      <img src="/logo_esmeralda.png" alt="EcoCycle Logo">
       <div class="logo-text">
         <h2>EcoCycle</h2>
-        <span>Cliente</span>
+        <span>Panel</span>
       </div>
     </div>
+    
+
     <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
       <i class="fa-solid fa-bars"></i>
       <span class="sr-only">Abrir menú</span>
     </button>
   </div>
 
-  <div class="search-box">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input type="text" placeholder="Buscar">
-  </div>
 
   <nav class="menu-navegacion">
+    <ng-container *ngFor="let group of filteredMenu">
+      <div class="menu-section mt-3">{{ group.section }}</div>
+      
+      <a *ngFor="let item of group.items" 
+         [routerLink]="item.route"
+         class="item-menu"
+         routerLinkActive="activo">
+        <i [class]="item.icon"></i>
+        <span>{{ item.name }}</span>
+      </a>
+    </ng-container>
 
-    <div class="menu-section">Principal</div>
-
-    <a routerLink="/cliente/dashboard"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-house"></i>
-      <span>Dashboard</span>
-    </a>
-
-    <div class="menu-section mt-3">Mis Actividades</div>
-
-    <a routerLink="/cliente/historial-recompensas"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-trophy"></i>
-      <span>Recompensas</span>
-    </a>
-
-    <a routerLink="/cliente/catalogo"
-       class="item-menu"
-       routerLinkActive="activo">
-      <i class="fa-solid fa-box"></i>
-      <span>Catálogo</span>
-    </a>
-
-    <div class="menu-section mt-3">Soporte</div>
-
-    <a routerLink="/cliente/soporte" 
-       class="item-menu" 
-       routerLinkActive="activo">
-      <i class="fa-solid fa-headset"></i> 
-      <span>Soporte Técnico</span>
-    </a>
-
+    <div *ngIf="filteredMenu.length === 0" class="text-center py-4 px-3 text-muted">
+      <i class="fa-solid fa-ghost fs-3 mb-2" style="opacity: 0.3;"></i>
+      <p class="small mb-0">No se encontraron resultados para "{{ searchTerm }}"</p>
+    </div>
   </nav>
 
   <div class="sidebar-bottom">
 
-    <a class="item-menu">
-      <i class="fa-solid fa-bell"></i>
-      <span>Notificaciones</span>
-      <small>12</small>
-    </a>
-
-    <div class="usuario">
-      <img src="/usuario.png" alt="Avatar del usuario" title="Avatar">
-      <div>
-        <strong>Cliente</strong>
-        <!-- ✅ CORREGIDO: Usar la entidad HTML &#64; -->
-        <span>cliente&#64;ecocycle.com</span>
+    <div class="usuario"
+         *ngIf="perfil"
+         (click)="toggleUserMenu($event)">
+  
+      <img src="/usuario.png" alt="Usuario">
+  
+      <div class="user-info">
+        <strong>{{ perfil.nombre }}</strong>
+        <span>{{ perfil.correo }}</span>
       </div>
-      <i class="fa-solid fa-ellipsis-vertical"></i>
+  
+      <i class="fa-solid fa-chevron-right"></i>
+  
     </div>
 
+    <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+   
+      <button class="dropdown-item" routerLink='/cliente/mi-perfil/perfil'>
+        <i class="fa-solid fa-user" ></i>
+        Perfil
+      </button>
+  
+      <button class="dropdown-item">
+        <i class="fa-solid fa-gear"></i>
+        Configuración
+      </button>
+  
+      <button class="dropdown-item" routerLink='/admin/reportes'>
+        <i class="fa-solid fa-circle-question"></i>
+        Ayuda
+      </button>
+
+      <button class="dropdown-item" routerLink='/admin/soporte'>
+        <i class="fa-solid fa-headset"></i>
+        Soporte Tecnico
+      </button>
+
+      <hr>
+  
+      <button class="dropdown-item danger" (click)="onLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
+  
+    </div>
+  
   </div>
 
 </aside>

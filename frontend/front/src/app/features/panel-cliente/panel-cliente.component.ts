@@ -13,11 +13,10 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
     RouterOutlet,
     RouterModule,
     CommonModule,
-    SidebarClienteComponent,
-    NavbarComponent
+    SidebarClienteComponent
   ],
-  templateUrl: './panel-cliente.component.html',  // ✅ ESTE ARCHIVO DEBE EXISTIR
-  styleUrls: ['./panel-cliente.component.scss']  // ✅ OPCIONAL
+  templateUrl: './panel-cliente.component.html', 
+  styleUrls: ['./panel-cliente.component.scss']  
 })
 export class PanelClienteComponent implements OnInit {
   perfil: any = null;

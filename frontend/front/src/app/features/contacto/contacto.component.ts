@@ -51,27 +51,16 @@ export class ContactoComponent {
       next: (response: any) => {
 
         this.notificationService.hideLoading();
-
-        if (response.suceso) {
-
-          this.notificationService.success(
-            'Mensaje enviado',
-            'Nos pondremos en contacto contigo lo antes posible.'
-          );
-
-          this.formulario.reset();
-
-        } else {
-
-          this.notificationService.error(
-            'Error',
-            response.message
-          );
-
-        }
-
+      
+        this.notificationService.success(
+          'Mensaje enviado',
+          response.mensaje || 'Nos pondremos en contacto contigo lo antes posible.'
+        );
+      
+        this.formulario.reset();
+      
       },
-
+      
       error: () => {
 
         this.notificationService.hideLoading();

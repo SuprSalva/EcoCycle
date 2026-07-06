@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-<<<<<<< HEAD
+
 export class SidebarComponent implements OnInit {
 
   @Input() perfil: any;
@@ -26,30 +26,30 @@ export class SidebarComponent implements OnInit {
     {
       section: 'Principal',
       items: [
-        { name: 'Dashboard', icon: 'fa-solid fa-house', route: '/panel/dashboard' },
-        { name: 'Usuarios', icon: 'fa-solid fa-users', route: '/panel/usuarios' }
+        { name: 'Dashboard', icon: 'fa-solid fa-house', route: '/admin/dashboard' },
+        { name: 'Usuarios', icon: 'fa-solid fa-users', route: '/admin/usuarios' }
       ]
     },
     {
       section: 'Operaciones',
       items: [
       //  { name: 'Terminal IoT', icon: 'fa-solid fa-cube', route: '/panel/reciclaje' },
-        { name: 'Catálogo', icon: 'fa-solid fa-box', route: '/panel/catalogo' },
-        { name: 'Recompensas', icon: 'fa-solid fa-layer-group', route: '/panel/historial-recompensas' }
+        { name: 'Catálogo', icon: 'fa-solid fa-box', route: '/admin/catalogo' },
+        { name: 'Recompensas', icon: 'fa-solid fa-layer-group', route: '/admin/historial-recompensas' }
       ]
     },
     {
       section: 'Abastecimiento',
       items: [
-        { name: 'Proveedores', icon: 'fa-solid fa-truck', route: '/panel/proveedores' },
-        { name: 'Compras a Proveedores', icon: 'fa-solid fa-cart-shopping', route: '/panel/compras-proveedores' },
+        { name: 'Proveedores', icon: 'fa-solid fa-truck', route: '/admin/proveedores' },
+        { name: 'Compras a Proveedores', icon: 'fa-solid fa-cart-shopping', route: '/admin/compras-proveedores' },
       ]
     },
     {
       section: 'Análisis',
       items: [
-        { name: 'Reportes', icon: 'fa-solid fa-chart-column', route: '/panel/reportes' },
-        { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/panel/materia-prima' },
+        { name: 'Reportes', icon: 'fa-solid fa-chart-column', route: '/admin/reportes' },
+        { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/admin/materia-prima' },
       ]
     }
   ];
@@ -95,12 +95,8 @@ export class SidebarComponent implements OnInit {
     this.logout.emit();
     this.showUserMenu = false;
   }
-=======
-export class SidebarComponent {
-  isCollapsed = false;  // ← ¡NECESARIO!
->>>>>>> origin/nueva-roles
 
-  toggleSidebar() {     // ← ¡NECESARIO!
+  toggleSidebar() {     
     this.isCollapsed = !this.isCollapsed;
   }
 

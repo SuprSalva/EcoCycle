@@ -4,13 +4,14 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
-import { BarComponent } from '../../shared/components/bar/bar.component';
 import { switchMap } from 'rxjs';
+import { BarComponent } from '../../shared/components/bar/bar.component';
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, RouterLink, BarComponent],
+  imports: [FormsModule, BarComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
