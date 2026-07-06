@@ -20,6 +20,8 @@ import { ProductoComponent } from './features/producto/producto.component';
 import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
 import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
 import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
+import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component'
+
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -95,6 +97,7 @@ export const routes: Routes = [
         ]
       },
 
+        {path: 'materia-prima', component: MateriaPrimaComponent},
 
       { path: 'dashboard', component: DashboardGlobalComponent },
 

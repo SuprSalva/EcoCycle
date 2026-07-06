@@ -108,7 +108,7 @@ export class ComprasFormComponent implements OnInit {
     this.compraService.registrarCompra(dto).subscribe({
       next: () => {
         Swal.fire('Éxito', 'Compra registrada y stock actualizado correctamente', 'success');
-        this.router.navigate(['/panel/compras-proveedores']);
+        this.router.navigate(['/admin/compras-proveedores']);
       },
       error: (err) => {
         this.guardando = false;

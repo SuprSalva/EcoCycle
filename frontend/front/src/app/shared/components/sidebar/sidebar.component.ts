@@ -50,7 +50,7 @@ export class SidebarComponent implements OnInit {
       items: [
         { name: 'Reportes', icon: 'fa-solid fa-chart-column', route: '/admin/reportes' },
         { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/admin/materia-prima' },
-        { name: 'Compras de clientes y Opiniones', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
+        { name: 'Comentarios y Opiniones', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
 
         
       ]
