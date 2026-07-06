@@ -1,53 +1,234 @@
+<!-- ================= KPI ================= -->
+
 <section class="tarjetas-grid">
+
   <div class="tarjeta verde">
     <p>TOTAL BOTELLAS RECICLADAS</p>
+
     <h3 *ngIf="cargando">...</h3>
-    <h3 *ngIf="!cargando">{{ resumen.totalBotellas | number }} <span>uds</span></h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalBotellas | number }}
+      <span>uds</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Actividad general
+    </small>
+
   </div>
+
   <div class="tarjeta azul">
+
     <p>PUNTOS TOTALES EMITIDOS</p>
+
     <h3 *ngIf="cargando">...</h3>
-    <h3 *ngIf="!cargando">${{ resumen.totalPuntosEmitidos | number:'1.2-2' }} <span>pts</span></h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalPuntosEmitidos | number:'1.2-2' }}
+      <span>pts</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Recompensas entregadas
+    </small>
+
   </div>
+
   <div class="tarjeta verde-claro">
-    <p>USUARIOS REGISTRADOS ACTIVOS</p>
+
+    <p>USUARIOS REGISTRADOS</p>
+
     <h3 *ngIf="cargando">...</h3>
-    <h3 *ngIf="!cargando">{{ resumen.totalUsuarios | number }} <span>habs</span></h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalUsuarios }}
+      <span>usuarios</span>
+    </h3>
+
+    <small class="indicador">
+      <i class="fa-solid fa-users"></i>
+      Comunidad EcoCycle
+    </small>
+
   </div>
+
   <div class="tarjeta naranja">
-    <p>CANJES TOTALES COMPLETADOS</p>
+
+    <p>CANJES COMPLETADOS</p>
+
     <h3 *ngIf="cargando">...</h3>
-    <h3 *ngIf="!cargando">{{ resumen.totalCanjes | number }} <span>éxitos</span></h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalCanjes }}
+      <span>éxitos</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-circle-check"></i>
+      Canjes exitosos
+    </small>
+
   </div>
+
 </section>
 
-<div class="graficas-grid">
-  <div class="bloque-grafica">
-    <h4>Monitoreo de Reciclaje</h4>
-    <p class="subtitulo">Actividad de los últimos 4 días registrados</p>
-    
-    <div class="barras-mockup" *ngIf="cargando">
-      <div class="barra" style="height: 10%"><span>...</span></div>
+<section class="dashboard">
+
+
+  <div class="card-dashboard grafica-principal">
+
+    <div class="card-header">
+
+      <h3>Monitoreo de Reciclaje</h3>
+
+      <span>Actividad registrada durante los últimos días</span>
+
     </div>
 
-    <div class="barras-mockup" *ngIf="!cargando">
-      <div class="barra" *ngFor="let item of resumen.grafica" [style.height.%]="item.porcentaje || 5">
-        <span>{{ item.cantidad }}</span>
-        <div style="position: absolute; bottom: -25px; width: 100%; text-align: center; font-size: 0.75rem; color: var(--text-secondary-color);">{{ item.dia }}</div>
+    <div class="chart-container">
+    <canvas #areaChart></canvas>
+    </div>
+  </div>
+
+
+  <div class="card-dashboard estado-iot">
+
+    <div class="card-header">
+
+      <h3>Estado de Terminales IoT</h3>
+
+      <span>Monitoreo en tiempo real</span>
+
+    </div>
+
+    <div class="iot-list">
+
+      <div class="iot-item">
+
+        <div>
+
+          <strong>MQ-01</strong>
+
+          <small>Tecnológico</small>
+
+        </div>
+
+        <span class="badge estable">
+
+          ESTABLE
+
+        </span>
+
       </div>
+
+      <div class="iot-item">
+
+        <div>
+
+          <strong>MQ-02</strong>
+
+          <small>Plaza Principal</small>
+
+        </div>
+
+        <span class="badge estable">
+
+          ESTABLE
+
+        </span>
+
+      </div>
+
+      <div class="iot-item">
+
+        <div>
+
+          <strong>MQ-03</strong>
+
+          <small>Centro Comercial</small>
+
+        </div>
+
+        <span class="badge revision">
+
+          REVISIÓN
+
+        </span>
+
+      </div>
+
     </div>
+
+    <button
+      class="btn-iot"
+      routerLink="/panel/reciclaje">
+
+      Administrar Terminales
+
+    </button>
+
   </div>
 
-  <div class="bloque-iot">
-    <h4>Estado Físico IoT</h4>
-    <div class="dispositivo">
-      <span>MQ-01 (Tec)</span>
-      <span class="badge estable">ESTABLE</span>
+  <div class="card-dashboard tabla-card">
+
+    <div class="card-header">
+
+      <h3>Últimas sesiones</h3>
+
+      <span>Reciclajes registrados recientemente</span>
+
     </div>
-    <div class="dispositivo">
-      <span>MQ-02 (Plaza)</span>
-      <span class="badge estable">ESTABLE</span>
+
+    <div class="tabla-responsive">
+
+      <table>
+
+        <thead>
+
+          <tr>
+          
+          <th>Fecha</th>
+          
+          <th>Máquina</th>
+              
+          </tr>
+          
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let s of ultimasSesiones">
+            
+            <td>{{ s.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            
+            <td>{{ s.maquinaId }}</td>  
+      
+            </tr>
+            
+            </tbody>
+      </table>
+
     </div>
-    <button class="btn-iot" routerLink="/panel/reciclaje">Administrar Nodos IoT</button>
+
   </div>
-</div>
+
+  <div class="card-dashboard stock-card">
+
+    <div class="card-header">
+
+      <h3>Stock de Materia Prima</h3>
+
+      <span>Inventario disponible</span>
+
+    </div>
+
+    <div class="chart-container">
+      <canvas #pieChart></canvas>
+  </div>
+    
+
+  </div>
+
+</section>

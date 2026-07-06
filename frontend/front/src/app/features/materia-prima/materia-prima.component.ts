@@ -21,6 +21,12 @@ export class MateriaPrimaComponent implements OnInit {
   materiaSeleccionada: MateriaPrima | null = null;
   cargando = false;
 
+  // 🔍 Propiedades para Búsqueda y Paginación
+  searchTerm: string = '';
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  itemsPerPageOptions: number[] = [5, 10, 20, 50];
+
   constructor(private fb: FormBuilder, private materiaPrimaService: MateriaPrimaService) {
     this.formularioMateria = this.fb.group({
       nombre: ['', Validators.required],
@@ -44,6 +50,7 @@ export class MateriaPrimaComponent implements OnInit {
       next: (data) => {
         this.materias = data;
         this.cargando = false;
+        this.currentPage = 1; // Resetea a la primera página al recargar datos
       },
       error: (err) => {
         console.error(err);
@@ -51,6 +58,46 @@ export class MateriaPrimaComponent implements OnInit {
       }
     });
   }
+
+  get materiasFiltradas(): MateriaPrima[] {
+    if (!this.searchTerm.trim()) {
+      return this.materias;
+    }
+    const search = this.searchTerm.toLowerCase().trim();
+    return this.materias.filter(m => 
+      m.nombre.toLowerCase().includes(search) || 
+      (m.unidad && m.unidad.toLowerCase().includes(search))
+    );
+  }
+
+  get materiasPaginadas(): MateriaPrima[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.materiasFiltradas.slice(startIndex, startIndex + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.materiasFiltradas.length / this.itemsPerPage) || 1;
+  }
+
+  cambiarItemsPorPagina(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.itemsPerPage = Number(selectElement.value);
+    this.currentPage = 1; 
+  }
+
+  anteriorPagina() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  siguientePagina() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+    }
+  }
+
+  // 🛠️ MÉTODOS EXISTENTES DE OPERACIÓN 
 
   crearNuevaMateria() {
     this.materiaSeleccionada = null;
@@ -110,7 +157,6 @@ export class MateriaPrimaComponent implements OnInit {
     if (this.formularioMateria.invalid) return;
     
     if (this.materiaSeleccionada && this.materiaSeleccionada.id) {
-      // Actualizar
       const dataToUpdate = {
         ...this.materiaSeleccionada,
         nombre: this.formularioMateria.value.nombre,
@@ -124,7 +170,6 @@ export class MateriaPrimaComponent implements OnInit {
         error: () => Swal.fire('Error', 'No se pudo actualizar.', 'error')
       });
     } else {
-      // Crear
       const materiaData: MateriaPrima = {
         nombre: this.formularioMateria.value.nombre,
         unidad: this.formularioMateria.value.unidad,

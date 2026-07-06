@@ -1,289 +1,177 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// Variables de diseño
+$primary-green: #1b5e20;
+$dark-green: #0d2312;
+$light-bg: #f4f7f5;
+$white: #ffffff;
+$text-muted: #667085;
+$border-color: #d0d5dd;
 
-.contenedor-login {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-}
-
-/* =====================================
-   PANEL IZQUIERDO
-===================================== */
-
-.panel-formulario {
-  width: 30%;
-  min-width: 400px;
-  background: #ffffff;
-  color: #0f172a;
-  --placeholder-color: #94a3b8;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 50px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.logo img {
-  width: 65px;
-}
-
-.logo span {
-  font-size: 33px;
-  font-weight: 800;
-}
-
-.avatar {
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 20px;
-
-  border-radius: 50%;
-
-  background: #0d631b;
-
+.login-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.avatar i {
-  color: white;
-  font-size: 50px;
-}
-
-
-.encabezado-login {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.encabezado-login h2 {
-  font-size: 32px;
-  color: #0d631b;
-  margin-bottom: 10px;
-}
-
-.encabezado-login p {
-  color: #64748b;
-  font-size: 15px;
-}
-
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.input-group {
-  position: relative;
-}
-
-.input-group i {
-  position: absolute;
-  top: 50%;
-  left: 18px;
-  transform: translateY(-50%);
-  color: #0d631b;
-}
-
-.input-group input {
-  width: 100%;
-  box-sizing: border-box;
-
-  padding: 18px 18px 18px 55px;
-
-  border-radius: 15px  !important;
-
-  border: 2px solid #E4F0E6;
-
-  background: #F9FFFA;
-
-  font-size: 15px;
-  color: #0f172a;
-}
-
-.input-group input:focus {
-  outline: none;
-  border-color: #18912e;
-  background: white;
-  box-shadow:
-    0 0 0 4px rgba(24,145,46,.15);
-}
-
-button {
-  margin-top: 15px;
-  padding: 15px;
-  border: none;
-  border-radius: 30px;
-  background: #0d631b;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: .3s;
-}
-
-button:hover {
-  background: #18912e;
-}
-
-/* =====================================
-   PANEL DERECHO
-===================================== */
-.panel-imagen {
-  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  background: url('/ecologia_portada.jpg') no-repeat center center/cover;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
 }
 
-.imagen-fondo {
+// Filtro oscuro/verdoso sobre la imagen de fondo para dar contraste
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transform: scale(1.05);
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.3);
+  background: linear-gradient(135deg, rgba($dark-green, 0.85) 0%, rgba(27, 94, 32, 0.6) 100%);
   z-index: 1;
 }
 
-.navbar-login {
-  position: absolute;
-  top: 35px;
-  right: 60px;
-  display: flex;
-  gap: 50px;
-  z-index: 3;
-}
-
-.navbar-login a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: .5px;
-  transition: .3s;
-}
-
-.navbar-login a:hover {
-  color: #3CBD3D;
-}
-
-.contenido-panel {
-  position: absolute;
-  left: 60px;
-  bottom: 90px;
-  z-index: 3;
-  color: white;
-}
-
-.contenido-panel h1 {
-  font-size: 72px;
-  font-weight: 800;
-  margin-bottom: 15px;
-}
-
-.descripcion {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 50px;
-}
-
-.caracteristicas {
-  display: flex;
-  gap: 55px;
-}
-
-.item {
-  max-width: 180px;
-}
-
-.item i {
-  width: 70px;
-  height: 70px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.5);
-
-  background: rgba(255,255,255,.08);
-  backdrop-filter: blur(5px);
-
-  font-size: 28px;
-
-  margin-bottom: 15px;
-}
-
-.item h4 {
-  font-size: 17px;
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.item span {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.curva {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.curva-1 {
-  width: 120%;
-  height: 220px;
-  background: rgba(13, 99, 27, .70);
-  border-radius: 60% 40% 0 0;
-  transform: translateX(-10%);
-}
-
-.curva-2 {
-  width: 100%;
-  height: 140px;
-  background: rgba(95, 185, 73, .45);
-  border-radius: 70% 30% 0 0;
-  bottom: -40px;
-}
-
-.texto-bienvenida {
-  position: absolute;
-  bottom: 80px;
-  left: 80px;
-
+// Tarjeta Central (Efecto Glassmorphism sutil)
+.login-card {
+  position: relative;
   z-index: 2;
-
-  color: white;
+  background: rgba($white, 0.96);
+  backdrop-filter: blur(8px);
+  padding: 2.5rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+  animation: fadeIn 0.5s ease-out;
 }
 
-.texto-bienvenida h1 {
-  font-size: 80px;
-  font-weight: 800;
+// Encabezado
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    .logo-img {
+      height: 40px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: $dark-green;
+      margin: 0;
+    }
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: $text-muted;
+    margin: 0;
+  }
 }
 
-.texto-bienvenida p {
-  margin-top: 15px;
-  font-size: 24px;
-  max-width: 500px;
+// Formulario e Inputs
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #344054;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .input-icon {
+        position: absolute;
+        left: 14px;
+        color: #667085;
+        font-size: 1.1rem;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid $border-color;
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: $white;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-green;
+          box-shadow: 0px 0px 0px 4px rgba(27, 94, 32, 0.15);
+        }
+      }
+    }
+  }
+}
+
+// Botón de Acción Principal
+.btn-submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: $primary-green;
+  color: $white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 0.5rem;
+
+  &:hover {
+    background-color: darken($primary-green, 5%);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Footer Interno
+.login-footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: $text-muted;
+  border-top: 1px solid #eaecf0;
+  padding-top: 1rem;
+  letter-spacing: 0.5px;
+
+  span {
+    font-weight: 500;
+  }
+}
+
+// Animación de entrada
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

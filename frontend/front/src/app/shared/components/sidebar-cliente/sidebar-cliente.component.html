@@ -1,0 +1,89 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+
+  <div class="sidebar-header">
+    <div class="logo-seccion">
+      <img src="/logo_esmeralda.png" alt="EcoCycle Logo">
+      <div class="logo-text">
+        <h2>EcoCycle</h2>
+        <span>Panel</span>
+      </div>
+    </div>
+    
+
+    <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-bars"></i>
+      <span class="sr-only">Abrir menú</span>
+    </button>
+  </div>
+
+
+  <nav class="menu-navegacion">
+    <ng-container *ngFor="let group of filteredMenu">
+      <div class="menu-section mt-3">{{ group.section }}</div>
+      
+      <a *ngFor="let item of group.items" 
+         [routerLink]="item.route"
+         class="item-menu"
+         routerLinkActive="activo">
+        <i [class]="item.icon"></i>
+        <span>{{ item.name }}</span>
+      </a>
+    </ng-container>
+
+    <div *ngIf="filteredMenu.length === 0" class="text-center py-4 px-3 text-muted">
+      <i class="fa-solid fa-ghost fs-3 mb-2" style="opacity: 0.3;"></i>
+      <p class="small mb-0">No se encontraron resultados para "{{ searchTerm }}"</p>
+    </div>
+  </nav>
+
+  <div class="sidebar-bottom">
+
+    <div class="usuario"
+         *ngIf="perfil"
+         (click)="toggleUserMenu($event)">
+  
+      <img src="/usuario.png" alt="Usuario">
+  
+      <div class="user-info">
+        <strong>{{ perfil.nombre }}</strong>
+        <span>{{ perfil.correo }}</span>
+      </div>
+  
+      <i class="fa-solid fa-chevron-right"></i>
+  
+    </div>
+
+    <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+   
+      <button class="dropdown-item" routerLink='/cliente/mi-perfil/perfil'>
+        <i class="fa-solid fa-user" ></i>
+        Perfil
+      </button>
+  
+      <button class="dropdown-item">
+        <i class="fa-solid fa-gear"></i>
+        Configuración
+      </button>
+  
+      <button class="dropdown-item" routerLink='/admin/reportes'>
+        <i class="fa-solid fa-circle-question"></i>
+        Ayuda
+      </button>
+
+      <button class="dropdown-item" routerLink='/cliente/soporte'>
+        <i class="fa-solid fa-headset"></i>
+        Soporte Tecnico
+      </button>
+
+      <hr>
+  
+      <button class="dropdown-item danger" (click)="onLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
+  
+    </div>
+  
+  </div>
+
+</aside>

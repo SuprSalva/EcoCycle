@@ -1,8 +1,6 @@
 <div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color);">
 
-  <!-- LISTA DE MATERIA PRIMA -->
   <div *ngIf="vistaActual === 'lista'" class="fade-in-up">
-    <!-- Encabezado y Botón Agregar -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
       <div>
         <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
@@ -20,7 +18,34 @@
       </div>
     </div>
 
-    <!-- Tabla de Resultados -->
+    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        
+        <div class="input-group" style="max-width: 400px;">
+          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+            <i class="fa-solid fa-search"></i>
+          </span>
+          <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill" 
+                 placeholder="Buscar por material, unidad..." 
+                 style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+                 [(ngModel)]="searchTerm">
+        </div>
+        
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-muted small fw-semibold">Mostrar:</span>
+          <select class="form-select form-select-sm border-0 text-dark fw-bold rounded-pill shadow-sm cursor-pointer" 
+                  style="padding-top: 0.4rem; padding-bottom: 0.4rem; background-color: #f1f5f9; width: auto; padding-right: 2rem;" 
+                  (change)="cambiarItemsPorPagina($event)">
+            <option *ngFor="let option of itemsPerPageOptions" [value]="option" [selected]="option === itemsPerPage" class="text-dark">
+              {{ option }}
+            </option>
+          </select>
+          <span class="text-muted small fw-semibold ms-2">filas</span>
+        </div>
+
+      </div>
+    </div>
+
     <div class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden mb-4 hover-lift">
       <div class="table-responsive">
         <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
@@ -71,19 +96,21 @@
                           (click)="registrarTransaccion(m, $event)">
                     <i class="fa-solid fa-exchange-alt"></i>
                   </button>
+                  
                   <button class="btn btn-sm rounded-pill shadow-sm px-3 py-1" 
-                          style="border: 1px solid #64748b; color: #64748b; font-weight: 500; transition: all 0.2s;"
+                          style="border: 1px solid #dee2e6; color: #475569; background-color: #f8fafc; font-weight: 500; transition: all 0.2s;"
                           title="Editar"
-                          onmouseover="this.style.backgroundColor='#64748b'; this.style.color='white';"
-                          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#64748b';"
+                          onmouseover="this.style.backgroundColor='#e2e8f0'; this.style.color='#0f172a';"
+                          onmouseout="this.style.backgroundColor='#f8fafc'; this.style.color='#475569';"
                           (click)="editarMateria(m, $event)">
                     <i class="fa-solid fa-pen"></i>
                   </button>
+                  
                   <button class="btn btn-sm rounded-pill shadow-sm px-3 py-1" 
-                          style="border: 1px solid #ef4444; color: #ef4444; font-weight: 500; transition: all 0.2s;"
+                          style="border: 1px solid #fee2e2; color: #ef4444; background-color: #fef2f2; font-weight: 500; transition: all 0.2s;"
                           title="Eliminar"
-                          onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='white';"
-                          onmouseout="this.style.backgroundColor='transparent'; this.style.color='#ef4444';"
+                          onmouseover="this.style.backgroundColor='#ef4444'; this.style.color='white'; this.style.borderColor='#ef4444';"
+                          onmouseout="this.style.backgroundColor='#fef2f2'; this.style.color='#ef4444'; this.style.borderColor='#fee2e2';"
                           (click)="eliminarMateria(m, $event)">
                     <i class="fa-solid fa-trash"></i>
                   </button>
@@ -91,7 +118,6 @@
               </td>
             </tr>
 
-            <!-- Empty State -->
             <tr *ngIf="materias.length === 0 && !cargando">
               <td colspan="5" class="text-center py-5 text-muted">
                 <i class="fa-solid fa-boxes-stacked fs-1 mb-3" style="opacity: 0.2;"></i>
@@ -102,10 +128,26 @@
           </tbody>
         </table>
       </div>
+
+      <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: #edf2f7 !important; background-color: #ffffff;">
+        <span class="text-muted small fw-medium">Página 1 de 1</span>
+        
+        <div class="d-flex gap-1">
+          <button class="btn btn-sm btn-light border shadow-sm" disabled>
+            <i class="fa-solid fa-chevron-left text-muted"></i>
+          </button>
+          <button class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: var(--primary-color, #10b981);">
+            1
+          </button>
+          <button class="btn btn-sm btn-light border shadow-sm" disabled>
+            <i class="fa-solid fa-chevron-right text-muted"></i>
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- FORMULARIO NUEVA MATERIA PRIMA -->
   <div *ngIf="vistaActual === 'formulario'" class="fade-in-up">
     <div class="card shadow-sm border-0 rounded-4 bg-white p-4 mx-auto" style="max-width: 600px;">
       <h4 class="fw-bold mb-4" style="color: var(--on-background-color);">Nueva Materia Prima</h4>
@@ -126,7 +168,6 @@
     </div>
   </div>
 
-  <!-- FORMULARIO TRANSACCION -->
   <div *ngIf="vistaActual === 'transaccion'" class="fade-in-up">
     <div class="card shadow-sm border-0 rounded-4 bg-white p-4 mx-auto" style="max-width: 600px;">
       <div class="d-flex align-items-center mb-4 gap-3">

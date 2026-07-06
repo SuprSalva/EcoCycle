@@ -1,520 +1,149 @@
 <div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color);">
-  
-  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
     <div>
       <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
-        Reportes de Ingesta y Reciclaje
+        Buzón de Reportes e Incidencias
       </h2>
       <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
-        Bitácora general de todas las sesiones de reciclaje registradas por los nodos IoT y su impacto.
+        Revisa, gestiona y atiende los reportes enviados por los usuarios y el sistema.
       </p>
-    </div>
-    
-    <div class="d-flex gap-3" *ngIf="tabActiva === 'sesiones'">
-      <button class="btn d-flex align-items-center gap-2 shadow-sm rounded-3 fw-semibold px-4 py-2" 
-              style="background-color: var(--primary-color); color: var(--on-primary-color); border: none;"
-              (click)="exportarExcel()">
-        <span class="material-symbols-outlined fs-5">download</span>
-        Exportar CSV/Excel
-      </button>
     </div>
   </div>
 
-  <!-- Navegación de Pestañas -->
-  <ul class="nav nav-pills custom-tabs mb-4 px-2 gap-2">
-    <li class="nav-item">
-      <button class="nav-link fw-semibold rounded-pill px-4" 
-              [class.active]="tabActiva === 'impacto'" 
-              (click)="tabActiva = 'impacto'">
-        <i class="fa-solid fa-leaf me-2"></i> Impacto Ambiental
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link fw-semibold rounded-pill px-4" 
-              [class.active]="tabActiva === 'sesiones'" 
-              (click)="tabActiva = 'sesiones'">
-        <i class="fa-solid fa-list me-2"></i> Sesiones de Reciclaje
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link fw-semibold rounded-pill px-4" 
-              [class.active]="tabActiva === 'iot'" 
-              (click)="tabActiva = 'iot'">
-        <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.2rem;">precision_manufacturing</span> Rendimiento IoT
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link fw-semibold rounded-pill px-4" 
-              [class.active]="tabActiva === 'usuarios'" 
-              (click)="tabActiva = 'usuarios'">
-        <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.2rem;">groups</span> Comunidad
-      </button>
-    </li>
-    <li class="nav-item">
-      <button class="nav-link fw-semibold rounded-pill px-4" 
-              [class.active]="tabActiva === 'finanzas'" 
-              (click)="tabActiva = 'finanzas'">
-        <span class="material-symbols-outlined align-middle me-1" style="font-size: 1.2rem;">account_balance</span> Finanzas e Inventario
-      </button>
-    </li>
-  </ul>
+  <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+    <div class="d-flex flex-column flex-xl-row justify-content-between align-items-stretch align-items-xl-center gap-3">
+      
+      <div class="d-flex flex-wrap align-items-center gap-3 flex-grow-1">
+        
+        <div class="input-group" style="max-width: 320px; min-width: 220px;">
+          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+            <i class="fa-solid fa-search"></i>
+          </span>
+          <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill" 
+                 placeholder="Buscar por nombre o correo..." 
+                 style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+                 [(ngModel)]="searchTerm" 
+                 (keyup)="currentPage = 1">
+        </div>
 
-  <!-- CONTENIDO: SESIONES -->
-  <div *ngIf="tabActiva === 'sesiones'" class="card shadow-sm border-0 rounded-4 overflow-hidden fade-in-up" style="background-color: var(--surface-color);">
-    <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--surface-variant-color);">
-      <h6 class="m-0 fw-bold" style="color: var(--on-surface-color);">
-        <span class="material-symbols-outlined align-middle me-1 fs-5" style="color: var(--primary-color);">history</span>
-        Historial Global de Operaciones
-      </h6>
-      <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--on-background-color); border: 1px solid #dee2e6;">
-        {{ sesiones.length }} Registros Encontrados
-      </span>
+        <div class="d-flex align-items-center gap-2 bg-light px-3 py-1 rounded-pill" style="border: 1px solid #e2e8f0; background-color: #f8fafc !important; height: 38px;">
+          <span class="text-muted small fw-bold text-uppercase" style="font-size: 0.7rem;">Estado:</span>
+          <select class="form-select form-select-sm border-0 bg-transparent text-dark fw-semibold cursor-pointer shadow-none" 
+                  style="font-size: 0.85rem; padding-right: 1.5rem;"
+                  [(ngModel)]="filtroEstado"
+                  (change)="currentPage = 1">
+            <option value="Todos">Todos</option>
+            <option value="Pendiente">Pendientes</option>
+            <option value="En Revisión">En Revisión</option>
+            <option value="Resuelto">Resueltos</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="d-flex align-items-center gap-2 justify-content-md-end" *ngIf="searchTerm || filtroEstado !== 'Todos'">
+        <button class="btn btn-sm btn-light border rounded-pill px-3 py-2 fw-medium text-secondary" style="font-size: 0.85rem;" (click)="limpiarFiltros()">
+          <i class="fa-solid fa-rotate-left me-1"></i> Restablecer Filtros
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden mb-4">
+    
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-success" role="status" style="color: var(--primary-color, #10b981) !important;">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
     </div>
 
-    <!-- Estado Vacío -->
-    <div *ngIf="!cargando && sesiones.length === 0" class="text-center py-5">
-      <span class="material-symbols-outlined mb-3" style="font-size: 48px; color: #adb5bd;">data_info_alert</span>
-      <h5 class="fw-bold" style="color: var(--on-surface-color);">No hay datos registrados</h5>
-      <p class="text-muted">Aún no se han completado sesiones de reciclaje en los nodos IoT.</p>
-    </div>
-
-    <!-- Tabla -->
-    <div class="table-responsive" *ngIf="!cargando && sesiones.length > 0">
-      <table class="table table-hover align-middle mb-0 custom-table">
-        <thead style="background-color: var(--surface-color);">
-          <tr>
-            <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">ID Sesión</th>
-            <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">Fecha y Hora</th>
-            <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">Máquina (Nodo)</th>
-            <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Botellas</th>
-            <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">EcoPuntos</th>
+    <div class="table-responsive" *ngIf="!cargando && reportesFiltrados.length > 0">
+      <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+        <thead style="background-color: #f8fafc;">
+          <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+            <th class="ps-4 py-3 fw-bold border-bottom-0">Usuario</th> 
+            <th class="py-3 fw-bold border-bottom-0">Correo</th>
+            <th class="py-3 fw-bold border-bottom-0">Fecha Envío</th>
+            <th class="py-3 fw-bold border-bottom-0">Estado</th>
+            <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let sesion of sesiones" style="cursor: default;">
-            <td class="border-bottom-0 py-3 px-3">
-              <span class="text-secondary" style="font-family: monospace; font-size: 0.85rem;">{{ sesion.id }}</span>
-            </td>
-            <td class="border-bottom-0 py-3 px-3">
-              <div class="fw-semibold" style="color: var(--on-surface-color);">{{ sesion.fecha | date:'dd MMM yyyy' }}</div>
-              <div class="text-muted small">{{ sesion.fecha | date:'hh:mm a' }}</div>
-            </td>
-            <td class="border-bottom-0 py-3 px-3">
-              <div class="d-flex align-items-center gap-2">
-                <span class="material-symbols-outlined fs-5" style="color: var(--primary-color);">precision_manufacturing</span>
-                <span class="fw-medium" style="color: var(--on-surface-color);">{{ sesion.maquinaId || 'MÁQUINA-01' }}</span>
+          <tr *ngFor="let r of reportesPaginados" class="bg-white border-bottom" style="transition: all 0.2s ease;">
+            
+            <td class="ps-4 py-3">
+                
+                <span class="fw-bold">
+                {{r.nombre}} {{r.apellidos}}
+                </span>       
+              </td>
+
+            <td class="py-3">
+              <div class="d-flex flex-column">
+                <span class="fw-semibold text-dark" style="font-size: 0.9rem;">{{r.correo}}</span>
+                <span class="text-muted small" style="font-size: 0.8rem;">{{r.telefono}}</span>
               </div>
             </td>
-            <td class="border-bottom-0 py-3 px-3 text-center">
-              <span class="badge rounded-pill fs-6" style="background-color: #E3F2FD; color: #1976D2; padding: 0.4em 0.8em;">
-                {{ sesion.botellas }} u.
+            
+            <td class="py-3 text-muted" style="font-size: 0.9rem;">
+              {{ r.fechaEnvio | date:'dd MMM yyyy, h:mm a' }}
+            </td>
+            
+            <td class="py-3">
+              <span class="fw-bold px-3 py-1 rounded-pill" 
+                    [style.background-color]="r.estado === 'Resuelto' ? '#f0fdf4' : (r.estado === 'En Revisión' ? '#eff6ff' : '#f1f5f9')"
+                    [style.color]="r.estado === 'Resuelto' ? '#16a34a' : (r.estado === 'En Revisión' ? '#3b82f6' : '#64748b')"
+                    style="font-size: 0.8rem;">
+                
+                <i class="fa-solid me-1"
+                   [class.fa-check-circle]="r.estado === 'Resuelto'"
+                   [class.fa-spinner]="r.estado === 'En Revisión'"
+                   [class.fa-clock]="r.estado === 'Pendiente'"></i>
+            
+                {{ r.estado }}
               </span>
             </td>
-            <td class="border-bottom-0 py-3 px-3 text-center">
-              <span class="badge rounded-pill fs-6 fw-bold" style="background-color: #E8F5E9; color: #2E7D32; padding: 0.4em 0.8em;">
-                +{{ sesion.puntos }} pts
-              </span>
+
+            <td class="pe-4 py-3 text-center">
+              <button (click)="verDetallesReporte(r)" class="btn btn-sm rounded-pill px-3 py-1"
+                      style="border: 1px solid var(--primary-color, #10b981); color: var(--primary-color, #10b981); background-color: transparent; font-weight: 500; font-size: 0.75rem; transition: all 0.2s;"
+                      onmouseover="this.style.backgroundColor='var(--primary-color, #10b981)'; this.style.color='white';"
+                      onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary-color, #10b981)';">
+                <i class="fa-solid fa-folder-open me-1"></i> Atender
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
 
-  <!-- CONTENIDO: IMPACTO AMBIENTAL -->
-  <div *ngIf="tabActiva === 'impacto'" class="fade-in-up">
-    <div class="row g-4 mb-4">
-      
-      <!-- Tarjeta: Botellas Recuperadas -->
-      <div class="col-md-4">
-        <div class="card shadow-sm border-0 rounded-4 h-100 impact-card hover-lift" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white;">
-          <div class="card-body p-4 d-flex flex-column justify-content-between position-relative">
-            <div class="custom-tooltip-wrapper">
-              <i class="fa-solid fa-circle-info fs-6 opacity-75"></i>
-              <span class="custom-tooltip-text">Total de botellas de PET recicladas a lo largo del tiempo.<br><small class="text-warning mt-1 d-block">Peso estimado: 20 gramos por botella</small></span>
-            </div>
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h6 class="fw-semibold text-uppercase opacity-75 mb-1" style="letter-spacing: 1px;">
-                  Botellas Recuperadas
-                </h6>
-                <h2 class="fw-bold display-5 mb-0">{{ totalBotellas | number:'1.0-0' }}</h2>
-              </div>
-              <div class="icon-circle card-modern text-success bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-bottle-water fs-3"></i>
-              </div>
-            </div>
-            <p class="m-0 small opacity-75"><i class="fa-solid fa-arrow-trend-up me-1"></i> Total acumulado en la red EcoCycle</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tarjeta: CO2 Evitado -->
-      <div class="col-md-4">
-        <div class="card shadow-sm border-0 rounded-4 h-100 impact-card hover-lift" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
-          <div class="card-body p-4 d-flex flex-column justify-content-between position-relative">
-            <div class="custom-tooltip-wrapper">
-              <i class="fa-solid fa-circle-info fs-6 opacity-75"></i>
-              <span class="custom-tooltip-text">Cálculo basado en el estándar medioambiental de <strong class="text-info">0.06 kg de CO₂</strong> evitados por cada botella de PET reciclada correctamente.</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h6 class="fw-semibold text-uppercase opacity-75 mb-1" style="letter-spacing: 1px;">
-                  CO₂ Evitado
-                </h6>
-                <h2 class="fw-bold display-5 mb-0">{{ co2Evitado | number:'1.1-2' }} <span class="fs-5">kg</span></h2>
-              </div>
-              <div class="icon-circle card-modern text-info bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-cloud fs-3"></i>
-              </div>
-            </div>
-            <p class="m-0 small opacity-75"><i class="fa-solid fa-globe me-1"></i> Menos emisiones a la atmósfera</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tarjeta: Agua Ahorrada -->
-      <div class="col-md-4">
-        <div class="card shadow-sm border-0 rounded-4 h-100 impact-card hover-lift" style="background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%); color: white;">
-          <div class="card-body p-4 d-flex flex-column justify-content-between position-relative">
-            <div class="custom-tooltip-wrapper">
-              <i class="fa-solid fa-circle-info fs-6 opacity-75"></i>
-              <span class="custom-tooltip-text">Cálculo basado en el estándar de <strong class="text-info">3 Litros de agua</strong> ahorrados en la cadena productiva por cada botella reciclada.</span>
-            </div>
-            <div class="d-flex justify-content-between align-items-start mb-3">
-              <div>
-                <h6 class="fw-semibold text-uppercase opacity-75 mb-1" style="letter-spacing: 1px;">
-                  Agua Ahorrada
-                </h6>
-                <h2 class="fw-bold display-5 mb-0">{{ aguaAhorrada | number:'1.0-0' }} <span class="fs-5">L</span></h2>
-              </div>
-              <div class="icon-circle card-modern text-primary bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-droplet fs-3"></i>
-              </div>
-            </div>
-            <p class="m-0 small opacity-75"><i class="fa-solid fa-hand-holding-droplet me-1"></i> Conservación en la cadena de producción</p>
-          </div>
-        </div>
-      </div>
-
+    <div *ngIf="!cargando && reportesFiltrados.length === 0" class="text-center py-5 text-muted">
+      <i class="fa-solid fa-inbox fs-1 mb-3" style="opacity: 0.2;"></i>
+      <h5 class="fw-bold text-secondary">Buzón vacío</h5>
+      <p class="small mb-0">No se encontraron reportes que coincidan con los filtros seleccionados.</p>
     </div>
 
-    <!-- Resumen extendido -->
-    <div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="background-color: var(--surface-color);">
-      <div class="card-body p-5 text-center">
-        <i class="fa-solid fa-tree fs-1 mb-3" style="color: var(--primary-color);"></i>
-        <h4 class="fw-bold" style="color: var(--on-surface-color);">Impacto Total Sostenible</h4>
-        <p class="text-muted fs-5 mx-auto" style="max-width: 800px;">
-          Gracias a los esfuerzos de la comunidad EcoCycle, hemos evitado que <strong>{{ kgRecuperados | number:'1.1-2' }} kilogramos</strong> 
-          de plástico y aluminio terminen en los océanos o vertederos.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTENIDO: RENDIMIENTO IoT -->
-  <div *ngIf="tabActiva === 'iot'" class="fade-in-up">
-    
-    <!-- Estado Vacío -->
-    <div *ngIf="!cargando && metricasIoT.length === 0" class="text-center py-5">
-      <span class="material-symbols-outlined mb-3" style="font-size: 48px; color: #adb5bd;">router</span>
-      <h5 class="fw-bold" style="color: var(--on-surface-color);">Sin Máquinas Detectadas</h5>
-      <p class="text-muted">Aún no hay conexiones IoT registradas en el historial.</p>
-    </div>
-
-    <!-- Panel de Máquina Estrella -->
-    <div class="row mb-4" *ngIf="maquinaEstrella">
-      <div class="col-12">
-        <div class="card shadow-sm border-0 rounded-4 overflow-hidden impact-card hover-lift" style="background: linear-gradient(135deg, #1e1e2f 0%, #3a3a5a 100%); color: white;">
-          <div class="card-body p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-4">
-              <div class="icon-circle bg-warning bg-opacity-25 text-warning rounded-circle p-4 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                <span class="material-symbols-outlined" style="font-size: 2.5rem;">emoji_events</span>
-              </div>
-              <div>
-                <h6 class="fw-semibold text-uppercase text-warning opacity-75 mb-1" style="letter-spacing: 1px;">Máquina Más Productiva</h6>
-                <h2 class="fw-bold display-6 mb-0">{{ maquinaEstrella.maquinaId }}</h2>
-                <p class="m-0 mt-1 opacity-75"><i class="fa-solid fa-fire me-1 text-danger"></i> ¡Ha liderado con {{ maquinaEstrella.totalBotellas }} botellas recolectadas!</p>
-              </div>
-            </div>
-            <div class="text-end">
-              <h1 class="display-3 fw-bold m-0 text-warning">{{ maquinaEstrella.totalBotellas }}</h1>
-              <span class="text-uppercase opacity-75 small fw-semibold" style="letter-spacing: 2px;">Botellas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Grid de Máquinas -->
-    <div class="row g-4" *ngIf="metricasIoT.length > 0">
-      <div class="col-md-6 col-lg-4" *ngFor="let mq of metricasIoT">
-        <div class="card shadow-sm border-0 rounded-4 h-100" style="background-color: var(--surface-color); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
-          <div class="card-body p-4">
-            
-            <div class="d-flex justify-content-between align-items-start mb-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="bg-light rounded p-2 text-secondary d-flex">
-                  <span class="material-symbols-outlined">developer_board</span>
-                </div>
-                <h5 class="fw-bold m-0" style="color: var(--on-surface-color);">{{ mq.maquinaId }}</h5>
-              </div>
-              <span class="badge" [ngClass]="mq.totalBotellas > 100 ? 'bg-success' : 'bg-secondary'" style="font-size: 0.8rem;">
-                {{ mq.totalBotellas > 100 ? 'ALTA DEMANDA' : 'ACTIVA' }}
-              </span>
-            </div>
-
-            <div class="d-flex flex-column gap-3">
-              <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
-                <span class="text-muted small fw-semibold text-uppercase">Botellas Recolectadas</span>
-                <span class="fw-bold fs-5" style="color: var(--on-surface-color);">{{ mq.totalBotellas }}</span>
-              </div>
-              <div class="d-flex justify-content-between align-items-center pb-2 border-bottom">
-                <span class="text-muted small fw-semibold text-uppercase">Sesiones Totales</span>
-                <span class="fw-bold fs-5" style="color: var(--on-surface-color);">{{ mq.totalSesiones }}</span>
-              </div>
-              <div class="d-flex justify-content-between align-items-center">
-                <span class="text-muted small fw-semibold text-uppercase">Promedio / Sesión</span>
-                <span class="fw-bold fs-5" style="color: var(--on-surface-color);">{{ mq.promedioBotellas }}</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- CONTENIDO: COMUNIDAD Y USUARIOS -->
-  <div *ngIf="tabActiva === 'usuarios'" class="fade-in-up">
-    
-    <!-- Estado Vacío -->
-    <div *ngIf="!cargando && metricasUsuarios.length === 0" class="text-center py-5">
-      <span class="material-symbols-outlined mb-3" style="font-size: 48px; color: #adb5bd;">group_off</span>
-      <h5 class="fw-bold" style="color: var(--on-surface-color);">Sin Usuarios Registrados</h5>
-      <p class="text-muted">Aún no hay sesiones asociadas a usuarios en la plataforma.</p>
-    </div>
-
-    <!-- Panel del Eco-Héroe (Primer Lugar) -->
-    <div class="row mb-4" *ngIf="ecoHeroe">
-      <div class="col-12">
-        <div class="card shadow-sm border-0 rounded-4 overflow-hidden impact-card hover-lift" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: white;">
-          <div class="card-body p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-4">
-              <div class="icon-circle card-modern text-primary bg-opacity-25 rounded-circle p-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px;">
-                <span class="material-symbols-outlined" style="font-size: 2.5rem; color: #673ab7;">social_leaderboard</span>
-              </div>
-              <div>
-                <h6 class="fw-semibold text-uppercase text-white opacity-75 mb-1" style="letter-spacing: 1px;">Eco-Héroe Actual 🦸‍♂️</h6>
-                <h2 class="fw-bold display-6 mb-0 text-dark">{{ ecoHeroe.usuarioId }}</h2>
-                <p class="m-0 mt-1 text-dark opacity-75"><i class="fa-solid fa-medal me-1" style="color: #673ab7;"></i> ¡Máximo líder con {{ ecoHeroe.totalPuntos }} EcoPuntos ganados!</p>
-              </div>
-            </div>
-            <div class="text-end">
-              <h1 class="display-3 fw-bold m-0 text-dark">{{ ecoHeroe.totalBotellas }}</h1>
-              <span class="text-uppercase text-dark opacity-75 small fw-semibold" style="letter-spacing: 2px;">Botellas</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Leaderboard (Resto de usuarios) -->
-    <div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="background-color: var(--surface-color);" *ngIf="metricasUsuarios.length > 0">
-      <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--surface-variant-color);">
-        <h6 class="m-0 fw-bold" style="color: var(--on-surface-color);">
-          <span class="material-symbols-outlined align-middle me-1 fs-5" style="color: var(--primary-color);">format_list_numbered</span>
-          Tabla de Clasificación (Leaderboard)
-        </h6>
-        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--on-background-color); border: 1px solid #dee2e6;">
-          {{ metricasUsuarios.length }} Recicladores
+    <div *ngIf="!cargando && totalPages > 0" class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: #edf2f7 !important; background-color: #ffffff;">
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small fw-medium">
+          Mostrando página {{ currentPage }} de {{ totalPages }}
         </span>
       </div>
-
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 custom-table">
-          <thead style="background-color: var(--surface-color);">
-            <tr>
-              <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem; width: 80px;">Rango</th>
-              <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">Usuario (ID)</th>
-              <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Sesiones</th>
-              <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Botellas Recicladas</th>
-              <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Puntos Obtenidos</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of metricasUsuarios; let i = index" style="cursor: default;">
-              <td class="border-bottom-0 py-3 px-3 text-center">
-                <!-- Iconos para Top 3 -->
-                <span *ngIf="i === 0" class="fs-4" title="1er Lugar">🥇</span>
-                <span *ngIf="i === 1" class="fs-4" title="2do Lugar">🥈</span>
-                <span *ngIf="i === 2" class="fs-4" title="3er Lugar">🥉</span>
-                <!-- Números para el resto -->
-                <span *ngIf="i > 2" class="fw-bold text-muted" style="font-size: 1.1rem;">#{{ i + 1 }}</span>
-              </td>
-              <td class="border-bottom-0 py-3 px-3">
-                <div class="d-flex align-items-center gap-2">
-                  <div class="bg-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                    <span class="material-symbols-outlined text-secondary">person</span>
-                  </div>
-                  <span class="fw-semibold" style="color: var(--on-surface-color);">{{ user.usuarioId }}</span>
-                </div>
-              </td>
-              <td class="border-bottom-0 py-3 px-3 text-center text-muted fw-medium">
-                {{ user.totalSesiones }}
-              </td>
-              <td class="border-bottom-0 py-3 px-3 text-center">
-                <span class="badge rounded-pill fs-6" style="background-color: #E3F2FD; color: #1976D2; padding: 0.4em 0.8em;">
-                  {{ user.totalBotellas }} u.
-                </span>
-              </td>
-              <td class="border-bottom-0 py-3 px-3 text-center">
-                <span class="fw-bold" style="color: #2E7D32;">
-                  {{ user.totalPuntos }} pts
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTENIDO: FINANZAS E INVENTARIO -->
-  <div *ngIf="tabActiva === 'finanzas'" class="fade-in-up">
-    
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h5 class="fw-bold m-0" style="color: var(--on-surface-color);">Panel de Inteligencia Financiera</h5>
-      <div class="d-flex gap-2">
-        <button class="btn d-flex align-items-center gap-2 shadow-sm rounded-3 hover-lift border-0" 
-                style="background-color: #fef2f2; color: #b91c1c; height: 38px; padding: 0 16px;"
-                (click)="exportarFinanzasPDF()">
-          <i class="fa-solid fa-file-pdf"></i>
-          <span class="fw-semibold" style="font-size: 0.85rem;">PDF</span>
+      
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="anteriorPagina()" [disabled]="currentPage === 1">
+          <i class="fa-solid fa-chevron-left text-muted"></i>
         </button>
-
-        <button class="btn d-flex align-items-center gap-2 shadow-sm rounded-3 hover-lift border-0" 
-                style="background-color: #f0fdf4; color: #15803d; height: 38px; padding: 0 16px;"
-                (click)="exportarFinanzasExcel()">
-          <i class="fa-solid fa-file-excel"></i>
-          <span class="fw-semibold" style="font-size: 0.85rem;">Excel</span>
+        <button class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: var(--primary-color, #10b981); min-width: 28px;">
+          {{ currentPage }}
+        </button>
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="siguientePagina()" [disabled]="currentPage === totalPages">
+          <i class="fa-solid fa-chevron-right text-muted"></i>
         </button>
       </div>
     </div>
 
-    <!-- Resumen Financiero -->
-    <div class="row g-4 mb-4">
-      
-      <!-- Puntos Emitidos vs Canjeados -->
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100 impact-card hover-lift" style="background: linear-gradient(135deg, #43a047 0%, #1de9b6 100%); color: white;">
-          <div class="card-body p-4 position-relative">
-            <div class="custom-tooltip-wrapper">
-              <i class="fa-solid fa-circle-info fs-6 opacity-75"></i>
-              <span class="custom-tooltip-text">Balance económico de la red.<br><small class="text-warning mt-1 d-block">Puntos minados (ganados) vs Puntos gastados en el catálogo.</small></span>
-            </div>
-            <div class="d-flex align-items-center mb-3 gap-3">
-              <div class="icon-circle card-modern text-success bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-coins fs-3"></i>
-              </div>
-              <h5 class="fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">Economía EcoPuntos</h5>
-            </div>
-            
-            <div class="d-flex justify-content-between align-items-center border-bottom border-light border-opacity-25 pb-3 mb-3">
-              <span class="opacity-75">Puntos Emitidos (Circulando)</span>
-              <h3 class="fw-bold m-0">{{ metricasFinanzas.totalPuntosEmitidos | number }}</h3>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="opacity-75">Pasivo Redimido (Gastados)</span>
-              <h3 class="fw-bold m-0">{{ metricasFinanzas.totalPuntosCanjeados | number }}</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Valor de Inventario -->
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100 impact-card hover-lift" style="background: linear-gradient(135deg, #fb8c00 0%, #ffca28 100%); color: white;">
-          <div class="card-body p-4 position-relative">
-            <div class="custom-tooltip-wrapper">
-              <i class="fa-solid fa-circle-info fs-6 opacity-75"></i>
-              <span class="custom-tooltip-text">Costo total en puntos de todo el inventario disponible.<br><small class="text-white mt-1 d-block">Calculado sumando el costo de cada producto por su stock en bodega.</small></span>
-            </div>
-            <div class="d-flex align-items-center mb-3 gap-3">
-              <div class="icon-circle card-modern text-warning bg-opacity-25 rounded-circle p-3 d-flex align-items-center justify-content-center">
-                <i class="fa-solid fa-boxes-stacked fs-3"></i>
-              </div>
-              <h5 class="fw-bold m-0 text-uppercase" style="letter-spacing: 1px;">Valor de Inventario</h5>
-            </div>
-            
-            <h1 class="display-4 fw-bold mt-3 mb-1">{{ metricasFinanzas.valorInventarioActual | number }} <span class="fs-4">Pts</span></h1>
-            <p class="m-0 opacity-75"><i class="fa-solid fa-warehouse me-1"></i> Costo latente en bodega</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="row g-4">
-      
-      <!-- Top Ventas -->
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100" style="background-color: var(--surface-color);">
-          <div class="card-body p-4 text-center d-flex flex-column justify-content-center align-items-center">
-            <h5 class="fw-bold mb-4" style="color: var(--on-surface-color);">Producto Estrella (Top Ventas)</h5>
-            
-            <div *ngIf="metricasFinanzas.recompensaMasPopular; else noVentas">
-              <div class="icon-circle bg-primary bg-opacity-10 text-primary rounded-circle p-4 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                <span class="material-symbols-outlined" style="font-size: 2.5rem;">star</span>
-              </div>
-              <h3 class="fw-bold mb-1" style="color: var(--primary-color);">{{ metricasFinanzas.recompensaMasPopular.nombre }}</h3>
-              <p class="text-muted m-0">Canjeado <strong>{{ metricasFinanzas.recompensaMasPopular.cantidad }}</strong> veces en la historia.</p>
-            </div>
-            <ng-template #noVentas>
-              <div class="text-muted">Aún no se han registrado canjes.</div>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-
-      <!-- Alertas de Stock -->
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 rounded-4 h-100" style="background-color: var(--surface-color);">
-          <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: #fff3cd;">
-            <h6 class="m-0 fw-bold text-dark d-flex align-items-center gap-2">
-              <span class="material-symbols-outlined text-warning fs-5">warning</span>
-              Alertas de Stock Bajo
-            </h6>
-            <span class="badge bg-warning text-dark rounded-pill">{{ metricasFinanzas.alertasStock.length }} Alertas</span>
-          </div>
-          
-          <div class="card-body p-0">
-            <div *ngIf="metricasFinanzas.alertasStock.length === 0" class="p-4 text-center text-muted">
-              <i class="fa-solid fa-check-circle fs-2 text-success mb-2 opacity-50"></i>
-              <p class="m-0">Inventario saludable. No hay productos críticos.</p>
-            </div>
-            
-            <div class="list-group list-group-flush" *ngIf="metricasFinanzas.alertasStock.length > 0">
-              <div class="list-group-item d-flex justify-content-between align-items-center p-3" *ngFor="let prod of metricasFinanzas.alertasStock">
-                <div class="d-flex align-items-center gap-3">
-                  <div class="bg-danger bg-opacity-10 text-danger rounded p-2 d-flex">
-                    <span class="material-symbols-outlined fs-6">inventory_2</span>
-                  </div>
-                  <div>
-                    <h6 class="m-0 fw-semibold" style="color: var(--on-surface-color);">{{ prod.nombre }}</h6>
-                    <small class="text-muted">Costo: {{ prod.costoPuntos }} pts</small>
-                  </div>
-                </div>
-                <span class="badge bg-danger rounded-pill px-3 py-2 fs-6">Stock: {{ prod.stock }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
   </div>
-
 </div>

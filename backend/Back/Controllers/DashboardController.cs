@@ -6,6 +6,23 @@ using System.Threading.Tasks;
 
 namespace Back.Controllers;
 
+public class StockMateriaPrimaDto
+{
+    public string Nombre { get; set; } = "";
+    public double StockActual { get; set; }
+}
+
+public class UltimaSesionDto
+{
+    public DateTime Fecha { get; set; }
+
+    public string MaquinaId { get; set; } = "";
+
+    public long Botellas { get; set; }
+
+    public long Puntos { get; set; }
+}
+
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
@@ -22,10 +39,10 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
         // 2. Sesiones de reciclaje
         var sesionesRef = firestoreDb.Collection("sesiones_reciclaje");
         var sesionesSnap = await sesionesRef.GetSnapshotAsync();
-        
+
         long totalBotellas = 0;
         long totalPuntosEmitidos = 0;
-        
+
         // Para la gráfica (Agrupamos por día en los últimos 4 días que haya actividad)
         var agrupadoPorDia = new Dictionary<string, long>();
 
@@ -33,7 +50,7 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
         {
             if (doc.TryGetValue("botellas", out long botellas)) totalBotellas += botellas;
             if (doc.TryGetValue("puntos", out long puntos)) totalPuntosEmitidos += puntos;
-            
+
             if (doc.TryGetValue("fecha", out Google.Cloud.Firestore.Timestamp timestamp))
             {
                 var dateStr = timestamp.ToDateTime().ToString("dd MMM");
@@ -44,7 +61,7 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
                 }
             }
         }
-        
+
         // Tomar los últimos 4 días con actividad
         var graficaDatos = agrupadoPorDia
             .Select(x => new { Dia = x.Key, Cantidad = x.Value })
@@ -52,12 +69,13 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
             .Take(4)
             .Reverse()
             .ToList();
-            
+
         // Si no hay 4, rellenamos con vacíos
-        while(graficaDatos.Count < 4) {
+        while (graficaDatos.Count < 4)
+        {
             graficaDatos.Insert(0, new { Dia = "--", Cantidad = 0L });
         }
-        
+
         // Calcular el máximo para los porcentajes de altura en HTML
         long maxCantidad = graficaDatos.Max(x => x.Cantidad);
         if (maxCantidad == 0) maxCantidad = 1; // Para evitar división por 0
@@ -67,16 +85,63 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
         var canjesSnap = await canjesRef.GetSnapshotAsync();
         var totalCanjes = canjesSnap.Count;
 
-        return Ok(ApiResponse<object>.Ok(new {
+        var materiaPrimaRef = firestoreDb.Collection("materia_prima");
+        var materiaPrimaSnap = await materiaPrimaRef.GetSnapshotAsync();
+
+        var stockMateriaPrima = new List<StockMateriaPrimaDto>();
+
+        foreach (var doc in materiaPrimaSnap.Documents)
+        {
+            string nombre = doc.GetValue<string>("nombre");
+
+            double stock = 0;
+
+            if (doc.ContainsField("stock_actual"))
+            {
+                var valor = doc.GetValue<object>("stock_actual");
+                stock = Convert.ToDouble(valor);
+            }
+
+            stockMateriaPrima.Add(new StockMateriaPrimaDto
+            {
+                Nombre = nombre,
+                StockActual = stock
+            });
+        }
+
+ var ultimasSesiones = sesionesSnap.Documents
+
+.OrderByDescending(x=>x.GetValue<Timestamp>("fecha").ToDateTime())
+
+.Take(10)
+
+.Select(x=>new UltimaSesionDto{
+
+    Fecha=x.GetValue<Timestamp>("fecha").ToDateTime(),
+
+    MaquinaId=x.GetValue<string>("maquina_id"),
+})
+
+.ToList();
+
+        return Ok(ApiResponse<object>.Ok(new
+        {
             totalBotellas,
             totalPuntosEmitidos,
             totalUsuarios,
             totalCanjes,
-            grafica = graficaDatos.Select(g => new { 
-                dia = g.Dia, 
-                cantidad = g.Cantidad, 
-                porcentaje = (int)((double)g.Cantidad / maxCantidad * 100) 
-            })
+
+            grafica = graficaDatos.Select(g => new
+            {
+                dia = g.Dia,
+                cantidad = g.Cantidad,
+                porcentaje = (int)((double)g.Cantidad / maxCantidad * 100)
+            }),
+
+            stockMateriaPrima,
+
+            ultimasSesiones
+
         }));
     }
 }

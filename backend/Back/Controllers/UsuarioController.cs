@@ -1,8 +1,9 @@
 using System.Security.Claims;
 using Back.DTOs.Request;
 using Back.DTOs.Response;
+using Back.Entities;  // ✅ IMPORTANTE
 using Back.Repositories.Interfaces;
-using Back.Repositories.Interfaces;
+using Back.Services;
 using Back.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,116 +13,172 @@ namespace Back.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public class UsuarioController(Back.Repositories.Interfaces.IUsuarioRepository usuarioRepository, ISesionReciclajeRepository sesionRepository, Back.Repositories.Interfaces.IRecompensaRepository recompensaRepository) : ControllerBase
+public class UsuarioController : ControllerBase
 {
-    private string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value ?? string.Empty;
+    private readonly IUsuarioRepository _usuarioRepository;
+    private readonly ISesionReciclajeRepository _sesionRepository;
+    private readonly IRecompensaRepository _recompensaRepository;
+    private readonly IEmailService _emailService;
+    private readonly IConfiguration _configuration;
+
+    public UsuarioController(
+        IUsuarioRepository usuarioRepository,
+        ISesionReciclajeRepository sesionRepository,
+        IRecompensaRepository recompensaRepository,
+        IEmailService emailService,
+        IConfiguration configuration)
+    {
+        _usuarioRepository = usuarioRepository;
+        _sesionRepository = sesionRepository;
+        _recompensaRepository = recompensaRepository;
+        _emailService = emailService;
+        _configuration = configuration;
+    }
+
+    private string GetUserId() => 
+        User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
+        User.FindFirst("user_id")?.Value ?? 
+        string.Empty;
+
+    // ✅ CREAR CLIENTE CON ENVÍO DE CORREO
+    [HttpPost("crear-cliente")]
+    public async Task<IActionResult> CrearCliente([FromBody] CrearClienteRequest request)
+    {
+        try
+        {
+            Console.WriteLine($"🔍 Intentando crear cliente: {request.Email}");
+
+            // Verificar que el usuario es admin
+            var adminId = GetUserId();
+            var admin = await _usuarioRepository.ObtenerPorIdAsync(adminId);
+            if (admin?.Rol?.ToLower() != "admin")
+                return Forbid("Acceso denegado. Solo administradores.");
+
+            // Verificar si el email ya existe
+            var existente = await _usuarioRepository.ObtenerPorEmailAsync(request.Email);
+            if (existente != null)
+                return BadRequest(ApiResponse<object>.Fail("El email ya está registrado."));
+
+            // Generar contraseña temporal
+            var passwordTemporal = GenerarPasswordTemporal();
+            Console.WriteLine($"🔑 Contraseña generada: {passwordTemporal}");
+
+            // Crear usuario en Firestore
+            var usuario = new Usuario
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = request.Email,
+                Nombre = request.Nombre,
+                Apellidos = request.Apellidos,
+                Telefono = request.Telefono ?? "",
+                Direccion = request.Direccion ?? "",
+                Rol = "cliente",
+                Activo = true,
+                CreadoEn = DateTime.UtcNow,
+                SaldoPuntos = 0
+            };
+
+            await _usuarioRepository.GuardarAsync(usuario);
+            Console.WriteLine($"✅ Usuario guardado en Firestore: {usuario.Id}");
+
+            // ✅ Enviar correo con credenciales
+            var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
+            var linkAcceso = $"{frontendUrl}/login";
+
+            Console.WriteLine($"📧 Enviando correo a {request.Email}...");
+            var enviado = await _emailService.EnviarCredencialesClienteAsync(
+                request.Email,
+                request.Nombre,
+                passwordTemporal,
+                linkAcceso
+            );
+
+            if (enviado)
+            {
+                Console.WriteLine($"✅ Correo enviado exitosamente a {request.Email}");
+            }
+            else
+            {
+                Console.WriteLine($"⚠️ No se pudo enviar el correo a {request.Email}");
+            }
+
+            return Ok(ApiResponse<object>.Ok(new
+            {
+                usuario.Id,
+                usuario.Email,
+                usuario.Nombre,
+                usuario.Apellidos,
+                usuario.Rol,
+                CorreoEnviado = enviado
+            }, "Cliente creado exitosamente."));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error al crear cliente: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error al crear cliente: {ex.Message}"));
+        }
+    }
+
+    private string GenerarPasswordTemporal()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 10)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
 
     [HttpGet("perfil")]
     public async Task<IActionResult> GetPerfil()
     {
-        var userId = GetUserId();
-        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(userId);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
-
-        var response = new UsuarioResponse
+        try
         {
-            Id = usuario.Id,
-            Nombre = usuario.Nombre,
-            Apellidos = usuario.Apellidos,
-            Email = usuario.Email,
-            Telefono = usuario.Telefono,
-            Direccion = usuario.Direccion,
-            Rol = usuario.Rol,
-            SaldoPuntos = (double)usuario.SaldoPuntos
-        };
-
-        return Ok(ApiResponse<UsuarioResponse>.Ok(response));
-    }
-
-    [HttpGet("historial")]
-    public async Task<IActionResult> GetHistorial()
-    {
-        var userId = GetUserId();
-        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-        var sesiones = await sesionRepository.ObtenerPorUsuarioAsync(userId);
-        var canjes = await recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
-
-        var historial = new List<HistorialItemResponse>();
-
-        foreach (var sesion in sesiones)
-        {
-            historial.Add(new HistorialItemResponse
+            Console.WriteLine($"🔍 Obteniendo perfil del usuario...");
+            
+            var userId = GetUserId();
+            Console.WriteLine($"🔍 UserId obtenido: '{userId}'");
+            
+            if (string.IsNullOrEmpty(userId)) 
             {
-                Id = sesion.Id,
-                Titulo = $"{sesion.Botellas} botellas",
-                Subtitulo = $"{sesion.Fecha:dd MMM yyyy} • Reciclaje",
-                Puntos = $"+{sesion.Puntos} pts",
-                EsPositivo = true,
-                Fecha = sesion.Fecha
-            });
-        }
+                Console.WriteLine($"❌ UserId vacío");
+                return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+            }
 
-        foreach (var canje in canjes)
-        {
-            var recompensa = await recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
-            var titulo = recompensa != null ? recompensa.Nombre : "Premio Canjeado";
-
-            historial.Add(new HistorialItemResponse
+            var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
+            
+            if (usuario == null) 
             {
-                Id = canje.Id,
-                Titulo = titulo,
-                Subtitulo = $"{canje.Fecha:dd MMM yyyy} • Canje",
-                Puntos = $"-{canje.PuntosUsados} pts",
-                EsPositivo = false,
-                Fecha = canje.Fecha
-            });
+                Console.WriteLine($"❌ Usuario no encontrado en Firestore para ID: {userId}");
+                return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+            }
+
+            Console.WriteLine($"✅ Perfil encontrado: {usuario.Email}, Rol: {usuario.Rol}");
+
+            var response = new UsuarioResponse
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Telefono = usuario.Telefono,
+                Direccion = usuario.Direccion,
+                Rol = usuario.Rol,
+                SaldoPuntos = (double)usuario.SaldoPuntos,
+                Activo = usuario.Activo
+            };
+
+            return Ok(ApiResponse<UsuarioResponse>.Ok(response));
         }
-
-        var historialOrdenado = historial.OrderByDescending(h => h.Fecha).ToList();
-
-        return Ok(ApiResponse<List<HistorialItemResponse>>.Ok(historialOrdenado));
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error en GetPerfil: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+        }
     }
-
-    [HttpPut("perfil")]
-    public async Task<IActionResult> UpdatePerfil([FromBody] ActualizarPerfilRequest request)
-    {
-        var userId = GetUserId();
-        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(userId);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
-
-        usuario.Nombre = request.Nombre;
-        usuario.Apellidos = request.Apellidos;
-        usuario.Telefono = request.Telefono;
-        usuario.Direccion = request.Direccion;
-
-        await usuarioRepository.GuardarAsync(usuario);
-
-        return Ok(ApiResponse<object>.Ok(null, "Perfil actualizado correctamente."));
-    }
-
-    [HttpGet("puntos")]
-    public async Task<IActionResult> GetPuntos()
-    {
-        var userId = GetUserId();
-        if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(userId);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
-
-        return Ok(ApiResponse<object>.Ok(new { saldo = usuario.SaldoPuntos }));
-    }
-
-    // --- Métodos CRUD Completos ---
 
     [HttpGet("todos")]
     public async Task<IActionResult> ObtenerTodos()
     {
-        var usuarios = await usuarioRepository.ObtenerTodosAsync();
+        var usuarios = await _usuarioRepository.ObtenerTodosAsync();
         var response = usuarios.Select(u => new UsuarioResponse
         {
             Id = u.Id,
@@ -131,7 +188,8 @@ public class UsuarioController(Back.Repositories.Interfaces.IUsuarioRepository u
             Telefono = u.Telefono,
             Direccion = u.Direccion,
             Rol = u.Rol,
-            SaldoPuntos = (double)u.SaldoPuntos
+            SaldoPuntos = (double)u.SaldoPuntos,
+            Activo = u.Activo
         }).ToList();
 
         return Ok(ApiResponse<List<UsuarioResponse>>.Ok(response));
@@ -140,8 +198,9 @@ public class UsuarioController(Back.Repositories.Interfaces.IUsuarioRepository u
     [HttpGet("{id}")]
     public async Task<IActionResult> ObtenerPorId(string id)
     {
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+        var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
+        if (usuario == null) 
+            return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
         var response = new UsuarioResponse
         {
@@ -152,55 +211,50 @@ public class UsuarioController(Back.Repositories.Interfaces.IUsuarioRepository u
             Telefono = usuario.Telefono,
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
-            SaldoPuntos = (double)usuario.SaldoPuntos
+            SaldoPuntos = (double)usuario.SaldoPuntos,
+            Activo = usuario.Activo
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> ActualizarUsuarioDesdeAdmin(string id, [FromBody] ActualizarUsuarioRequest request)
+    public async Task<IActionResult> ActualizarUsuario(string id, [FromBody] ActualizarUsuarioRequest request)
     {
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+        var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
+        if (usuario == null) 
+            return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
-        usuario.Nombre = request.Nombre;
-        usuario.Apellidos = request.Apellidos;
-        usuario.Telefono = request.Telefono;
-        usuario.Direccion = request.Direccion;
+        if (!string.IsNullOrEmpty(request.Nombre))
+            usuario.Nombre = request.Nombre;
+        
+        if (!string.IsNullOrEmpty(request.Apellidos))
+            usuario.Apellidos = request.Apellidos;
+        
+        if (!string.IsNullOrEmpty(request.Telefono))
+            usuario.Telefono = request.Telefono;
+        
+        if (request.Direccion != null)
+            usuario.Direccion = request.Direccion;
+        
         if (!string.IsNullOrEmpty(request.Rol))
-        {
             usuario.Rol = request.Rol;
-        }
 
-        await usuarioRepository.GuardarAsync(usuario);
+        await _usuarioRepository.GuardarAsync(usuario);
 
-        return Ok(ApiResponse<object>.Ok(null, "Usuario actualizado correctamente por el administrador."));
-    }
-
-    [HttpPut("{id}/estatus")]
-    public async Task<IActionResult> CambiarEstatus(string id, [FromBody] CambiarEstatusRequest request)
-    {
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
-
-        if (!string.IsNullOrEmpty(request.Rol))
-        {
-            usuario.Rol = request.Rol;
-            await usuarioRepository.GuardarAsync(usuario);
-        }
-
-        return Ok(ApiResponse<object>.Ok(null, "Estatus del usuario actualizado correctamente."));
+        return Ok(ApiResponse<object>.Ok(null, "Usuario actualizado correctamente."));
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Eliminar(string id)
     {
-        var usuario = await usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+        var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
+        if (usuario == null) 
+            return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
-        await usuarioRepository.EliminarAsync(id);
+        await _usuarioRepository.EliminarAsync(id);
 
         return Ok(ApiResponse<object>.Ok(null, "Usuario eliminado correctamente."));
     }
 }
+

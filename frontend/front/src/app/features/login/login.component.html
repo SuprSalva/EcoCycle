@@ -1,41 +1,53 @@
-<main class="contenedor-login">
+<main class="login-wrapper">
 
   <app-bar></app-bar>
 
-  <section class="panel-formulario">
+  <div class="background-overlay"></div>
 
-    <div class="logo">
-      <img src="/logofinalpng.png" alt="EcoCycle">
-      <span class="logo-texto">EcoCycle</span>
+  <section class="login-card">
+    
+    <div class="login-header">
+      <div class="logo-container">
+        <img src="/logoo.png" alt="EcoCycle" class="logo-img">
+        <h1 class="brand-name">EcoCycle</h1>
+      </div>
+      <p class="subtitle">Sistema de Gestión Sostenible</p>
     </div>
-
-
 
     <div class="encabezado-login">
       <h2>Iniciar Sesión</h2>
       <p>Accede al sistema de gestión EcoCycle</p>
     </div>
 
-    <form class="formulario" (ngSubmit)="onLogin()">
+    
+    <form class="login-form" (ngSubmit)="onLogin()">
 
       <div class="input-group">
-        <i class="fa-regular fa-envelope"></i>
-        <input
-          type="email"
-          name="email"
-          [(ngModel)]="email"
-          placeholder="Correo electrónico"
-          required>
+        <label for="email">Correo Electrónico</label>
+        <div class="input-wrapper">
+          <i class="fa-regular fa-envelope input-icon"></i>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="ejemplo@ecocycle.com"
+            required>
+        </div>
       </div>
 
       <div class="input-group">
-        <i class="fa-solid fa-lock"></i>
-        <input
-          type="password"
-          name="password"
-          [(ngModel)]="password"
-          placeholder="Contraseña"
-          required>
+        <label for="password">Contraseña</label>
+        <div class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            placeholder="••••••••"
+            required>
+        </div>
       </div>
 
       <div class="opciones-extra" style="text-align: right; margin-bottom: 15px; font-size: 0.9rem;">
@@ -48,53 +60,10 @@
 
     </form>
 
-  </section>
+    <footer class="login-footer">
+      <span>Sostenible</span> • <span>Responsable</span> • <span>Consciente</span>
+    </footer>
 
-  <section class="panel-imagen">
-    <img
-      src="/ecologia_portada.jpg"
-      alt="EcoCycle"
-      class="imagen-fondo">
-  
-    <div class="overlay"></div>
-  
 
-    <div class="contenido-panel">
-  
-      <h1>Welcome.</h1>
-  
-      <p class="descripcion">
-        Sistema de administración EcoCycle
-        <br>
-        Juntos construimos un futuro más sostenible.
-      </p>
-  
-      <div class="caracteristicas">
-  
-        <div class="item">
-          <i class="fa-solid fa-leaf"></i>
-          <h4>Sostenible</h4>
-          <span>Cuidamos el planeta</span>
-        </div>
-  
-        <div class="item">
-          <i class="fa-solid fa-recycle"></i>
-          <h4>Responsable</h4>
-          <span>Comprometidos con el entorno</span>
-        </div>
-  
-        <div class="item">
-          <i class="fa-solid fa-users"></i>
-          <h4>Consciente</h4>
-          <span>Pequeñas acciones, grandes cambios</span>
-        </div>
-  
-      </div>
-  
-    </div>
-  
-    <div class="curva curva-1"></div>
-    <div class="curva curva-2"></div>
-  
   </section>
 </main>

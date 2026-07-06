@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms'; 
 import { ProveedorService } from '../../../core/services/proveedor.service';
 import { Proveedor } from '../../../models/proveedor.model';
 import Swal from 'sweetalert2';
@@ -8,13 +9,18 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-proveedores-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './proveedores-list.component.html',
   styleUrls: ['./proveedores-list.component.scss']
 })
 export class ProveedoresListComponent implements OnInit {
+  // Variables de control de estado
   proveedores: Proveedor[] = [];
   cargando = true;
+
+  searchTerm: string = '';
+  itemsPerPage: number = 10;
+  itemsPerPageOptions: number[] = [5, 10, 25, 50];
 
   constructor(private proveedorService: ProveedorService) {}
 
@@ -34,6 +40,11 @@ export class ProveedoresListComponent implements OnInit {
         Swal.fire('Error', 'No se pudieron cargar los proveedores', 'error');
       }
     });
+  }
+
+  cambiarItemsPorPagina(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.itemsPerPage = Number(target.value);
   }
 
   eliminarProveedor(id: string): void {

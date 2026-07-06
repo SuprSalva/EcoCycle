@@ -1,50 +1,214 @@
 using Back.Entities;
 using Back.Repositories.Interfaces;
 using Google.Cloud.Firestore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Back.Repositories;
-
-public class UsuarioRepository(FirestoreDb firestoreDb) : IUsuarioRepository
+namespace Back.Repositories
 {
-    private readonly CollectionReference _collection = firestoreDb.Collection("usuarios");
-
-    public async Task<Usuario?> ObtenerPorIdAsync(string id)
+    public class UsuarioRepository : IUsuarioRepository
     {
-        var docRef = _collection.Document(id);
-        var snapshot = await docRef.GetSnapshotAsync();
+        private readonly FirestoreDb _firestoreDb;
+        private const string COLLECTION_NAME = "usuarios";
 
-        if (!snapshot.Exists) return null;
+        public UsuarioRepository(FirestoreDb firestoreDb)
+        {
+            _firestoreDb = firestoreDb;
+        }
 
-        var usuario = snapshot.ConvertTo<Usuario>();
-        return usuario.Activo ? usuario : null;
-    }
+        public async Task<Usuario?> ObtenerPorIdAsync(string id)
+        {
+            try
+            {
+                var docRef = _firestoreDb.Collection(COLLECTION_NAME).Document(id);
+                var snapshot = await docRef.GetSnapshotAsync();
 
-    public async Task<Usuario?> ObtenerPorEmailAsync(string email)
-    {
-        var query = _collection.WhereEqualTo("email", email).WhereEqualTo("activo", true).Limit(1);
-        var snapshot = await query.GetSnapshotAsync();
+                if (snapshot.Exists)
+                {
+                    return snapshot.ConvertTo<Usuario>();
+                }
 
-        if (snapshot.Documents.Count == 0) return null;
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener usuario por ID: {ex.Message}");
+                return null;
+            }
+        }
 
-        return snapshot.Documents[0].ConvertTo<Usuario>();
-    }
+        public async Task<Usuario?> ObtenerPorEmailAsync(string email)
+        {
+            try
+            {
+                Console.WriteLine($"🔍 Buscando usuario por email: {email}");
 
-    public async Task GuardarAsync(Usuario usuario)
-    {
-        var docRef = _collection.Document(usuario.Id);
-        await docRef.SetAsync(usuario, SetOptions.MergeAll);
-    }
+                var usuarios = await ObtenerTodosAsync();
 
-    public async Task<List<Usuario>> ObtenerTodosAsync()
-    {
-        var query = _collection.WhereEqualTo("activo", true);
-        var snapshot = await query.GetSnapshotAsync();
-        return snapshot.Documents.Select(d => d.ConvertTo<Usuario>()).ToList();
-    }
+                foreach (var usuario in usuarios)
+                {
+                    if (usuario?.Email?.Equals(email, StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        Console.WriteLine($"✅ Usuario encontrado: {usuario.Email}");
+                        return usuario;
+                    }
+                }
 
-    public async Task EliminarAsync(string id)
-    {
-        var docRef = _collection.Document(id);
-        await docRef.UpdateAsync("activo", false);
+                Console.WriteLine("❌ Usuario no encontrado.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener usuario por email: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<IEnumerable<Usuario>> ObtenerTodosAsync()
+        {
+            try
+            {
+                var snapshot = await _firestoreDb
+                    .Collection(COLLECTION_NAME)
+                    .GetSnapshotAsync();
+
+                var usuarios = new List<Usuario>();
+
+                foreach (var document in snapshot.Documents)
+                {
+                    try
+                    {
+                        var usuario = document.ConvertTo<Usuario>();
+
+                        if (usuario != null)
+                        {
+                            usuarios.Add(usuario);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error convirtiendo documento {document.Id}: {ex.Message}");
+                    }
+                }
+
+                return usuarios;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener usuarios: {ex.Message}");
+                return new List<Usuario>();
+            }
+        }
+
+        public async Task<IEnumerable<Usuario>> ObtenerPorRolAsync(string rol)
+        {
+            try
+            {
+                var query = _firestoreDb
+                    .Collection(COLLECTION_NAME)
+                    .WhereEqualTo("rol", rol);
+
+                var snapshot = await query.GetSnapshotAsync();
+
+                var usuarios = new List<Usuario>();
+
+                foreach (var document in snapshot.Documents)
+                {
+                    var usuario = document.ConvertTo<Usuario>();
+
+                    if (usuario != null)
+                    {
+                        usuarios.Add(usuario);
+                    }
+                }
+
+                return usuarios;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener usuarios por rol: {ex.Message}");
+                return new List<Usuario>();
+            }
+        }
+
+        public async Task GuardarAsync(Usuario usuario)
+        {
+            try
+            {
+                if (usuario.CreadoEn == default)
+                {
+                    usuario.CreadoEn = DateTime.UtcNow;
+                }
+
+                var docRef = _firestoreDb
+                    .Collection(COLLECTION_NAME)
+                    .Document(usuario.Id);
+
+                await docRef.SetAsync(usuario, SetOptions.Overwrite);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar usuario: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task ActualizarAsync(Usuario usuario)
+        {
+            try
+            {
+                var docRef = _firestoreDb
+                    .Collection(COLLECTION_NAME)
+                    .Document(usuario.Id);
+
+                await docRef.SetAsync(usuario, SetOptions.Overwrite);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar usuario: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task EliminarAsync(string id)
+        {
+            try
+            {
+                var docRef = _firestoreDb
+                    .Collection(COLLECTION_NAME)
+                    .Document(id);
+
+                await docRef.DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al eliminar usuario: {ex.Message}");
+                throw;
+            }
+        }
+
+        public async Task<bool> ExisteEmailAsync(string email)
+        {
+            try
+            {
+                var usuarios = await ObtenerTodosAsync();
+
+                foreach (var usuario in usuarios)
+                {
+                    if (usuario?.Email?.Equals(email, StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al verificar email: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

@@ -1,37 +1,237 @@
-<div class="producto-container">
+<section class="machine-showcase">
+    <app-bar></app-bar>
+  
+    <div class="container">
+      <div class="machine-grid">
+        
+        <div class="product-gallery">
+            <div class="thumbnails">
+                <button 
+                  type="button"
+                  class="thumb-btn" 
+                  [class.active]="mainImage() === '/maquina1.jpg'"
+                  (click)="changeImage('/maquina1.jpg')">
+                  Vista frontal
+                </button>
+                
+                <button 
+                  type="button"
+                  class="thumb-btn" 
+                  [class.active]="mainImage() === '/maquina2.jpg'"
+                  (click)="changeImage('/maquina2.jpg')">
+                  Vista lateral
+                </button>
+                
+                <button 
+                  type="button"
+                  class="thumb-btn" 
+                  [class.active]="mainImage() === 'img/machine-screen.jpg'"
+                  (click)="changeImage('img/machine-screen.jpg')">
+                  Pantalla táctil
+                </button>
+              </div>
 
-    <nav class="navbar-login">
-        <a href="/login">Inicio</a>
-        <a href="/nosotros">Nosotros</a>
-        <a href="/producto">Producto</a>
-        <a href="/contacto">Contacto</a>
-      </nav>
-
-    <section class="hero">
-        <img src="/producto_img/producto.jpg" class="hero-image" alt="Producto">
-        <div class="overlay"></div>
-
-        <div class="hero-content">
-            <h1>Nombre del Producto</h1>
-            <p>Descripción corta del producto.</p>
-            <button>Conoce más</button>
+              <div class="main-preview">
+                <img [src]="mainImage()" alt="EcoCycle Smart RVM Hardware" id="mainProductImg">
+              </div>
         </div>
+  
+        <div class="product-info">
+          <span class="badge">Hardware IoT</span>
+          <h2>EcoCycle Smart RVM v1.0</h2>
+          <p class="subtitle">Estación automatizada de reciclaje inverso con analítica en tiempo real.</p>
+          
+          <hr class="divider">
+  
+          <div class="specs-list">
+            <h3>Especificaciones Técnicas</h3>
+            <ul>
+              <li><strong>Clasificación Automatizada:</strong> Identificación selectiva de botellas PET y latas de aluminio mediante sensores de proximidad y peso.</li>
+              <li><strong>Interfaz de Usuario:</strong> Pantalla táctil interactiva con guías dinámicas para el usuario final.</li>
+              <li><strong>Ecosistema IoT:</strong> Conectividad en tiempo real para actualización de inventario de tolva, alertas de mantenimiento y control de recompensas.</li>
+              <li><strong>Capacidad Compacta:</strong> Optimizado para supermercados, universidades y espacios públicos de alto tráfico.</li>
+            </ul>
+          </div>
+  
+          <div class="actions">
+            <a href="#contacto" class="btn btn-primary">Cotizar Equipamiento</a>
+            <a href="#specs" class="btn btn-secondary">Descargar Ficha Técnica (PDF)</a>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+  <section class="products-section">
+    <div class="container">
+      
+      <div class="products-header">
+        <h2 class="products-title">Nuestros Productos</h2>
+        <div class="products-line"></div>
+        <p class="products-subtitle">
+          Descubre nuestras soluciones tecnológicas e innovadoras diseñadas para facilitar el reciclaje y transformar tus hábitos.
+        </p>
+      </div>
+    
+      <div class="products-grid">
+        
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=600" alt="EcoCycle Smart Eco-Bin">
+          </div>
+          <div class="product-content">
+            <h3 class="product-name">EcoCycle Smart Eco-Bin</h3>
+            <p class="product-description">
+              Nuestra máquina de reciclaje inteligente automatizada. Clasifica botellas de PET al instante y genera recompensas directas para el usuario de forma transparente.
+            </p>
+            <button class="product-btn">Saber más</button>
+          </div>
+        </div>
+    
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=600" alt="EcoCycle App Premium">
+          </div>
+          <div class="product-content">
+            <h3 class="product-name">EcoCycle App Premium</h3>
+            <p class="product-description">
+              Llevas el control de tu impacto ambiental. Monitorea tus botellas recicladas, consulta tus puntos acumulados y canjea beneficios exclusivos.
+            </p>
+            <button class="product-btn">Saber más</button>
+          </div>
+        </div>
+    
+        <div class="product-card">
+          <div class="product-image">
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600" alt="EcoKit Empresarial">
+          </div>
+          <div class="product-content">
+            <h3 class="product-name">EcoKit Empresarial</h3>
+            <p class="product-description">
+              La solución perfecta para escuelas y oficinas. Incluye un sistema modular de recolección y acceso a talleres interactivos sobre economía circular.
+            </p>
+            <button class="product-btn">Saber más</button>
+          </div>
+        </div>
+    
+      </div>
+  
+      <hr class="section-divider">
+    </div>
     </section>
 
-    <section class="informacion">
-        <h2>Características</h2>
-
-        <div class="cards">
-            <div class="card">
-                <h3>Característica 1</h3>
-                <p>Descripción.</p>
+<section class="products-feedback">
+    <div class="container">
+        <div class="feedback-grid">
+          
+          <div class="comment-form-container">
+            <span class="feedback-badge">Feedback</span>
+            <h3>Tu opinión nos impulsa</h3>
+            <p class="form-subtitle">Comparte tu experiencia con nuestro ecosistema de reciclaje automatizado.</p>
+            
+            <form class="feedback-form" onsubmit="event.preventDefault();">
+              <div class="form-group">
+                <label for="clientName">Nombre Completo</label>
+                <input type="text" id="clientName" placeholder="Juan Pérez" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="clientComment">Tu Comentario</label>
+                <textarea id="clientComment" rows="3" placeholder="¿Qué te pareció el funcionamiento de EcoCycle?" required></textarea>
+              </div>
+              
+              <button type="submit" class="btn-submit">Enviar Opinión</button>
+            </form>
+          </div>
+  
+          <div class="comments-carousel-wrapper">
+            <div class="carousel-header">
+              <h4>Opiniones de la Comunidad</h4>
             </div>
+            
+            <div class="comments-carousel">
+              <div class="comment-card">
+                <div class="card-top">
+                  <div class="avatar">LG</div>
+                  <div class="user-meta">
+                    <h5>Luis Gómez</h5>
+                    <span>Gerente - Retail S.A.</span>
+                  </div>
+                </div>
+                <p class="comment-text">
+                  "La analítica IoT del Smart RVM nos permite monitorear las recompensas en tiempo real de forma exacta y transparente."
+                </p>
+                <div class="stars">★★★★★</div>
+              </div>
+  
+              <div class="comment-card">
+                <div class="card-top">
+                  <div class="avatar">AR</div>
+                  <div class="user-meta">
+                    <h5>Ana Rodríguez</h5>
+                    <span>Sustentabilidad - Campus Tec</span>
+                  </div>
+                </div>
+                <p class="comment-text">
+                  "A los alumnos les encanta la interfaz táctil. El proceso de reciclaje inverso es sumamente intuitivo y fluido."
+                </p>
+                <div class="stars">★★★★★</div>
+              </div>
+            </div>
+            
+          </div>
+  
+        </div>
+    </div>
+  </section>
 
-            <div class="card">
-                <h3>Característica 2</h3>
-                <p>Descripción.</p>
+  <footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h2>EcoCycle</h2>
+            <p>
+                Resguardando y cuidando el medio ambiente.
+            </p>
+        </div>
+
+        <div class="footer-links">
+
+            <h3>Enlaces</h3>
+
+            <a href="index.html">Inicio</a>
+            <a href="productos.html">Productos</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="contacto.html">Contacto</a>
+
+        </div>
+
+        <div class="footer-contacto">
+
+            <h3>Contacto</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> Ciudad, México</p>
+            <p><i class="fa-solid fa-phone"></i>+52 123 456 7890</p>
+            <p><i class="fa-solid fa-envelope"></i> contactoEcocycle.com</p>
+
+        </div>
+
+        <div class="footer-social">
+
+            <h3>Síguenos</h3>
+
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
-    </section>
+    </div>
 
-</div>
+    <div class="footer-bottom">
+        © 2026 EcoCycle| Todos los derechos reservados.
+    </div>
+</footer>

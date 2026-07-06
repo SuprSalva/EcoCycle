@@ -10,12 +10,30 @@ export interface DashboardGrafica {
   porcentaje: number;
 }
 
-export interface DashboardResumen {
-  totalBotellas: number;
-  totalPuntosEmitidos: number;
-  totalUsuarios: number;
-  totalCanjes: number;
-  grafica: DashboardGrafica[];
+export interface StockMateriaPrima{
+
+  nombre:string;
+  stockActual:number;
+
+}
+
+export interface UltimaSesion{
+
+  fecha:string;
+  maquinaId:string;
+
+}
+
+export interface DashboardResumen{
+
+  totalBotellas:number;
+  totalPuntosEmitidos:number;
+  totalUsuarios:number;
+  totalCanjes:number;
+  grafica:DashboardGrafica[];
+  stockMateriaPrima:StockMateriaPrima[];
+  ultimasSesiones:UltimaSesion[];
+
 }
 
 @Injectable({

@@ -1,55 +1,132 @@
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-primary fw-bold">Administración de Proveedores</h2>
-    <a routerLink="/panel/proveedores/nuevo" class="btn btn-success shadow-sm">
-      <i class="bi bi-plus-circle me-2"></i>Nuevo Proveedor
-    </a>
+<div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color, #f5f7fb);">
+
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
+    <div>
+      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--text, #18233d) !important; letter-spacing: -0.02em;">
+        Administración de Proveedores
+      </h2>
+      <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
+        Gestiona la información de contacto, empresas y estados de tus proveedores.
+      </p>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <a routerLink="/panel/proveedores/nuevo" class="btn btn-primary btn-sm fw-semibold shadow-sm d-flex align-items-center gap-2" style="padding-top: 0.4rem; padding-bottom: 0.4rem;">
+        <i class="fa-solid fa-plus-circle"></i> Nuevo Proveedor
+      </a>
+    </div>
   </div>
 
-  <div class="card card-modern border-0 fade-in-up">
-    <div class="card-body p-4">
+  <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
       
-      <div *ngIf="cargando" class="text-center py-5">
-        <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
+      <div class="input-group" style="max-width: 400px;">
+        <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+          <i class="fa-solid fa-search"></i>
+        </span>
+        <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill" 
+               placeholder="Buscar por nombre, empresa o correo..." 
+               style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+               [(ngModel)]="searchTerm">
       </div>
-
-      <div *ngIf="!cargando && proveedores.length === 0" class="text-center py-5 text-muted">
-        <i class="bi bi-inboxes display-1"></i>
-        <p class="mt-3 fs-5">No hay proveedores registrados aún.</p>
-      </div>
-
-      <div class="table-responsive" *ngIf="!cargando && proveedores.length > 0">
-        <table class="table table-dark table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Empresa</th>
-              <th>Teléfono</th>
-              <th>Email</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of proveedores">
-              <td class="fw-medium">{{ p.nombre }}</td>
-              <td><span class="badge" style="background-color: var(--primary); color: #000; border-radius: 20px;">{{ p.empresa }}</span></td>
-              <td><i class="bi bi-telephone text-muted me-2"></i>{{ p.telefono }}</td>
-              <td><i class="bi bi-envelope text-muted me-2"></i>{{ p.email }}</td>
-              <td class="text-center">
-                <button [routerLink]="['/panel/proveedores/editar', p.id]" class="btn btn-sm btn-outline-primary me-2 rounded-circle" title="Editar">
-                  <i class="bi bi-pencil"></i>
-                </button>
-                <button (click)="eliminarProveedor(p.id)" class="btn btn-sm btn-outline-danger rounded-circle" title="Eliminar">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-muted small fw-semibold">Mostrar:</span>
+        <select class="form-select form-select-sm border-0 text-dark fw-bold rounded-pill shadow-sm cursor-pointer" 
+                style="padding-top: 0.4rem; padding-bottom: 0.4rem; background-color: #f1f5f9; width: auto; padding-right: 2rem;" 
+                (change)="cambiarItemsPorPagina($event)">
+          <option *ngFor="let option of itemsPerPageOptions" [value]="option" [selected]="option === itemsPerPage" class="text-dark">
+            {{ option }}
+          </option>
+        </select>
+        <span class="text-muted small fw-semibold ms-2">filas</span>
       </div>
 
     </div>
+  </div>
+
+  <div *ngIf="cargando" class="card shadow-sm border-0 rounded-4 p-5 text-center mb-4" style="background-color: #ffffff;">
+    <div class="spinner-border text-success" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && proveedores.length === 0" class="card shadow-sm border-0 rounded-4 p-5 text-center text-muted mb-4" style="background-color: #ffffff;">
+    <i class="fa-solid fa-boxes-stacked fs-1 mb-3" style="opacity: 0.2;"></i>
+    <h5 class="fw-bold text-secondary">No hay proveedores registrados aún</h5>
+    <p class="small mb-0">Comienza agregando un proveedor usando el botón superior.</p>
+  </div>
+
+  <div *ngIf="!cargando && proveedores.length > 0" class="card shadow-sm border-0 rounded-4 p-0 overflow-hidden mb-4" style="background-color: #ffffff;">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+        <thead>
+          <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: #f8fafc;">
+            <th class="ps-4 py-3 fw-bold border-bottom-0">Nombre</th>
+            <th class="py-3 fw-bold border-bottom-0">Empresa</th>
+            <th class="py-3 fw-bold border-bottom-0">Teléfono</th>
+            <th class="py-3 fw-bold border-bottom-0">Email</th>
+            <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of proveedores" class="border-bottom" style="transition: all 0.2s ease;">
+            
+            <td class="ps-4 py-3">
+              <div class="d-flex flex-column">
+                <span class="fw-bold" style="font-size: 0.95rem; color: #18233d;">{{ p.nombre }}</span>
+              </div>
+            </td>
+
+            <td class="py-3">
+              <span class="fw-semibold px-2 py-1 rounded-2 bg-light text-secondary text-capitalize" style="font-size: 0.85rem;">
+                {{ p.empresa }}
+              </span>
+            </td>
+
+            <td class="py-3">
+              <span class="text-muted" style="font-size: 0.9rem;">{{ p.telefono }}</span>
+            </td>
+
+            <td class="py-3">
+              <span class="text-muted" style="font-size: 0.9rem;">{{ p.email }}</span>
+            </td>
+
+            <td class="pe-4 py-3 text-center">
+              <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm me-2 d-inline-flex align-items-center justify-content-center p-0"
+                      style="width: 35px; height: 35px; transition: all 0.2s ease;"
+                      title="Eliminar Proveedor"
+                      (click)="$event.stopPropagation(); eliminarProveedor(p.id)">
+                <i class="fa-solid fa-trash" style="font-size: 0.85rem;"></i>
+              </button>
+              
+              <a [routerLink]="['/panel/proveedores/editar', p.id]" class="text-decoration-none">
+                <i class="fa-solid fa-chevron-right text-muted ms-2" style="cursor: pointer;"></i>
+              </a>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border, #edf2f7) !important;">
+      <span class="text-muted small fw-medium">Página 1 de 1</span>
+      
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-light border shadow-sm" disabled>
+          <i class="fa-solid fa-chevron-left text-muted"></i>
+        </button>
+        
+        <button class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: var(--primary-color, #10b981);">
+          1
+        </button>
+
+        <button class="btn btn-sm btn-light border shadow-sm" disabled>
+          <i class="fa-solid fa-chevron-right text-muted"></i>
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>

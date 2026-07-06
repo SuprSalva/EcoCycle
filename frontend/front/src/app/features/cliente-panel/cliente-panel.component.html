@@ -1,46 +1,78 @@
 <div class="d-flex min-vh-100" style="background-color: var(--background-color);">
-  <!-- Sidebar del cliente -->
-  <aside class="sidebar bg-white shadow-sm p-4 d-flex flex-column" style="width: 260px; border-right: 1px solid var(--border-neutral-color);">
-    <div class="mb-5 d-flex align-items-center gap-3">
-      <div class="d-flex justify-content-center align-items-center rounded-circle" style="width: 40px; height: 40px; background-color: var(--primary-container-color); color: var(--primary-color); font-size: 1.2rem;">
-        <i class="fa-solid fa-leaf"></i>
+   <main class="flex-grow-1 p-4" style="overflow-y: auto; height: 100vh;">
+    <div class="fade-in-up">
+      <div class="d-flex align-items-center mb-4 gap-3">
+        <div class="d-flex align-items-center justify-content-center rounded-circle" style="width: 48px; height: 48px; background-color: var(--primary-container-color); color: var(--primary-color); font-size: 1.2rem;">
+          <i class="fa-solid fa-user-gear"></i>
+        </div>
+        <div>
+          <h2 class="fw-bold m-0" style="color: var(--on-background-color); letter-spacing: -0.02em;">Mi Perfil</h2>
+          <p class="text-muted small m-0 mt-1">Actualiza tu información personal y de seguridad.</p>
+        </div>
       </div>
-      <div>
-        <h5 class="fw-bold m-0" style="color: var(--primary-dark);">EcoCycle</h5>
-        <span class="text-muted small" style="font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">Portal Cliente</span>
+      
+      <div *ngIf="!cargando" class="row g-4">
+        <div class="col-lg-7">
+          <div class="card shadow-sm border-0 rounded-4 bg-white p-4 h-100">
+            <h5 class="fw-bold mb-4" style="color: var(--primary-dark);">Datos Personales</h5>
+            <form [formGroup]="perfilForm" (ngSubmit)="actualizarPerfil()">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-secondary small text-uppercase">Nombre</label>
+                  <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="nombre" style="font-size: 0.95rem;">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-bold text-secondary small text-uppercase">Apellidos</label>
+                  <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="apellidos" style="font-size: 0.95rem;">
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary small text-uppercase">Teléfono</label>
+                  <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="telefono" style="font-size: 0.95rem;">
+                </div>
+                <div class="col-md-12">
+                  <label class="form-label fw-bold text-secondary small text-uppercase">Dirección</label>
+                  <input type="text" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="direccion" style="font-size: 0.95rem;">
+                </div>
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn text-white px-4 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color);" [disabled]="perfilForm.invalid">
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+    
+        <div class="col-lg-5">
+          <div class="card shadow-sm border-0 rounded-4 bg-white p-4 h-100">
+            <h5 class="fw-bold mb-4" style="color: var(--primary-dark);">Cambiar Contraseña</h5>
+            <form [formGroup]="passwordForm" (ngSubmit)="cambiarPassword()">
+              <div class="mb-3">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Nueva Contraseña</label>
+                <input type="password" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="password" style="font-size: 0.95rem;">
+              </div>
+              <div class="mb-4">
+                <label class="form-label fw-bold text-secondary small text-uppercase">Confirmar Contraseña</label>
+                <input type="password" class="form-control form-control-lg bg-light border-0 shadow-none" formControlName="confirmar" style="font-size: 0.95rem;">
+              </div>
+              <div class="d-flex justify-content-end mt-auto">
+                <button type="submit" class="btn btn-outline-danger px-4 py-2 rounded-3 fw-bold shadow-sm" [disabled]="passwordForm.invalid">
+                  Actualizar Contraseña
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
-
-    <ul class="nav flex-column gap-2 mt-2">
-      <li class="nav-item">
-        <a class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 fw-medium nav-hover" 
-           routerLink="perfil" routerLinkActive="active-link">
-          <i class="fa-solid fa-user" style="width: 20px; text-align: center;"></i> Mi Perfil
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 fw-medium nav-hover" 
-           routerLink="mis-compras" routerLinkActive="active-link">
-          <i class="fa-solid fa-box-open" style="width: 20px; text-align: center;"></i> Mis Compras
-        </a>
-      </li>
-    </ul>
-
-    <div class="mt-auto">
-      <hr class="text-muted mb-3">
-      <a routerLink="/panel/dashboard" class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 text-secondary fw-medium nav-hover">
-        <i class="fa-solid fa-arrow-left" style="width: 20px; text-align: center;"></i> Volver al Inicio
-      </a>
-    </div>
-  </aside>
-
-  <!-- Contenido Principal -->
-  <main class="flex-grow-1 p-4" style="overflow-y: auto; height: 100vh;">
-    <router-outlet></router-outlet>
+      
   </main>
 </div>
 
 <style>
+  .fade-in-up { animation: fadeInUp 0.4s ease-out; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
   .nav-link { color: var(--text-secondary-color); transition: all 0.2s ease; }
   .nav-hover:hover { background-color: var(--primary-container-color); color: var(--primary-color) !important; }
   .active-link { background-color: var(--primary-color) !important; color: white !important; font-weight: 600 !important; box-shadow: var(--shadow-sm); }
