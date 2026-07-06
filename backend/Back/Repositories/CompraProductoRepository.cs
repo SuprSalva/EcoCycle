@@ -1,16 +1,34 @@
 using Back.Entities;
+using Back.Repositories.Interfaces;
 using Google.Cloud.Firestore;
 
 namespace Back.Repositories;
 
-public class CompraProductoRepository(FirestoreDb firestoreDb) : Interfaces.ICompraProductoRepository
+public class CompraProductoRepository : ICompraProductoRepository
 {
-    private readonly CollectionReference _collection = firestoreDb.Collection("compras_productos");
+    private readonly FirestoreDb _firestoreDb;
+    private readonly CollectionReference _collection;
+
+    public CompraProductoRepository(FirestoreDb firestoreDb)
+    {
+        _firestoreDb = firestoreDb;
+        _collection = _firestoreDb.Collection("compras_productos");
+    }
 
     public async Task<List<CompraProducto>> ObtenerPorUsuarioIdAsync(string usuarioId)
     {
         var query = _collection.WhereEqualTo("usuario_id", usuarioId);
         var snapshot = await query.GetSnapshotAsync();
+        return snapshot.Documents
+            .Select(d => d.ConvertTo<CompraProducto>())
+            .OrderByDescending(c => c.FechaCompra)
+            .ToList();
+    }
+
+    // ✅ NUEVO: Obtener TODAS las compras
+    public async Task<List<CompraProducto>> ObtenerTodasAsync()
+    {
+        var snapshot = await _collection.OrderByDescending("fecha_compra").GetSnapshotAsync();
         return snapshot.Documents
             .Select(d => d.ConvertTo<CompraProducto>())
             .OrderByDescending(c => c.FechaCompra)

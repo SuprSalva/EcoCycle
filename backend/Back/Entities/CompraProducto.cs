@@ -1,3 +1,4 @@
+// 📁 Back/Entities/CompraProducto.cs
 using Google.Cloud.Firestore;
 
 namespace Back.Entities;
@@ -30,5 +31,9 @@ public class CompraProducto
     public string Opinion { get; set; } = string.Empty;
 
     [FirestoreProperty("calificacion")]
-    public int Calificacion { get; set; } = 0; // 0 a 5 estrellas
+    public int Calificacion { get; set; } = 0;
+
+    // ✅ AGREGADO - SIN DUPLICADOS
+    [FirestoreProperty("estado")]
+    public string Estado { get; set; } = "Pendiente";
 }
