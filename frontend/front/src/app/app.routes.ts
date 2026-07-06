@@ -25,7 +25,7 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
- 
+  { path: 'maquina', loadComponent: () => import('./features/maquina-info/maquina-info.component').then(m => m.MaquinaInfoComponent) },
   // 2. Ruta Padre del Panel (PROTEGIDA BAJO LLAVE)
   { 
     path: 'panel', 
