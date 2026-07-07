@@ -3,8 +3,8 @@
 .sidebar {
   width: 320px;
   height: 100vh;
-  background: #144b18; 
-  color: #FFFFFF; /* Texto principal en blanco puro */
+  background: #144b1b; 
+  color: #FFFFFF; 
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@
 
 .logo-text span {
   font-size: 12px;
-  color: #fafafa; /* Un toque de verde esmeralda brillante */
+  color: #fafafa; 
 }
 
 .menu-btn {
@@ -159,7 +159,7 @@
 }
 
 .item-menu.activo {
-  background: #2DB337; /* Esmeralda Vivo para resaltar la selección */
+  background: #29a131; /* Esmeralda Vivo para resaltar la selección */
   color: #FFFFFF;
   font-weight: 600;
   border-left: 4px solid #5bb162; /* Detalle de borde más claro */
