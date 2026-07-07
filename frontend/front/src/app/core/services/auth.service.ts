@@ -1,6 +1,6 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, getIdToken, onIdTokenChanged, sendPasswordResetEmail } from '@angular/fire/auth';
 import { from, Observable, switchMap, tap, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -12,8 +12,6 @@ export class AuthService {
   private usuarioUrl = `${environment.apiUrl}/Usuario`;
 
   constructor(private auth: Auth, private http: HttpClient, private injector: Injector) {
-    // BUG FIX: El token de Firebase expira a la hora. Con esto, Angular escucha silenciosamente
-    // cada vez que Firebase refresca el token en el fondo y nosotros actualizamos localStorage.
     onIdTokenChanged(this.auth, async (user) => {
       if (user) {
         const token = await user.getIdToken();
@@ -28,11 +26,9 @@ export class AuthService {
     return localStorage.getItem('token');
   }
 
-  // 1. INICIAR SESIÓN (Corregido para mantener contexto de inyección)
   login(email: string, password: string): Observable<string> {
     return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((userCredential) => {
-        // Ejecutamos getIdToken dentro del contexto de inyección de Angular
         return runInInjectionContext(this.injector, () => 
           from(getIdToken(userCredential.user)).pipe(
             tap((token) => {
@@ -44,7 +40,6 @@ export class AuthService {
     );
   }
 
-  // CERRAR SESIÓN
   logout(): Observable<void> {
     return from(this.auth.signOut()).pipe(
       tap(() => {
@@ -53,14 +48,16 @@ export class AuthService {
     );
   }
 
-  // OBTENER PERFIL DE USUARIO LOGUEADO
+  resetPassword(email: string): Observable<void> {
+    return from(sendPasswordResetEmail(this.auth, email));
+  }
+
   obtenerPerfilUsuario(): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/perfil`).pipe(
       map(res => res.data)
     );
   }
 
-  // 2. REGISTRO AUTÓNOMO (Corregido para mantener contexto de inyección)
   registro(email: string, password: string, datosAdicionales: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
       switchMap((userCredential) => {
@@ -84,7 +81,6 @@ export class AuthService {
     );
   }
 
-  // 3. REGISTRO DESDE EL ADMIN (Crea la cuenta en Firebase Auth e impacta tu base de datos)
   registrarDesdeAdmin(usuarioNuevo: any): Observable<any> {
     return from(createUserWithEmailAndPassword(this.auth, usuarioNuevo.email, usuarioNuevo.password)).pipe(
       switchMap((userCredential) => {
@@ -98,8 +94,6 @@ export class AuthService {
               rol: usuarioNuevo.rol || 'usuario'
             };
 
-            // Enviamos el registro al backend con el token RECIÉN CREADO (del nuevo usuario)
-            // Esto evita que el interceptor mande el token del administrador y cause un 400 Bad Request
             return this.http.post(`${this.authUrl}/registro`, body, {
               headers: { Authorization: `Bearer ${nuevoToken}` }
             });
@@ -109,7 +103,6 @@ export class AuthService {
     );
   }
 
-  // 4. LEER: OBTENER TODOS LOS USUARIOS (Mantiene tu lógica funcional)
   obtenerTodosLosUsuarios(): Observable<any[]> {
     return this.http.get<any>(`${this.usuarioUrl}/todos`).pipe(
       map(respuestaCsharp => {
@@ -119,20 +112,16 @@ export class AuthService {
     );
   }
 
-  // OBTENER UN SOLO USUARIO POR ID
   obtenerUsuarioPorId(id: string): Observable<any> {
     return this.http.get<any>(`${this.usuarioUrl}/${id}`).pipe(
       map(res => res.data)
     );
   }
 
-  // 5. ACTUALIZAR: CAMBIAR DATOS, ROLES O ESTATUS DESDE EL ADMIN
   actualizarUsuario(id: string, datos: any): Observable<any> {
-    // Mandamos el objeto modificado a C#
     return this.http.put(`${this.usuarioUrl}/${id}`, datos);
   }
 
-  // 6. ELIMINAR: BORRAR CUENTA PERMANENTEMENTE
   eliminarUsuario(id: string): Observable<any> {
     return this.http.delete(`${this.usuarioUrl}/${id}`);
   }
