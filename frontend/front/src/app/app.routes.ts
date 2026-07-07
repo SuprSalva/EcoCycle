@@ -29,8 +29,8 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
-  { path: 'catalogo', component: CatalogoComponent }, 
- 
+  { path: 'maquina', loadComponent: () => import('./features/maquina-info/maquina-info.component').then(m => m.MaquinaInfoComponent) },
+  { path: 'catalogo', component: CatalogoComponent },
   { 
     path: 'cliente',
     component: PanelClienteComponent,  

@@ -1,0 +1,42 @@
+// Paleta de Fondos Soft para Badges Administrativos
+.bg-soft-success {
+  background-color: rgba(124, 179, 66, 0.12) !important;
+  color: #558b2f !important;
+  border: 1px solid rgba(124, 179, 66, 0.2);
+}
+
+.bg-soft-danger {
+  background-color: rgba(211, 47, 47, 0.1) !important;
+  color: #c62828 !important;
+  border: 1px solid rgba(211, 47, 47, 0.15);
+}
+
+// Suavizado general de la tabla maestra
+.table {
+  tbody tr {
+    transition: background-color 0.15s ease;
+    cursor: default;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+  }
+
+  th {
+    text-transform: uppercase;
+  }
+}
+
+.btn-refresh {
+  transition: transform 0.2s ease, background-color 0.2s;
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+code {
+  color: #2b3674;
+  background-color: #f4f7fe;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+}

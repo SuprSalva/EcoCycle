@@ -1,0 +1,152 @@
+<div class="container-fluid p-4" style="background-color: #f8fafc; min-height: 100vh;">
+  
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="fw-bold m-0" style="color: #0f172a; font-size: 1.6rem;">Dashboard de Reciclaje Global</h1>
+      <p class="text-muted small m-0">Monitor unificado de saldos, cuentas de clientes e impacto IoT</p>
+    </div>
+    <button (click)="generarReporteAnalisis()" class="btn text-white fw-semibold shadow-sm px-4 py-2 border-0" style="background-color: #1e293b; border-radius: 8px; font-size: 0.85rem;">
+      <i class="fa-solid fa-file-export me-2"></i> Exportar Auditoría Completa
+    </button>
+  </div>
+
+  <div *ngIf="cargando" class="text-center my-5 p-5">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2 text-muted small">Consultando repositorios en C#...</p>
+  </div>
+
+  <div *ngIf="!cargando">
+    
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 rounded-3 bg-white" style="border-top: 4px solid #2563eb !important;">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-uppercase fw-bold text-muted small tracking-wider" style="font-size: 0.75rem;">Clientes Registrados</span>
+              <h2 class="fw-bold m-0 mt-1" style="color: #0f172a;">{{ metricas.usuariosActivos }}</h2>
+            </div>
+            <div class="fs-3 bg-light rounded px-3 py-2 text-primary">👥</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 rounded-3 bg-white" style="border-top: 4px solid #d97706 !important;">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-uppercase fw-bold text-muted small tracking-wider" style="font-size: 0.75rem;">Capital de EcoPts Circulantes</span>
+              <h2 class="fw-bold m-0 mt-1" style="color: #0f172a;">{{ metricas.puntosGenerados }} <span class="fs-6 text-muted fw-normal">Pts</span></h2>
+            </div>
+            <div class="fs-3 bg-light rounded px-3 py-2 text-warning">🪙</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="card h-100 border-0 shadow-sm p-4 rounded-3 bg-white" style="border-top: 4px solid #16a34a !important;">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <span class="text-uppercase fw-bold text-muted small tracking-wider" style="font-size: 0.75rem;">Volumen Total Envases</span>
+              <h2 class="fw-bold m-0 mt-1" style="color: #0f172a;">{{ metricas.botellasRecicladas }} <span class="fs-6 text-muted fw-normal">unidades</span></h2>
+            </div>
+            <div class="fs-3 bg-light rounded px-3 py-2 text-success">🍾</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold m-0" style="color: #0f172a; font-size: 1rem;">Top 5 Clientes con Mayor Impacto (Botellas)</h5>
+            <span class="badge bg-primary text-white rounded-pill px-3 py-1 small fw-normal" style="font-size: 0.75rem;">Métricas de Base de Datos</span>
+          </div>
+          <div style="position: relative; height: 260px; width: 100%;">
+            <canvas id="graficaBarrasReciclaje"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-3 p-4 bg-white h-100 d-flex flex-column justify-content-between">
+          <div>
+            <h5 class="fw-bold mb-2" style="color: #0f172a; font-size: 1rem;">Módulos del Sistema</h5>
+            <p class="text-muted small mb-3">Navegación inmediata para control de catálogos maestro.</p>
+            
+            <div class="d-grid gap-2">
+              <a href="/catalogo" class="btn btn-manage d-flex align-items-center justify-content-between p-3 border rounded-3 text-start text-decoration-none bg-light">
+                <div>
+                  <span class="d-block fw-bold text-dark" style="font-size: 0.85rem;">🎁 Catálogo de Recompensas</span>
+                  <span class="text-muted d-block" style="font-size: 0.75rem;">Configuración de premios</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+
+              <a href="/usuarios" class="btn btn-manage d-flex align-items-center justify-content-between p-3 border rounded-3 text-start text-decoration-none bg-light">
+                <div>
+                  <span class="d-block fw-bold text-dark" style="font-size: 0.85rem;">👥 Control de Usuarios</span>
+                  <span class="text-muted d-block" style="font-size: 0.75rem;">Estatus de cuentas de clientes</span>
+                </div>
+                <i class="fa-solid fa-chevron-right text-muted small"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="text-center mt-3 pt-2 border-top border-light">
+            <button (click)="cargarEstadisticas()" class="btn btn-link btn-sm text-decoration-none text-muted small p-0">
+              <i class="fa-solid fa-arrows-rotate me-1"></i> Sincronizar Base de Datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h5 class="fw-bold m-0" style="color: #0f172a; font-size: 1rem;">Historial de Cuentas y Estado de Billeteras</h5>
+          <p class="text-muted small m-0">Traza consolidada mapeando las variables desde el Repositorio de C#</p>
+        </div>
+        <span class="badge bg-success text-white px-3 py-1 rounded-pill" style="font-size: 0.75rem;">Sincronizado</span>
+      </div>
+      
+      <div class="table-responsive">
+        <table class="table align-middle m-0 small table-hover">
+          <thead class="table-light text-muted">
+            <tr>
+              <th>USUARIO / BENEFICIARIO</th>
+              <th>EMAIL</th>
+              <th>ACTIVIDAD DETECTADA</th>
+              <th>ROL DEL SISTEMA</th>
+              <th class="text-end">SALDO ACTUAL EN BD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of historialGlobalSimulado">
+              <td>
+                <div class="fw-bold text-dark">{{ item.usuario }}</div>
+              </td>
+              <td class="text-muted">{{ item.email }}</td>
+              <td>
+                <span class="text-secondary"><i class="fa-solid fa-clock-rotate-left me-1 text-success"></i> {{ item.accion }}</span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="item.rol === 'Admin' ? 'bg-danger' : 'bg-secondary'">
+                  {{ item.rol }}
+                </span>
+              </td>
+              <td class="fw-bold text-end text-success" style="font-size: 0.95rem;">
+                {{ item.impacto }}
+              </td>
+            </tr>
+            <tr *ngIf="historialGlobalSimulado.length === 0">
+              <td colspan="5" class="text-center py-4 text-muted">No se encontraron usuarios en la base de datos.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
