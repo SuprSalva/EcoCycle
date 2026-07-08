@@ -20,6 +20,10 @@ import { ProductoComponent } from './features/producto/producto.component';
 import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
 import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
 import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
+import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component'
+import {ComentariosComponent} from './features/comentarios/comentarios.component'
+
+
 export const routes: Routes = [
 
   { path: 'login', component: LoginComponent },
@@ -27,8 +31,7 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
-  { path: 'maquina', loadComponent: () => import('./features/maquina-info/maquina-info.component').then(m => m.MaquinaInfoComponent) },
-  { path: 'catalogo', component: CatalogoComponent },
+
   { 
     path: 'cliente',
     component: PanelClienteComponent,  
@@ -95,25 +98,16 @@ export const routes: Routes = [
         ]
       },
 
-
+        {path: 'materia-prima', component: MateriaPrimaComponent},
       { path: 'dashboard', component: DashboardGlobalComponent },
-
       { path: 'usuarios', component: UsuariosComponent },
       { path: 'reciclaje', component: SesionReciclajeComponent },
-
       { path: 'catalogo', component: CatalogoComponent },
-
-      // Historial de Recompensas
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
-
-      // Reportes
       { path: 'reportes', component: ReportesComponent },
-
-      // Soporte
       { path: 'soporte', component: SoporteComponent },
-      
-       { path: 'compras', component: AdminComprasComponent },
-      
+      { path: 'compras', component: AdminComprasComponent },
+      { path: 'comentarios', component: ComentariosComponent },
        {
         path: 'proveedores',
         loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component')
@@ -130,7 +124,6 @@ export const routes: Routes = [
           .then(c => c.ProveedoresFormComponent)
       },
 
-      // Gestión de Compras a Proveedores
       {
         path: 'compras-proveedores',
         loadComponent: () => import('./features/compras-proveedores/compras-list/compras-list.component')
@@ -141,21 +134,13 @@ export const routes: Routes = [
         loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component')
           .then(c => c.ComprasFormComponent)
       },
-
-      // Redirección por defecto dentro de /admin
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
 
-  // ============================================
-  // RUTAS DE ERROR
-  // ============================================
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
-  // ============================================
-  // REDIRECCIONES
-  // ============================================
   { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }
 ];

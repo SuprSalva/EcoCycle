@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { UsuarioService } from '../../../core/services/Usuario.service';
+import { UsuarioService } from '../../../core/services/usuario.service';
 
 // Interface para tipado
 export interface UsuarioData {

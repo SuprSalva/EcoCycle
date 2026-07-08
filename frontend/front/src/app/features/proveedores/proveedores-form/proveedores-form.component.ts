@@ -48,7 +48,7 @@ export class ProveedoresFormComponent implements OnInit {
       },
       error: () => {
         Swal.fire('Error', 'No se pudo cargar la información del proveedor', 'error');
-        this.router.navigate(['/panel/proveedores']);
+        this.router.navigate(['/admin/proveedores']);
       }
     });
   }
@@ -69,7 +69,7 @@ export class ProveedoresFormComponent implements OnInit {
     peticion.subscribe({
       next: () => {
         Swal.fire('Éxito', `Proveedor ${this.isEdit ? 'actualizado' : 'registrado'} correctamente`, 'success');
-        this.router.navigate(['/panel/proveedores']);
+        this.router.navigate(['/admin/proveedores']);
       },
       error: () => {
         this.guardando = false;

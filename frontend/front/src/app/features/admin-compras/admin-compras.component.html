@@ -1,215 +1,330 @@
-<!-- admin-compras.component.html -->
-<div class="container-fluid p-4">
-  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-    <div>
-      <h2 class="fw-bold m-0">📊 Gestión de Compras y Opiniones</h2>
-      <p class="text-muted small">Administra las compras y opiniones de los clientes.</p>
+<div class="dashboard-container">
+
+  
+  <div class="tarjetas-grid">
+
+    <div class="tarjeta azul">
+      <p>
+        <i class="fa-solid fa-basket-shopping me-2"></i>
+        Total Compras
+      </p>
+
+      <h3>{{ countTodas }}</h3>
+
+      <span>Órdenes registradas</span>
     </div>
-    <span class="badge bg-primary px-3 py-2">{{ countTodas }} Compras</span>
+
+    <div class="tarjeta verde">
+      <p>
+        <i class="fa-solid fa-circle-check me-2"></i>
+        Completadas
+      </p>
+
+      <h3>{{ countCompletadas }}</h3>
+
+      <span>Transacciones exitosas</span>
+    </div>
+
+    <div class="tarjeta naranja">
+      <p>
+        <i class="fa-solid fa-circle-notch fa-spin me-2"></i>
+        Pendientes
+      </p>
+
+      <h3>{{ countPendientes }}</h3>
+
+      <span>Por evaluar / confirmar</span>
+    </div>
+
+    <div class="tarjeta verde-claro">
+      <p>
+        <i class="fa-solid fa-comment-slash me-2"></i>
+        Sin Opinión
+      </p>
+
+      <h3>{{ countSinOpinion }}</h3>
+
+      <span>Productos sin reseña</span>
+    </div>
+
   </div>
 
-  <!-- Estadísticas -->
-  <div class="row g-3 mb-4">
-    <div class="col-md-3">
-      <div class="card shadow-sm border-0">
-        <div class="card-body d-flex align-items-center gap-3">
-          <div class="icon-circle bg-primary bg-opacity-10 p-3 rounded-circle">
-            <i class="fa-solid fa-shopping-bag text-primary fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Total compras</h6>
-            <h4 class="mb-0">{{ countTodas }}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card shadow-sm border-0">
-        <div class="card-body d-flex align-items-center gap-3">
-          <div class="icon-circle bg-success bg-opacity-10 p-3 rounded-circle">
-            <i class="fa-solid fa-check-circle text-success fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Completadas</h6>
-            <h4 class="mb-0">{{ countCompletadas }}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card shadow-sm border-0">
-        <div class="card-body d-flex align-items-center gap-3">
-          <div class="icon-circle bg-warning bg-opacity-10 p-3 rounded-circle">
-            <i class="fa-solid fa-clock text-warning fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Pendientes</h6>
-            <h4 class="mb-0">{{ countPendientes }}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="card shadow-sm border-0">
-        <div class="card-body d-flex align-items-center gap-3">
-          <div class="icon-circle bg-danger bg-opacity-10 p-3 rounded-circle">
-            <i class="fa-solid fa-star text-danger fs-4"></i>
-          </div>
-          <div>
-            <h6 class="text-muted mb-0">Sin opinión</h6>
-            <h4 class="mb-0">{{ countSinOpinion }}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div class="dashboard">
 
-  <!-- Buscador y Filtros -->
-  <div class="card shadow-sm border-0 p-3 mb-4">
-    <div class="row g-3">
-      <div class="col-md-6">
-        <div class="input-group">
-          <span class="input-group-text bg-transparent border-end-0">
-            <i class="fa-solid fa-search"></i>
+    <div class="card-dashboard tabla-card">
+
+      <div class="card-header">
+        <div>
+          <h3>Consola de Administración de comentarios y ordenes</h3>
+          <span>
+            Monitoreo de flujos comerciales, estatus de entrega y feedback de clientes
           </span>
-          <input type="text" class="form-control border-start-0" 
-                 placeholder="Buscar por producto, cliente..." 
-                 [(ngModel)]="filtroBusqueda"
-                 (input)="aplicarBusqueda()">
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="d-flex flex-wrap gap-2">
-          <button class="btn btn-sm" [class.btn-primary]="filtroEstado === 'Todas'" [class.btn-outline-secondary]="filtroEstado !== 'Todas'" (click)="cambiarFiltro('Todas')">
-            Todas <span class="badge bg-light text-dark ms-1">{{ countTodas }}</span>
+
+      <div class="toolbar">
+        <div class="filtros">
+
+          <button
+            class="btn-filtro-pill"
+            [class.active]="filtroEstado === 'Todas'"
+            (click)="cambiarFiltro('Todas')">
+        
+            Todas
+        
+            <span class="badge-contador">
+              {{ countTodas }}
+            </span>
+        
           </button>
-          <button class="btn btn-sm" [class.btn-success]="filtroEstado === 'Completada'" [class.btn-outline-secondary]="filtroEstado !== 'Completada'" (click)="cambiarFiltro('Completada')">
-            ✅ Completadas <span class="badge bg-light text-dark ms-1">{{ countCompletadas }}</span>
+        
+          <button
+            class="btn-filtro-pill"
+            [class.active]="filtroEstado === 'Completada'"
+            (click)="cambiarFiltro('Completada')">
+        
+            <i class="fa-solid fa-check"></i>
+        
+            Completadas
+        
+            <span class="badge-contador">
+              {{ countCompletadas }}
+            </span>
+        
           </button>
-          <button class="btn btn-sm" [class.btn-warning]="filtroEstado === 'Pendiente'" [class.btn-outline-secondary]="filtroEstado !== 'Pendiente'" (click)="cambiarFiltro('Pendiente')">
-            ⏳ Pendientes <span class="badge bg-light text-dark ms-1">{{ countPendientes }}</span>
+        
+          <button
+            class="btn-filtro-pill"
+            [class.active]="filtroEstado === 'Pendiente'"
+            (click)="cambiarFiltro('Pendiente')">
+        
+            <i class="fa-solid fa-spinner"></i>
+        
+            Pendientes
+        
+            <span class="badge-contador">
+              {{ countPendientes }}
+            </span>
+        
           </button>
-          <button class="btn btn-sm" [class.btn-danger]="filtroEstado === 'Cancelada'" [class.btn-outline-secondary]="filtroEstado !== 'Cancelada'" (click)="cambiarFiltro('Cancelada')">
-            ❌ Canceladas <span class="badge bg-light text-dark ms-1">{{ countCanceladas }}</span>
+        
+          <button
+            class="btn-filtro-pill"
+            [class.active]="filtroEstado === 'Cancelada'"
+            (click)="cambiarFiltro('Cancelada')">
+        
+            <i class="fa-solid fa-xmark"></i>
+        
+            Canceladas
+        
+            <span class="badge-contador">
+              {{ countCanceladas }}
+            </span>
+        
           </button>
+        
         </div>
       </div>
+
+      <div
+        class="text-center py-5"
+        *ngIf="cargando">
+
+        <div class="spinner-border text-success"></div>
+
+        <p class="text-muted mt-3">
+          Sincronizando registros globales...
+        </p>
+
+      </div>
+
+      <div
+        class="tabla-responsive"
+        *ngIf="!cargando">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>#</th>
+
+              <th>Producto</th>
+
+              <th>Cliente</th>
+
+              <th>Fecha</th>
+
+              <th>Total</th>
+
+              <th>Estado</th>
+
+              <th>Opinión</th>
+
+              <th>Acciones</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let compra of comprasFiltradas; let i=index">
+
+              <td>{{i+1}}</td>
+
+              <td>Producto</td>
+
+              <td>Cliente</td>
+
+              <td>Fecha</td>
+
+              <td>$0.00</td>
+
+              <td>
+
+                <span class="badge-estado pendiente">
+
+                  Pendiente
+
+                </span>
+
+              </td>
+
+              <td>Sin opinión</td>
+
+              <td>
+
+                <button class="btn-opinar-tabla">
+
+                  <i class="fa-solid fa-reply"></i>
+
+                  Responder
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
     </div>
+
   </div>
 
-  <!-- Lista de compras -->
-  <div *ngIf="cargando" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Cargando...</span>
-    </div>
-  </div>
+</div>
+    
+<div
+  class="modal fade"
+  [class.show]="mostrandoRespuesta"
+  [style.display]="mostrandoRespuesta ? 'block' : 'none'"
+  tabindex="-1">
 
-  <div *ngIf="!cargando">
-    <div *ngIf="comprasFiltradas.length === 0" class="alert alert-light text-center border p-5">
-      <i class="fa-solid fa-shopping-bag text-muted fs-1 mb-3"></i>
-      <p class="mb-0 text-muted">No hay compras que coincidan con los filtros.</p>
-    </div>
+  <div class="modal-dialog modal-dialog-centered">
 
-    <div class="row g-4">
-      <div *ngFor="let compra of comprasFiltradas" class="col-12">
-        <div class="card shadow-sm border-0">
-          <div class="card-body">
-            <!-- Cabecera -->
-            <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-              <div>
-                <span class="fw-bold me-3">#{{ compra.id | slice:0:8 }}</span>
-                <span class="text-muted small">
-                  <i class="fa-solid fa-calendar me-1"></i>
-                  {{ compra.fechaCompra | date:'dd/MM/yyyy HH:mm' }}
-                </span>
-                <span class="text-muted small ms-2">
-                  <i class="fa-solid fa-user me-1"></i>
-                  Cliente: {{ compra.usuarioId | slice:0:8 }}
-                </span>
-              </div>
-              
-              <!-- ✅ PARTE CORREGIDA -->
-              <div class="d-flex align-items-center gap-2">
-                <select class="form-select form-select-sm" style="width: auto; min-width: 140px;"
-                        [(ngModel)]="compra.estado"
-                        (change)="cambiarEstado(compra, compra.estado || 'Pendiente')">
-                  <option value="Pendiente">⏳ Pendiente</option>
-                  <option value="Completada">✅ Completada</option>
-                  <option value="Cancelada">❌ Cancelada</option>
-                </select>
-                <span class="fw-bold fs-5 text-success">${{ compra.total | number:'1.2' }}</span>
-              </div>
-            </div>
+    <div class="modal-content">
 
-            <!-- Producto -->
-            <div class="mt-3">
-              <div class="d-flex justify-content-between border-bottom py-1">
-                <span>
-                  <strong>{{ compra.nombreProducto }}</strong>
-                  <span class="text-muted ms-2">x{{ compra.cantidad }}</span>
-                </span>
-                <span class="fw-bold">${{ compra.total | number:'1.2' }}</span>
-              </div>
-            </div>
+      <div class="modal-body">
 
-            <!-- Opinión del cliente -->
-            <div class="mt-3 pt-2 border-top">
-              <div *ngIf="compra.opinion" class="bg-light p-3 rounded">
-                <div class="d-flex flex-wrap align-items-center gap-2">
-                  <div class="d-flex align-items-center gap-1">
-                    <span *ngFor="let star of [1,2,3,4,5]" 
-                          class="fs-5"
-                          [class.text-warning]="star <= (compra.calificacion || 0)"
-                          [class.text-secondary]="star > (compra.calificacion || 0)">
-                      ⭐
-                    </span>
-                    <span class="text-muted small ms-1">({{ compra.calificacion || 0 }}/5)</span>
-                  </div>
-                  <span class="text-muted small flex-1">{{ compra.opinion }}</span>
-                  <button class="btn btn-sm btn-outline-primary" (click)="responderOpinion(compra)">
-                    <i class="fa-solid fa-reply me-1"></i>Responder
-                  </button>
-                </div>
-              </div>
-              <div *ngIf="!compra.opinion && compra.estado === 'Completada'" class="text-muted small">
-                <i class="fa-solid fa-info-circle me-1"></i> Cliente no ha dejado opinión aún
-              </div>
-              <div *ngIf="compra.estado === 'Pendiente'" class="text-muted small">
-                <i class="fa-solid fa-clock me-1"></i> Esperando confirmación
-              </div>
-            </div>
+        <div class="modal-header-custom">
+
+          <div class="modal-icon">
+
+            <i class="fa-solid fa-comments"></i>
+
           </div>
+
+          <div>
+
+            <h4>Atención a Reseña</h4>
+
+            <span>
+              Producto: {{ compraSeleccionada?.nombreProducto }}
+            </span>
+
+          </div>
+
         </div>
+
+
+        <div class="opinion-original">
+
+          <small>
+            Opinión Original
+          </small>
+
+          <p>
+            "{{ compraSeleccionada?.opinion }}"
+          </p>
+
+        </div>
+
+        <!-- Respuesta -->
+
+        <div class="form-group">
+
+          <label>
+
+            Escribir Respuesta
+
+          </label>
+
+          <textarea
+
+            class="form-control respuesta-textarea"
+
+            rows="5"
+
+            [(ngModel)]="respuestaForm.respuesta"
+
+            placeholder="Escribe la respuesta para el cliente...">
+
+          </textarea>
+
+        </div>
+
+        <!-- Botones -->
+
+        <div class="modal-footer-custom">
+
+          <button
+
+            class="btn-cancelar"
+
+            type="button"
+
+            (click)="cerrarRespuesta()">
+
+            Cancelar
+
+          </button>
+
+          <button
+
+            class="btn-iot"
+
+            type="button"
+
+            (click)="enviarRespuesta()">
+
+            <i class="fa-solid fa-paper-plane"></i>
+
+            Enviar Respuesta
+
+          </button>
+
+        </div>
+
       </div>
+
     </div>
+
   </div>
 
-  <!-- Modal de respuesta -->
-  <div class="modal" [class.show]="mostrandoRespuesta" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="mostrandoRespuesta">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">💬 Responder a opinión</h5>
-          <button type="button" class="btn-close" (click)="cerrarRespuesta()"></button>
-        </div>
-        <div class="modal-body">
-          <p class="text-muted">Respondiendo a: <strong>{{ compraSeleccionada?.nombreProducto }}</strong></p>
-          <p class="text-muted small">Opinión del cliente: "{{ compraSeleccionada?.opinion }}"</p>
-          
-          <div class="mb-3">
-            <label class="form-label fw-bold">Respuesta</label>
-            <textarea class="form-control" rows="4"
-                      [(ngModel)]="respuestaForm.respuesta"
-                      placeholder="Escribe tu respuesta..."></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="cerrarRespuesta()">Cancelar</button>
-          <button type="button" class="btn btn-primary" (click)="enviarRespuesta()">
-            <i class="fa-solid fa-paper-plane me-2"></i>Enviar Respuesta
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>

@@ -1,5 +1,5 @@
 <section class="machine-showcase">
-    <app-bar></app-bar>
+    <app-bar [forceSolid]="true"></app-bar>
   
     <div class="container">
       <div class="machine-grid">
@@ -120,71 +120,101 @@
       <hr class="section-divider">
     </div>
     </section>
-
-<section class="products-feedback">
-    <div class="container">
+    <section class="products-feedback">
+      <div class="container">
         <div class="feedback-grid">
-          
+    
           <div class="comment-form-container">
             <span class="feedback-badge">Feedback</span>
             <h3>Tu opinión nos impulsa</h3>
-            <p class="form-subtitle">Comparte tu experiencia con nuestro ecosistema de reciclaje automatizado.</p>
-            
-            <form class="feedback-form" onsubmit="event.preventDefault();">
+            <p class="form-subtitle">
+              Comparte tu experiencia con nuestro ecosistema de reciclaje automatizado.
+            </p>
+    
+            <form class="feedback-form" [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()">
+    
               <div class="form-group">
-                <label for="clientName">Nombre Completo</label>
-                <input type="text" id="clientName" placeholder="Juan Pérez" required>
+                <label>Correo electrónico</label>
+                <input
+                  type="email"
+                  formControlName="email"
+                  placeholder="correo@ejemplo.com">
               </div>
-              
+    
               <div class="form-group">
-                <label for="clientComment">Tu Comentario</label>
-                <textarea id="clientComment" rows="3" placeholder="¿Qué te pareció el funcionamiento de EcoCycle?" required></textarea>
+                <label>Calificación</label>
+                <div class="stars-selector">
+                  <span 
+                    *ngFor="let estrella of [1, 2, 3, 4, 5]" 
+                    class="star-icon"
+                    [class.active]="comentarioForm.get('estrellas')?.value >= estrella"
+                    (click)="comentarioForm.get('estrellas')?.setValue(estrella)">
+                    ★
+                  </span>
+                </div>
               </div>
-              
-              <button type="submit" class="btn-submit">Enviar Opinión</button>
+    
+              <div class="form-group">
+                <label>Mensaje</label>
+                <textarea
+                  rows="4"
+                  formControlName="mensaje"
+                  placeholder="Escribe tu comentario...">
+                </textarea>
+              </div>
+    
+              <button
+                type="submit"
+                class="btn-submit"
+                [disabled]="comentarioForm.invalid || cargando">
+                {{ cargando ? 'Enviando...' : 'Enviar opinión' }}
+              </button>
+    
             </form>
           </div>
-  
+    
           <div class="comments-carousel-wrapper">
             <div class="carousel-header">
               <h4>Opiniones de la Comunidad</h4>
             </div>
             
-            <div class="comments-carousel">
-              <div class="comment-card">
+            <div *ngIf="cargandoComentarios" style="text-align: center; padding: 20px; color: #666;">
+              <p>Cargando opiniones de EcoCycle 🌱...</p>
+            </div>
+          
+            <div class="comments-carousel" *ngIf="!cargandoComentarios && listaComentarios.length > 0">
+              <div class="comment-card" *ngFor="let comentario of listaComentarios">
                 <div class="card-top">
-                  <div class="avatar">LG</div>
+                  <div class="avatar">{{ obtenerIniciales(comentario.email) }}</div>
                   <div class="user-meta">
-                    <h5>Luis Gómez</h5>
-                    <span>Gerente - Retail S.A.</span>
+                    <h5>{{ formatearEmail(comentario.email) }}</h5>
+                    <span>Miembro de la Comunidad</span>
                   </div>
                 </div>
                 <p class="comment-text">
-                  "La analítica IoT del Smart RVM nos permite monitorear las recompensas en tiempo real de forma exacta y transparente."
+                  "{{ comentario.mensaje }}"
                 </p>
-                <div class="stars">★★★★★</div>
-              </div>
-  
-              <div class="comment-card">
-                <div class="card-top">
-                  <div class="avatar">AR</div>
-                  <div class="user-meta">
-                    <h5>Ana Rodríguez</h5>
-                    <span>Sustentabilidad - Campus Tec</span>
-                  </div>
+                
+                <div class="stars" style="color: #ffc107;">
+                  {{ '★'.repeat(comentario.estrellas) }}{{ '☆'.repeat(5 - comentario.estrellas) }}
                 </div>
-                <p class="comment-text">
-                  "A los alumnos les encanta la interfaz táctil. El proceso de reciclaje inverso es sumamente intuitivo y fluido."
-                </p>
-                <div class="stars">★★★★★</div>
+          
+                <div class="admin-reply-box" *ngIf="comentario.respuestaAdmin" 
+                     style="margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 6px; font-size: 0.9em; border-left: 4px solid #0D631B;">
+                  <p style="margin: 0; color: #0D631B; font-weight: bold; font-size: 12px;">Respuesta de EcoCycle 🌱:</p>
+                  <p style="margin: 4px 0 0 0; font-style: italic; color: #2e7d32;">"{{ comentario.respuestaAdmin }}"</p>
+                </div>
               </div>
             </div>
-            
+          
+            <div *ngIf="!cargandoComentarios && listaComentarios.length === 0" style="text-align: center; padding: 20px; color: #999;">
+              <p>Aún no hay opiniones publicadas. ¡Sé el primero en calificar tu Smart RVM!</p>
+            </div>
           </div>
-  
+          
         </div>
-    </div>
-  </section>
+      </div>
+    </section>
 
   <footer class="footer">
 

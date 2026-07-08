@@ -638,3 +638,21 @@ $border-radius: 1rem;
     color:#ccc;
     font-size:.9rem;
   }
+  
+  .stars-selector {
+    display: flex;
+    gap: 8px;
+    font-size: 28px;
+    cursor: pointer;
+    color: #ccc; /* Color gris para estrellas inactivas */
+    user-select: none;
+  }
+  
+  .star-icon {
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .star-icon:hover,
+  .star-icon.active {
+    color: #ffca28; /* Color dorado brillante para estrellas seleccionadas/activas */
+  }

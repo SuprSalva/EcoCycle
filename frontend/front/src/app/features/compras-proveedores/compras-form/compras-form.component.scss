@@ -1,0 +1,22 @@
+.btn-delete{
+
+    width:42px;
+    height:42px;
+
+    border:1px solid var(--surface-variant-color);
+
+    color:#777;
+
+    transition:.25s;
+
+}
+
+.btn-delete:hover{
+
+    background:#ffe9e9;
+
+    color:#dc3545;
+
+    border-color:#dc3545;
+
+}
