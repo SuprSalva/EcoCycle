@@ -7,4 +7,5 @@ public class ActualizarUsuarioRequest
     public string Telefono { get; set; } = string.Empty;
     public string? Direccion { get; set; }
     public string? Rol { get; set; }
+    public string? AvatarUrl { get; set; }
 }

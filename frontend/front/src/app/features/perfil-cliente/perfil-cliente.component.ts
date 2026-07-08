@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 
@@ -19,11 +20,25 @@ export class PerfilClienteComponent implements OnInit {
   cargando: boolean = false;
   editando: boolean = false;
   mostrandoCambioPassword: boolean = false;
+  mostrandoSelectorAvatar: boolean = false;
+
+  archivoSeleccionado: File | null = null;
+  imagenPreviewUrl: string | null = null;
+
+  predefinedAvatars: string[] = [
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Felix',
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Aneka',
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Jack',
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Jocelyn',
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Nala',
+    'https://api.dicebear.com/9.x/avataaars/svg?seed=Destiny'
+  ];
 
   constructor(
     private authService: AuthService,
     private fb: FormBuilder,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private storage: Storage
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +69,7 @@ export class PerfilClienteComponent implements OnInit {
     this.authService.obtenerPerfilUsuario().subscribe({
       next: (datos) => {
         this.perfil = datos;
+        this.imagenPreviewUrl = datos.avatarUrl || null;
         this.perfilForm.patchValue({
           nombre: datos.nombre || '',
           apellidos: datos.apellidos || '',
@@ -78,6 +94,8 @@ export class PerfilClienteComponent implements OnInit {
 
   cancelarEdicion(): void {
     this.editando = false;
+    this.archivoSeleccionado = null;
+    this.imagenPreviewUrl = this.perfil?.avatarUrl || null;
     if (this.perfil) {
       this.perfilForm.patchValue({
         nombre: this.perfil.nombre || '',
@@ -88,35 +106,97 @@ export class PerfilClienteComponent implements OnInit {
     }
   }
 
-  guardarPerfil(): void {
+  async guardarPerfil() {
     if (this.perfilForm.invalid) {
       this.notificationService.warning('Campos Incompletos', 'Por favor completa todos los campos obligatorios.');
       return;
     }
 
     this.cargando = true;
-    const datos = this.perfilForm.value;
+    this.notificationService.showLoading('Guardando...', 'Actualizando tu perfil');
 
-    this.authService.actualizarUsuario(this.perfil.id, datos).subscribe({
-      next: (response) => {
-        this.cargando = false;
-        this.editando = false;
-        this.notificationService.toastSuccess('Perfil actualizado correctamente.');
-        // Actualizar datos en localStorage
-        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-        userData.nombre = datos.nombre;
-        userData.apellidos = datos.apellidos;
-        userData.telefono = datos.telefono;
-        userData.direccion = datos.direccion;
-        localStorage.setItem('userData', JSON.stringify(userData));
-        this.cargarPerfil();
-      },
-      error: (err) => {
-        this.cargando = false;
-        console.error('Error al actualizar perfil:', err);
-        this.notificationService.error('Error', 'No se pudo actualizar el perfil.');
+    try {
+      let finalAvatarUrl = this.perfil?.avatarUrl;
+
+      // Si seleccionaron un nuevo archivo local, lo subimos a fotosperfil/
+      if (this.archivoSeleccionado) {
+        const filePath = `fotosperfil/${this.perfil.id}_${Date.now()}`;
+        const storageRef = ref(this.storage, filePath);
+        const uploadTask = await uploadBytes(storageRef, this.archivoSeleccionado);
+        finalAvatarUrl = await getDownloadURL(uploadTask.ref);
+      } else if (this.imagenPreviewUrl && this.imagenPreviewUrl !== this.perfil?.avatarUrl) {
+        // Seleccionaron un icono predeterminado
+        finalAvatarUrl = this.imagenPreviewUrl;
       }
-    });
+
+      const datos = {
+        ...this.perfilForm.value,
+        avatarUrl: finalAvatarUrl
+      };
+
+      this.authService.actualizarUsuario(this.perfil.id, datos).subscribe({
+        next: (response) => {
+          this.cargando = false;
+          this.editando = false;
+          this.archivoSeleccionado = null;
+          this.notificationService.hideLoading();
+          this.notificationService.toastSuccess('Perfil actualizado correctamente.');
+          
+          // Actualizar datos en localStorage
+          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+          userData.nombre = datos.nombre;
+          userData.apellidos = datos.apellidos;
+          userData.telefono = datos.telefono;
+          userData.direccion = datos.direccion;
+          userData.avatarUrl = finalAvatarUrl;
+          localStorage.setItem('userData', JSON.stringify(userData));
+          
+          this.cargarPerfil();
+        },
+        error: (err) => {
+          this.cargando = false;
+          this.notificationService.hideLoading();
+          console.error('Error al actualizar perfil:', err);
+          this.notificationService.error('Error', 'No se pudo actualizar el perfil.');
+        }
+      });
+    } catch (err) {
+      this.cargando = false;
+      this.notificationService.hideLoading();
+      console.error('Error al subir imagen', err);
+      this.notificationService.error('Error', 'Ocurrió un error al subir la imagen de perfil.');
+    }
+  }
+
+  // ✅ MANEJO DE AVATARES
+  abrirSelectorAvatar(): void {
+    if (this.editando) {
+      this.mostrandoSelectorAvatar = true;
+    }
+  }
+
+  cerrarSelectorAvatar(): void {
+    this.mostrandoSelectorAvatar = false;
+  }
+
+  alSeleccionarArchivo(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.archivoSeleccionado = file;
+      
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.imagenPreviewUrl = e.target.result;
+        this.cerrarSelectorAvatar();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  seleccionarIconoPredeterminado(url: string): void {
+    this.archivoSeleccionado = null;
+    this.imagenPreviewUrl = url;
+    this.cerrarSelectorAvatar();
   }
 
   // ✅ MOSTRAR FORMULARIO DE CAMBIO DE CONTRASEÑA

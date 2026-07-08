@@ -41,19 +41,14 @@ import { CommonModule } from '@angular/common';
       }    
 
     ngAfterViewInit(): void {
-  
-      const hero = document.querySelector('.hero') as HTMLElement;
-  
-      if (hero) {
-  
-        this.heroHeight = hero.offsetHeight;
-  
-      } else {
-  
-        this.isScrolled = true;
-  
-      }
-  
+      setTimeout(() => {
+        const hero = document.querySelector('.hero') as HTMLElement;
+        if (hero) {
+          this.heroHeight = hero.offsetHeight;
+        } else {
+          this.isScrolled = true;
+        }
+      });
     }
     
     @HostListener('window:scroll')

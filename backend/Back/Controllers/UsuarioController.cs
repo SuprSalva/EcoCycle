@@ -163,7 +163,8 @@ public class UsuarioController : ControllerBase
                 Direccion = usuario.Direccion,
                 Rol = usuario.Rol,
                 SaldoPuntos = (double)usuario.SaldoPuntos,
-                Activo = usuario.Activo
+                Activo = usuario.Activo,
+                AvatarUrl = usuario.AvatarUrl
             };
 
             return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -189,7 +190,8 @@ public class UsuarioController : ControllerBase
             Direccion = u.Direccion,
             Rol = u.Rol,
             SaldoPuntos = (double)u.SaldoPuntos,
-            Activo = u.Activo
+            Activo = u.Activo,
+            AvatarUrl = u.AvatarUrl
         }).ToList();
 
         return Ok(ApiResponse<List<UsuarioResponse>>.Ok(response));
@@ -212,7 +214,8 @@ public class UsuarioController : ControllerBase
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             SaldoPuntos = (double)usuario.SaldoPuntos,
-            Activo = usuario.Activo
+            Activo = usuario.Activo,
+            AvatarUrl = usuario.AvatarUrl
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -239,6 +242,9 @@ public class UsuarioController : ControllerBase
         
         if (!string.IsNullOrEmpty(request.Rol))
             usuario.Rol = request.Rol;
+
+        if (request.AvatarUrl != null)
+            usuario.AvatarUrl = request.AvatarUrl;
 
         await _usuarioRepository.GuardarAsync(usuario);
 

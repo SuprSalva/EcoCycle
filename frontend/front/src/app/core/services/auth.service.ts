@@ -8,7 +8,8 @@ import {
   onIdTokenChanged,
   updatePassword,
   reauthenticateWithCredential,
-  EmailAuthProvider
+  EmailAuthProvider,
+  sendPasswordResetEmail
 } from '@angular/fire/auth';
 import { from, Observable, switchMap, tap, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment';

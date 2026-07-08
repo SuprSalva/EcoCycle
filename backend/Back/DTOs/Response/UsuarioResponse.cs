@@ -11,4 +11,5 @@ public class UsuarioResponse
     public string Rol { get; set; } = string.Empty;
     public double SaldoPuntos { get; set; }
     public bool Activo { get; set; } = true;
+    public string? AvatarUrl { get; set; }
 }

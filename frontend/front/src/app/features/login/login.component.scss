@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Variables de diseño
 $primary-green: #1b5e20;
 $dark-green: #0d2312;
@@ -12,10 +14,13 @@ $border-color: #d0d5dd;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   background: url('/ecologia_portada.jpg') no-repeat center center/cover;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
+  padding-top: 100px; /* Evitar que el menu superior lo tape */
+  padding-bottom: 40px;
+  box-sizing: border-box;
 }
 
 // Filtro oscuro/verdoso sobre la imagen de fondo para dar contraste
@@ -30,50 +35,93 @@ $border-color: #d0d5dd;
 }
 
 // Tarjeta Central (Efecto Glassmorphism sutil)
-.login-card {
+// Tarjeta Central (Horizontal)
+.horizontal-card {
   position: relative;
   z-index: 2;
   background: rgba($white, 0.96);
   backdrop-filter: blur(8px);
-  padding: 2.5rem;
   border-radius: 16px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.1), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.2), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
   animation: fadeIn 0.5s ease-out;
-}
 
-// Encabezado
-.login-header {
-  text-align: center;
-  margin-bottom: 2rem;
-
-  .logo-container {
+  .login-card-left {
+    flex: 1;
+    background: linear-gradient(135deg, $primary-green, $dark-green);
+    padding: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    color: $white;
 
-    .logo-img {
-      height: 40px;
-      width: auto;
-    }
+    .branding-content {
+      text-align: left;
+      max-width: 320px;
 
-    .brand-name {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: $dark-green;
-      margin: 0;
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+
+        .logo-img {
+          height: 48px;
+        }
+
+        .brand-name {
+          font-size: 2.2rem;
+          font-weight: 700;
+          color: $white;
+          margin: 0;
+        }
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        color: rgba($white, 0.85);
+        margin: 0 0 2rem 0;
+      }
+
+      .eco-messaging {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        color: rgba($white, 0.95);
+        border-left: 4px solid rgba($white, 0.3);
+        padding-left: 1rem;
+        
+        p { margin-bottom: 0.5rem; }
+      }
     }
   }
 
-  .subtitle {
-    font-size: 0.95rem;
-    color: $text-muted;
-    margin: 0;
+  .login-card-right {
+    flex: 1;
+    padding: 3.5rem;
+    background: $white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
+
+.encabezado-login {
+  margin-bottom: 2rem;
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: $dark-green;
+    margin-bottom: 0.25rem;
+  }
+  p {
+    font-size: 0.95rem;
+    color: $text-muted;
+  }
+}
+
 
 // Formulario e Inputs
 .login-form {
@@ -141,7 +189,7 @@ $border-color: #d0d5dd;
   margin-top: 0.5rem;
 
   &:hover {
-    background-color: darken($primary-green, 5%);
+    background-color: color.adjust($primary-green, $lightness: -5%);
   }
 
   &:active {

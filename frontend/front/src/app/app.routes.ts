@@ -156,6 +156,6 @@ export const routes: Routes = [
   // ============================================
   // REDIRECCIONES
   // ============================================
-  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }
 ];

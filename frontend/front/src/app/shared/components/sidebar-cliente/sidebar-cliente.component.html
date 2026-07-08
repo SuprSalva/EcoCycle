@@ -42,7 +42,14 @@
          *ngIf="perfil"
          (click)="toggleUserMenu($event)">
   
-      <img src="/usuario.png" alt="Usuario">
+      <div class="avatar position-relative" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; margin-right: 10px;">
+        <ng-container *ngIf="perfil?.avatarUrl; else avatarPorDefecto">
+          <img [src]="perfil.avatarUrl" alt="Avatar" class="w-100 h-100 object-fit-cover m-0">
+        </ng-container>
+        <ng-template #avatarPorDefecto>
+          <img src="/usuario.png" alt="Usuario" class="m-0">
+        </ng-template>
+      </div>
   
       <div class="user-info">
         <strong>{{ perfil.nombre }}</strong>

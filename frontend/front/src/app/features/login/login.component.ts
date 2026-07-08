@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { switchMap } from 'rxjs';
-import { BarComponent } from '../../shared/components/bar/bar.component';
 
+import { BarComponent } from '../../shared/components/bar/bar.component';
 
 @Component({
   selector: 'app-login',

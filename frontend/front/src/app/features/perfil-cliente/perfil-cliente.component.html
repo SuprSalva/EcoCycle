@@ -24,10 +24,22 @@
     <div class="card-body p-4">
       
       <!-- Avatar y nombre -->
-      <div class="d-flex align-items-center gap-4 mb-4 pb-3 border-bottom">
-        <div class="avatar-circle bg-primary text-white">
-          {{ (perfil?.nombre?.charAt(0) || 'U') | uppercase }}{{ (perfil?.apellidos?.charAt(0) || '') | uppercase }}
+      <div class="d-flex align-items-center gap-4 mb-4 pb-3 border-bottom position-relative">
+        <div class="position-relative">
+          <div *ngIf="!imagenPreviewUrl" class="avatar-circle bg-primary text-white" style="width: 80px; height: 80px; font-size: 2rem;">
+            {{ (perfil?.nombre?.charAt(0) || 'U') | uppercase }}{{ (perfil?.apellidos?.charAt(0) || '') | uppercase }}
+          </div>
+          <img *ngIf="imagenPreviewUrl" [src]="imagenPreviewUrl" alt="Avatar" class="rounded-circle object-fit-cover shadow-sm" style="width: 80px; height: 80px; border: 3px solid #fff;">
+          
+          <button *ngIf="editando" 
+                  class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle shadow-sm"
+                  style="width: 30px; height: 30px; padding: 0; display: flex; align-items: center; justify-content: center;"
+                  (click)="abrirSelectorAvatar()"
+                  title="Cambiar Foto de Perfil">
+            <i class="fa-solid fa-camera small"></i>
+          </button>
         </div>
+
         <div>
           <h4 class="mb-0">{{ perfil?.nombre }} {{ perfil?.apellidos }}</h4>
           <span class="text-muted">{{ perfil?.email }}</span>
@@ -218,4 +230,47 @@
       </div>
     </div>
   </div>
+
+  <!-- ✅ MODAL PARA SELECCIONAR AVATAR -->
+  <div class="modal" [class.show]="mostrandoSelectorAvatar" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="mostrandoSelectorAvatar">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold">Elige tu Foto de Perfil</h5>
+          <button type="button" class="btn-close" (click)="cerrarSelectorAvatar()"></button>
+        </div>
+        <div class="modal-body text-center">
+          
+          <div class="mb-4">
+            <label class="btn btn-outline-primary w-100 p-3 rounded-3" style="cursor: pointer; border-style: dashed; border-width: 2px;">
+              <i class="fa-solid fa-cloud-arrow-up fs-3 mb-2 d-block"></i>
+              <span class="fw-bold">Subir Foto desde mi equipo</span>
+              <input type="file" class="d-none" accept="image/png, image/jpeg, image/webp" (change)="alSeleccionarArchivo($event)">
+            </label>
+            <p class="text-muted small mt-2 mb-0">Recomendado: 500x500px (JPG, PNG)</p>
+          </div>
+
+          <div class="position-relative my-4">
+            <hr class="text-muted">
+            <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small fw-bold">O ELIGE UN ÍCONO</span>
+          </div>
+
+          <div class="d-flex flex-wrap justify-content-center gap-3">
+            <img *ngFor="let avatar of predefinedAvatars" 
+                 [src]="avatar" 
+                 alt="Avatar Option" 
+                 class="rounded-circle avatar-option"
+                 style="width: 60px; height: 60px; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease;"
+                 [class.border-primary]="imagenPreviewUrl === avatar"
+                 (click)="seleccionarIconoPredeterminado(avatar)">
+          </div>
+
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-secondary w-100" (click)="cerrarSelectorAvatar()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
