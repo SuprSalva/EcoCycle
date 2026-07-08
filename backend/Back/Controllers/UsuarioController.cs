@@ -229,6 +229,44 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [HttpPut("perfil")]
+    public async Task<IActionResult> ActualizarPerfil([FromBody] ActualizarPerfilRequest request)
+    {
+        try
+        {
+            var userId = GetUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+            var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
+            if (usuario == null) 
+                return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+
+            if (!string.IsNullOrEmpty(request.Nombre))
+                usuario.Nombre = request.Nombre;
+            
+            if (!string.IsNullOrEmpty(request.Apellidos))
+                usuario.Apellidos = request.Apellidos;
+            
+            if (!string.IsNullOrEmpty(request.Telefono))
+                usuario.Telefono = request.Telefono;
+            
+            if (request.Direccion != null)
+                usuario.Direccion = request.Direccion;
+
+            if (request.AvatarUrl != null)
+                usuario.AvatarUrl = request.AvatarUrl;
+
+            await _usuarioRepository.GuardarAsync(usuario);
+
+            return Ok(ApiResponse<object>.Ok(null, "Perfil actualizado correctamente."));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error en ActualizarPerfil: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+        }
+    }
+
     [HttpGet("todos")]
     public async Task<IActionResult> ObtenerTodos()
     {
