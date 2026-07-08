@@ -75,6 +75,7 @@ export const routes: Routes = [
       { path: 'perfil', component: PerfilClienteComponent },
       { path: 'mis-compras', component: ComprasClienteComponent },
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
+      { path: 'configuracion', loadComponent: () => import('./features/configuracion/configuracion.component').then(m => m.ConfiguracionComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
@@ -134,6 +135,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/compras-proveedores/compras-form/compras-form.component')
           .then(c => c.ComprasFormComponent)
       },
+      { path: 'configuracion', loadComponent: () => import('./features/configuracion/configuracion.component').then(m => m.ConfiguracionComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
