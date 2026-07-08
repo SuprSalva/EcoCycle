@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-import { UsuarioService } from '../../core/services/Usuario.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 import { UsuarioFormComponent } from './usuario-form/usuario-form.component';
 import { NotificationService } from '../../core/services/notification.service';
 

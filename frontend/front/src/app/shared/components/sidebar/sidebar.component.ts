@@ -43,14 +43,15 @@ export class SidebarComponent implements OnInit {
       items: [
         { name: 'Proveedores', icon: 'fa-solid fa-truck', route: '/admin/proveedores' },
         { name: 'Compras a Proveedores', icon: 'fa-solid fa-cart-shopping', route: '/admin/compras-proveedores' },
+        { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/admin/materia-prima' },
+        
       ]
     },
     {
       section: 'Análisis',
       items: [
-        { name: 'Reportes', icon: 'fa-solid fa-chart-column', route: '/admin/reportes' },
-        { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/admin/materia-prima' },
-        { name: 'Comentarios y Opiniones', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
+        { name: 'Comentarios', icon: 'fa-solid fa-chart-column', route: '/admin/comentarios' },
+        { name: 'Compras y cotizaciones', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
 
         
       ]

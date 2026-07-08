@@ -1,4 +1,3 @@
-// 📁 Back/Services/EmailService.cs
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Net;
@@ -12,9 +11,10 @@ public interface IEmailService
 {
     Task<bool> EnviarCredencialesClienteAsync(string email, string nombre, string password, string linkAcceso);
     Task<bool> EnviarBienvenidaAsync(string email, string nombre, string password, string linkAcceso);
-    
-    // 🔥 NUEVO: Enviar correo con adjunto
     Task<bool> EnviarCorreoConAdjuntoAsync(string email, string nombre, string asunto, string mensaje, string rutaAdjunto);
+    Task<bool> EnviarRespuestaComentarioAsync(string email, string nombre, string mensajeOriginal, string respuestaAdmin);
+     Task<bool> EnviarRespuestaReporteAsync(string email, string nombre, string mensajeOriginal, string respuestaAdmin);
+
 }
 
 public class EmailService : IEmailService
@@ -28,7 +28,53 @@ public class EmailService : IEmailService
         _hostEnvironment = hostEnvironment;
     }
 
-    // 🔥 NUEVO MÉTODO: Enviar correo con adjunto
+
+ public async Task<bool>EnviarRespuestaReporteAsync(string email, string nombre, string mensajeOriginal, string respuestaAdmin)
+    {
+        var asunto = "Actualización de tu Comentario - EcoCycle";
+
+        var mensajeHtml = $@"
+        <p>Tu comentario enviado a nuestro buzón ha sido revisado por el equipo administrativo.</p>
+        
+        <div style='background: #f9f9f9; padding: 15px; border-left: 4px solid #ced4da; margin: 20px 0; border-radius: 0 8px 8px 0;'>
+            <strong style='color: #555; font-size: 13px;'>Tu mensaje original:</strong><br/>
+            <span style='font-style: italic; color: #666;'>""{mensajeOriginal}""</span>
+        </div>
+
+        <div style='background: #e8f5e9; padding: 15px; border-left: 4px solid #0D631B; margin: 20px 0; border-radius: 0 8px 8px 0;'>
+            <strong style='color: #0D631B; font-size: 13px;'>Respuesta del Administrador:</strong><br/>
+            <span style='color: #2e7d32; font-weight: bold;'>""{respuestaAdmin}""</span>
+        </div>
+
+        <p style='margin-top: 25px;'>Si tienes más dudas o comentarios, recuerda que puedes escribirnos nuevamente a través de la plataforma.</p>
+    ";
+
+        return await EnviarCorreoConAdjuntoAsync(email, nombre, asunto, mensajeHtml, rutaAdjunto: null!);
+    }
+    public async Task<bool> EnviarRespuestaComentarioAsync(string email, string nombre, string mensajeOriginal, string respuestaAdmin)
+    {
+        var asunto = "Actualización de tu Comentario - EcoCycle";
+
+        var mensajeHtml = $@"
+        <p>Tu comentario enviado a nuestro buzón ha sido revisado por el equipo administrativo.</p>
+        
+        <div style='background: #f9f9f9; padding: 15px; border-left: 4px solid #ced4da; margin: 20px 0; border-radius: 0 8px 8px 0;'>
+            <strong style='color: #555; font-size: 13px;'>Tu mensaje original:</strong><br/>
+            <span style='font-style: italic; color: #666;'>""{mensajeOriginal}""</span>
+        </div>
+
+        <div style='background: #e8f5e9; padding: 15px; border-left: 4px solid #0D631B; margin: 20px 0; border-radius: 0 8px 8px 0;'>
+            <strong style='color: #0D631B; font-size: 13px;'>Respuesta del Administrador:</strong><br/>
+            <span style='color: #2e7d32; font-weight: bold;'>""{respuestaAdmin}""</span>
+        </div>
+
+        <p style='margin-top: 25px;'>Si tienes más dudas o comentarios, recuerda que puedes escribirnos nuevamente a través de la plataforma.</p>
+    ";
+
+        return await EnviarCorreoConAdjuntoAsync(email, nombre, asunto, mensajeHtml, rutaAdjunto: null!);
+    }
+
+
     public async Task<bool> EnviarCorreoConAdjuntoAsync(string email, string nombre, string asunto, string mensaje, string rutaAdjunto)
     {
         try

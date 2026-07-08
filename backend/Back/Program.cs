@@ -72,9 +72,6 @@ var firestoreDb = new Google.Cloud.Firestore.FirestoreDbBuilder
 }.Build();
 builder.Services.AddSingleton(firestoreDb);
 
-// ==========================================
-// SERVICIOS Y REPOSITORIOS
-// ==========================================
 builder.Services.AddScoped<Back.Repositories.Interfaces.IUsuarioRepository, Back.Repositories.UsuarioRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ISesionReciclajeRepository, Back.Repositories.SesionReciclajeRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, Back.Repositories.RecompensaRepository>();
@@ -82,16 +79,14 @@ builder.Services.AddScoped<Back.Repositories.Interfaces.IProveedorRepository, Ba
 builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProveedorRepository, Back.Repositories.CompraProveedorRepository>();
 builder.Services.AddScoped<IReporteRepository, ReporteRepository>();
 
-// Repositorios adicionales (Migrados de Infrastructure)
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaRepository, Back.Repositories.MateriaPrimaRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaTransaccionRepository, Back.Repositories.MateriaPrimaTransaccionRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProductoRepository, Back.Repositories.CompraProductoRepository>();
+builder.Services.AddScoped<IComentariosRepository, ComentariosRepository>();
 
-// Servicios de Lógica (Anteriormente ViewModels)
 builder.Services.AddScoped<INotificacionViewModel, NotificacionViewModel>();
 
-// Validators
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 // ==========================================

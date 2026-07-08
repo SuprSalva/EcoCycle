@@ -1,0 +1,51 @@
+
+.cursor-pointer{
+    cursor:pointer;
+ }
+ 
+ .card-modern{
+    background:#fff;
+ }
+ 
+ .hover-lift{
+    transition:.25s ease;
+ }
+ 
+ .hover-lift:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(0,0,0,.08)!important;
+ }
+ 
+ .btn-action{
+    transition:.2s ease;
+ }
+ 
+ .btn-action:hover{
+    transform:scale(1.08);
+ }
+ 
+ .table tbody tr{
+    transition:.2s ease;
+ }
+ 
+ .table tbody tr:hover{
+    background:#f8fafc;
+ }
+ 
+ .modal-content{
+    animation:fadeIn .25s ease;
+ }
+ 
+ @keyframes fadeIn{
+ 
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+ 
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+ 
+ }
