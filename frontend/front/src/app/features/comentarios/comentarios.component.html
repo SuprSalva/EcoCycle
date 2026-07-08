@@ -183,7 +183,7 @@
                         </td>
 
 
-                        <td class="py-3">
+                        <td class="py-3" (click)="$event.stopPropagation()">
                             <div class="form-check form-switch m-0">
                                 <input class="form-check-input cursor-pointer" type="checkbox" role="switch"
                                     [(ngModel)]="comentario.esPublico" (change)="toggleVisibilidad(comentario)">
@@ -194,7 +194,7 @@
                             </div>
                         </td>
 
-                        <td class="py-3">
+                        <td class="py-3" (click)="$event.stopPropagation()">
                             <select [ngModel]="comentario.estatus || 'En revisión'"
                                 (ngModelChange)="cambiarEstatus(comentario, $event)"
                                 class="form-select form-select-sm rounded-pill border-0 px-3 py-1 fw-semibold shadow-sm text-center cursor-pointer"

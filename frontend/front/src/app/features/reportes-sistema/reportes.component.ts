@@ -5,6 +5,7 @@ import { SesionReciclajeService, SesionReciclaje } from '../../core/services/ses
 import { environment } from '../../../environments/environment';
 import { NotificationService } from '../../core/services/notification.service';
 import { RecompensaService, Recompensa } from '../../core/services/recompensa.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 import { forkJoin } from 'rxjs';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
@@ -22,6 +23,9 @@ export interface MetricasUsuario {
   totalSesiones: number;
   totalBotellas: number;
   totalPuntos: number;
+  nombre?: string;
+  email?: string;
+  avatarUrl?: string;
 }
 
 export interface MetricasFinanzas {
@@ -48,6 +52,8 @@ export class ReportesComponent implements OnInit {
   searchTerm: string = '';
   itemsPerPage: number = 10;
   itemsPerPageOptions: number[] = [5, 10, 25, 50];
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   // Métricas IoT
   metricasIoT: MetricasIoT[] = [];
@@ -95,14 +101,24 @@ export class ReportesComponent implements OnInit {
       );
     }
 
-    // Cortar los registros según los items por página seleccionados (Paginación local inicial)
-    return filtradas.slice(0, this.itemsPerPage);
+    // Calcular total de páginas
+    this.totalPages = Math.ceil(filtradas.length / this.itemsPerPage) || 1;
+    
+    // Ajustar la página actual si excede el nuevo total (ej. al buscar o cambiar items por página)
+    if (this.currentPage > this.totalPages) {
+      this.currentPage = this.totalPages;
+    }
+
+    // Cortar los registros según la página actual y los items por página
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return filtradas.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   constructor(
     private sesionService: SesionReciclajeService,
     private recompensaService: RecompensaService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
@@ -116,15 +132,40 @@ export class ReportesComponent implements OnInit {
     forkJoin({
       sesionesRes: this.sesionService.obtenerTodasLasSesiones(),
       catalogoRes: this.recompensaService.obtenerTodasAdmin(),
-      canjesRes: this.recompensaService.obtenerHistorialCanjesAdmin()
+      canjesRes: this.recompensaService.obtenerHistorialCanjesAdmin(),
+      usuariosRes: this.usuarioService.obtenerTodos()
     }).subscribe({
       next: (resultados) => {
         // --- 1. PROCESAR SESIONES ---
-        if (resultados.sesionesRes && resultados.sesionesRes.succeeded) {
-          this.sesiones = resultados.sesionesRes.data.sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+        let sesionesRaw: any[] = [];
+        if (resultados.sesionesRes && Array.isArray(resultados.sesionesRes.data)) {
+          sesionesRaw = resultados.sesionesRes.data;
+        } else if (Array.isArray(resultados.sesionesRes)) {
+          sesionesRaw = resultados.sesionesRes;
+        }
+
+        if (sesionesRaw && sesionesRaw.length > 0) {
+          this.sesiones = sesionesRaw.sort((a: any, b: any) => new Date(b.fecha || b.Fecha || 0).getTime() - new Date(a.fecha || a.Fecha || 0).getTime());
+          // Normalizar propiedades por si vienen en mayúsculas desde el backend
+          this.sesiones = this.sesiones.map((s: any) => ({
+            id: s.id || s.Id,
+            usuarioId: s.usuarioId || s.UsuarioId || 'Desconocido',
+            maquinaId: s.maquinaId || s.MaquinaId || 'MÁQUINA-01',
+            botellas: s.botellas || s.Botellas || 0,
+            puntos: s.puntos || s.Puntos || 0,
+            fecha: s.fecha || s.Fecha
+          }));
           this.totalBotellas = this.sesiones.reduce((acc, curr) => acc + curr.botellas, 0);
           this.calcularMetricasIoT();
-          this.calcularMetricasUsuarios();
+          
+          let usuarios: any[] = [];
+          if (resultados.usuariosRes && Array.isArray(resultados.usuariosRes.data)) {
+            usuarios = resultados.usuariosRes.data;
+          } else if (Array.isArray(resultados.usuariosRes)) {
+            usuarios = resultados.usuariosRes;
+          }
+          this.calcularMetricasUsuarios(usuarios);
+          
           this.metricasFinanzas.totalPuntosEmitidos = this.sesiones.reduce((acc, curr) => acc + curr.puntos, 0);
         }
 
@@ -162,6 +203,14 @@ export class ReportesComponent implements OnInit {
   cambiarItemsPorPagina(event: Event): void {
     const target = event.target as HTMLSelectElement;
     this.itemsPerPage = Number(target.value);
+    this.currentPage = 1; // Reiniciar a la primera página
+  }
+
+  cambiarPagina(incremento: number): void {
+    const nuevaPagina = this.currentPage + incremento;
+    if (nuevaPagina >= 1 && nuevaPagina <= this.totalPages) {
+      this.currentPage = nuevaPagina;
+    }
   }
 
   calcularMetricasIoT(): void {
@@ -201,17 +250,22 @@ export class ReportesComponent implements OnInit {
     this.maquinaEstrella = estrella;
   }
 
-  calcularMetricasUsuarios(): void {
+  calcularMetricasUsuarios(usuariosAPI: any[] = []): void {
     const mapaUsuarios = new Map<string, MetricasUsuario>();
 
     this.sesiones.forEach(sesion => {
       const uId = sesion.usuarioId;
       if (!mapaUsuarios.has(uId)) {
+        const userDetalle = usuariosAPI.find(u => u.id === uId || u.Id === uId);
+        
         mapaUsuarios.set(uId, {
           usuarioId: uId,
           totalSesiones: 0,
           totalBotellas: 0,
-          totalPuntos: 0
+          totalPuntos: 0,
+          nombre: userDetalle ? `${userDetalle.nombre || userDetalle.Nombre || ''} ${userDetalle.apellidos || userDetalle.Apellidos || ''}`.trim() : 'Usuario Anónimo',
+          email: userDetalle ? (userDetalle.email || userDetalle.Email || userDetalle.correo || userDetalle.Correo) : 'Sin correo',
+          avatarUrl: userDetalle ? (userDetalle.avatarUrl || userDetalle.AvatarUrl) : undefined
         });
       }
 

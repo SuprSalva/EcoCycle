@@ -48,7 +48,7 @@ export const routes: Routes = [
         path: 'mi-perfil',
         loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
         children: [
-          { path: 'perfil', loadComponent: () => import('./features/cliente-panel/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
+          { path: 'perfil', loadComponent: () => import('./features/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
           { path: 'mis-compras', loadComponent: () => import('./features/cliente-panel/mis-compras/mis-compras.component').then(m => m.MisComprasComponent) },
           { path: '', redirectTo: 'perfil', pathMatch: 'full' }
         ]
@@ -93,7 +93,7 @@ export const routes: Routes = [
         path: 'mi-perfil',
         loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
         children: [
-          { path: 'perfil', loadComponent: () => import('./features/cliente-panel/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
+          { path: 'perfil', loadComponent: () => import('./features/perfil-cliente/perfil-cliente.component').then(m => m.PerfilClienteComponent) },
           { path: 'mis-compras', loadComponent: () => import('./features/cliente-panel/mis-compras/mis-compras.component').then(m => m.MisComprasComponent) },
           { path: '', redirectTo: 'perfil', pathMatch: 'full' }
         ]
@@ -105,7 +105,8 @@ export const routes: Routes = [
       { path: 'reciclaje', component: SesionReciclajeComponent },
       { path: 'catalogo', component: CatalogoComponent },
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
-      { path: 'reportes', component: ReportesComponent },
+      { path: 'quejas', component: ReportesComponent },
+      { path: 'reportes-sistema', loadComponent: () => import('./features/reportes-sistema/reportes.component').then(m => m.ReportesComponent) },
       { path: 'soporte', component: SoporteComponent },
       { path: 'compras', component: AdminComprasComponent },
       { path: 'comentarios', component: ComentariosComponent },

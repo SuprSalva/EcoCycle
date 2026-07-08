@@ -147,16 +147,16 @@
       </div>
 
       <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border, #edf2f7) !important; background-color: #ffffff;">
-        <span class="text-muted small fw-medium">Página 1 de 1</span>
+        <span class="text-muted small fw-medium">Página {{ currentPage }} de {{ totalPages }}</span>
         
         <div class="d-flex gap-1">
-          <button class="btn btn-sm btn-light border shadow-sm" disabled>
+          <button class="btn btn-sm btn-light border shadow-sm" (click)="cambiarPagina(-1)" [disabled]="currentPage === 1">
             <i class="fa-solid fa-chevron-left text-muted"></i>
           </button>
           <button class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: var(--primary-color, #10b981);">
-            1
+            {{ currentPage }}
           </button>
-          <button class="btn btn-sm btn-light border shadow-sm" disabled>
+          <button class="btn btn-sm btn-light border shadow-sm" (click)="cambiarPagina(1)" [disabled]="currentPage === totalPages">
             <i class="fa-solid fa-chevron-right text-muted"></i>
           </button>
         </div>
@@ -287,14 +287,14 @@
         <div class="card shadow-sm border-0 rounded-4 h-100" style="background-color: var(--surface-color); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
           <div class="card-body p-4">
             
-            <div class="d-flex justify-content-between align-items-start mb-4">
-              <div class="d-flex align-items-center gap-3">
-                <div class="bg-light rounded p-2 text-secondary d-flex">
+            <div class="d-flex justify-content-between align-items-start mb-4 gap-2">
+              <div class="d-flex align-items-center gap-3" style="min-width: 0;">
+                <div class="bg-light rounded p-2 text-secondary d-flex flex-shrink-0">
                   <span class="material-symbols-outlined">developer_board</span>
                 </div>
-                <h5 class="fw-bold m-0" style="color: var(--on-surface-color);">{{ mq.maquinaId }}</h5>
+                <h5 class="fw-bold m-0 text-truncate" style="color: var(--on-surface-color);" [title]="mq.maquinaId">{{ mq.maquinaId }}</h5>
               </div>
-              <span class="badge" [ngClass]="mq.totalBotellas > 100 ? 'bg-success' : 'bg-secondary'" style="font-size: 0.8rem;">
+              <span class="badge flex-shrink-0" [ngClass]="mq.totalBotellas > 100 ? 'bg-success' : 'bg-secondary'" style="font-size: 0.8rem;">
                 {{ mq.totalBotellas > 100 ? 'ALTA DEMANDA' : 'ACTIVA' }}
               </span>
             </div>
@@ -334,12 +334,14 @@
         <div class="card shadow-sm border-0 rounded-4 overflow-hidden impact-card hover-lift" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); color: white;">
           <div class="card-body p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div class="d-flex align-items-center gap-4">
-              <div class="icon-circle card-modern text-primary bg-opacity-25 rounded-circle p-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px;">
+              <div *ngIf="!ecoHeroe.avatarUrl" class="icon-circle card-modern text-primary bg-opacity-25 rounded-circle p-4 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px;">
                 <span class="material-symbols-outlined" style="font-size: 2.5rem; color: #673ab7;">social_leaderboard</span>
               </div>
+              <img *ngIf="ecoHeroe.avatarUrl" [src]="ecoHeroe.avatarUrl" class="rounded-circle shadow-sm" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #fbc2eb;" alt="Avatar">
               <div>
                 <h6 class="fw-semibold text-uppercase text-white opacity-75 mb-1" style="letter-spacing: 1px;">Eco-Héroe Actual 🦸‍♂️</h6>
-                <h2 class="fw-bold display-6 mb-0 text-dark">{{ ecoHeroe.usuarioId }}</h2>
+                <h2 class="fw-bold display-6 mb-0 text-dark" [title]="ecoHeroe.usuarioId">{{ ecoHeroe.nombre }}</h2>
+                <p class="mb-1 text-dark opacity-75 small fw-semibold"><i class="fa-solid fa-envelope me-1"></i> {{ ecoHeroe.email }}</p>
                 <p class="m-0 mt-1 text-dark opacity-75"><i class="fa-solid fa-medal me-1" style="color: #673ab7;"></i> ¡Máximo líder con {{ ecoHeroe.totalPuntos }} EcoPuntos ganados!</p>
               </div>
             </div>
@@ -368,7 +370,7 @@
           <thead style="background-color: var(--surface-color);">
             <tr>
               <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem; width: 80px;">Rango</th>
-              <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">Usuario (ID)</th>
+              <th class="border-0 text-muted fw-semibold small text-uppercase" style="letter-spacing: 0.05em; padding: 1rem;">Usuario</th>
               <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Sesiones</th>
               <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Botellas Recicladas</th>
               <th class="border-0 text-muted fw-semibold small text-uppercase text-center" style="letter-spacing: 0.05em; padding: 1rem;">Puntos Obtenidos</th>
@@ -384,10 +386,14 @@
               </td>
               <td class="border-bottom-0 py-3 px-3">
                 <div class="d-flex align-items-center gap-2">
-                  <div class="bg-light rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                  <div *ngIf="!user.avatarUrl" class="bg-light rounded-circle p-2 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 40px; height: 40px;">
                     <span class="material-symbols-outlined text-secondary">person</span>
                   </div>
-                  <span class="fw-semibold" style="color: var(--on-surface-color);">{{ user.usuarioId }}</span>
+                  <img *ngIf="user.avatarUrl" [src]="user.avatarUrl" class="rounded-circle flex-shrink-0" style="width: 40px; height: 40px; object-fit: cover;" alt="Avatar">
+                  <div class="d-flex flex-column" style="min-width: 0;">
+                    <span class="fw-bold text-truncate" style="color: var(--on-surface-color);" [title]="user.usuarioId">{{ user.nombre }}</span>
+                    <span class="text-muted small text-truncate">{{ user.email }}</span>
+                  </div>
                 </div>
               </td>
               <td class="border-bottom-0 py-3 px-3 text-center text-muted fw-medium">

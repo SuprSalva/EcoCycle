@@ -164,7 +164,8 @@ public class UsuarioController : ControllerBase
                 Rol = usuario.Rol,
                 SaldoPuntos = (double)usuario.SaldoPuntos,
                 Activo = usuario.Activo,
-                AvatarUrl = usuario.AvatarUrl
+                AvatarUrl = usuario.AvatarUrl,
+                CreadoEn = usuario.CreadoEn
             };
 
             return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -172,6 +173,58 @@ public class UsuarioController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Error en GetPerfil: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+        }
+    }
+
+    [HttpGet("historial")]
+    public async Task<IActionResult> GetHistorial()
+    {
+        try
+        {
+            var userId = GetUserId();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+            var sesiones = await _sesionRepository.ObtenerPorUsuarioAsync(userId);
+            var canjes = await _recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
+            var recompensasTodas = await _recompensaRepository.ObtenerTodasAsync();
+
+            var historial = new List<HistorialItemResponse>();
+
+            foreach(var s in sesiones)
+            {
+                historial.Add(new HistorialItemResponse
+                {
+                    Id = s.Id,
+                    Titulo = "Sesión de Reciclaje",
+                    Subtitulo = $"{s.Botellas} botellas en {s.MaquinaId}",
+                    Puntos = $"+{s.Puntos}",
+                    EsPositivo = true,
+                    Fecha = s.Fecha
+                });
+            }
+
+            foreach(var c in canjes)
+            {
+                var r = recompensasTodas.FirstOrDefault(x => x.Id == c.RecompensaId);
+                historial.Add(new HistorialItemResponse
+                {
+                    Id = c.Id,
+                    Titulo = "Canje de Recompensa",
+                    Subtitulo = r?.Nombre ?? "Recompensa",
+                    Puntos = $"-{c.PuntosUsados}",
+                    EsPositivo = false,
+                    Fecha = c.Fecha
+                });
+            }
+
+            historial = historial.OrderByDescending(x => x.Fecha).ToList();
+
+            return Ok(ApiResponse<List<HistorialItemResponse>>.Ok(historial));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error en GetHistorial: {ex.Message}");
             return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
         }
     }

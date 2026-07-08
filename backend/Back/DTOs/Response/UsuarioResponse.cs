@@ -12,4 +12,5 @@ public class UsuarioResponse
     public double SaldoPuntos { get; set; }
     public bool Activo { get; set; } = true;
     public string? AvatarUrl { get; set; }
+    public DateTime CreadoEn { get; set; }
 }

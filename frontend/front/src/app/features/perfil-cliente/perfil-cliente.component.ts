@@ -21,6 +21,8 @@ export class PerfilClienteComponent implements OnInit {
   editando: boolean = false;
   mostrandoCambioPassword: boolean = false;
   mostrandoSelectorAvatar: boolean = false;
+  procesandoImagen: boolean = false;
+  mensajeCarga: string = 'Cargando tu información...';
 
   archivoSeleccionado: File | null = null;
   imagenPreviewUrl: string | null = null;
@@ -66,6 +68,7 @@ export class PerfilClienteComponent implements OnInit {
 
   cargarPerfil(): void {
     this.cargando = true;
+    this.mensajeCarga = 'Cargando tu información...';
     this.authService.obtenerPerfilUsuario().subscribe({
       next: (datos) => {
         this.perfil = datos;
@@ -113,6 +116,7 @@ export class PerfilClienteComponent implements OnInit {
     }
 
     this.cargando = true;
+    this.mensajeCarga = 'Guardando perfil y foto...';
     this.notificationService.showLoading('Guardando...', 'Actualizando tu perfil');
 
     try {
@@ -182,21 +186,31 @@ export class PerfilClienteComponent implements OnInit {
   alSeleccionarArchivo(event: any): void {
     const file = event.target.files[0];
     if (file) {
+      this.procesandoImagen = true;
       this.archivoSeleccionado = file;
       
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.imagenPreviewUrl = e.target.result;
-        this.cerrarSelectorAvatar();
+        // Simulamos un pequeño tiempo de carga visual
+        setTimeout(() => {
+          this.imagenPreviewUrl = e.target.result;
+          this.procesandoImagen = false;
+          this.cerrarSelectorAvatar();
+        }, 800);
       };
       reader.readAsDataURL(file);
     }
   }
 
   seleccionarIconoPredeterminado(url: string): void {
-    this.archivoSeleccionado = null;
-    this.imagenPreviewUrl = url;
-    this.cerrarSelectorAvatar();
+    this.procesandoImagen = true;
+    // Simulamos un tiempo de carga visual para el icono
+    setTimeout(() => {
+      this.archivoSeleccionado = null;
+      this.imagenPreviewUrl = url;
+      this.procesandoImagen = false;
+      this.cerrarSelectorAvatar();
+    }, 600);
   }
 
   // ✅ MOSTRAR FORMULARIO DE CAMBIO DE CONTRASEÑA

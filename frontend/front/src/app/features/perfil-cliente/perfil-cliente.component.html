@@ -16,7 +16,7 @@
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
-    <p class="text-muted mt-2">Cargando tu información...</p>
+    <p class="text-muted mt-2">{{ mensajeCarga }}</p>
   </div>
 
   <!-- Tarjeta de Perfil -->
@@ -119,13 +119,6 @@
             </div>
           </div>
 
-          <div class="col-md-6">
-            <label class="form-label fw-bold">Rol</label>
-            <input type="text" 
-                   class="form-control bg-light text-capitalize" 
-                   [value]="perfil?.rol || 'usuario'"
-                   readonly disabled>
-          </div>
 
         </div>
 
@@ -163,7 +156,7 @@
         <div class="card-body">
           <h6 class="card-title fw-bold"><i class="fa-solid fa-info-circle text-info me-2"></i>Información</h6>
           <p class="text-muted small">Última actualización: {{ (perfil?.creadoEn | date:'dd/MM/yyyy HH:mm') || 'No disponible' }}</p>
-          <p class="text-muted small mb-0">ID de usuario: {{ (perfil?.id | slice:0:12) || '---' }}...</p>
+          <p class="text-muted small mb-0">Cuenta activa y validada.</p>
         </div>
       </div>
     </div>
@@ -242,11 +235,15 @@
         <div class="modal-body text-center">
           
           <div class="mb-4">
-            <label class="btn btn-outline-primary w-100 p-3 rounded-3" style="cursor: pointer; border-style: dashed; border-width: 2px;">
+            <label *ngIf="!procesandoImagen" class="btn btn-outline-primary w-100 p-3 rounded-3" style="cursor: pointer; border-style: dashed; border-width: 2px;">
               <i class="fa-solid fa-cloud-arrow-up fs-3 mb-2 d-block"></i>
               <span class="fw-bold">Subir Foto desde mi equipo</span>
               <input type="file" class="d-none" accept="image/png, image/jpeg, image/webp" (change)="alSeleccionarArchivo($event)">
             </label>
+            <div *ngIf="procesandoImagen" class="p-3 text-center">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="mt-2 text-muted small fw-bold">Cargando imagen...</p>
+            </div>
             <p class="text-muted small mt-2 mb-0">Recomendado: 500x500px (JPG, PNG)</p>
           </div>
 
