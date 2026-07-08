@@ -333,3 +333,25 @@
 2026-07-08 16:07:13.918 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 95.9507ms
 2026-07-08 16:07:13.918 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
 2026-07-08 16:07:13.918 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 97.1068ms
+2026-07-08 16:09:19.221 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:09:19.221 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:09:19.221 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.1832ms
+2026-07-08 16:09:19.221 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:09:19.222 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:09:19.222 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:09:19.222 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-07-08 16:09:19.469 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-07-08 16:09:19.470 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 247.6075ms
+2026-07-08 16:09:19.470 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:09:19.470 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 248.4963ms
+2026-07-08 16:09:35.869 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:09:35.869 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:09:35.869 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.2638ms
+2026-07-08 16:09:35.869 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:09:35.869 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:09:35.870 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:09:35.870 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-07-08 16:09:35.948 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-07-08 16:09:35.948 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 78.2201ms
+2026-07-08 16:09:35.948 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:09:35.948 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 79.2571ms

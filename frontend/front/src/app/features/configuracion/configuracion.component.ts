@@ -15,14 +15,10 @@ export class ConfiguracionComponent implements OnInit {
   perfil: any = null;
   esAdmin = false;
 
+  darkMode = false;
   notifReciclaje = true;
   notifPromociones = false;
   notifSonido = true;
-
-  compacto = false;
-  dashboardBotellas = true;
-  dashboardPuntos = true;
-  dashboardSesiones = true;
 
   constructor(
     private authService: AuthService,
@@ -39,39 +35,27 @@ export class ConfiguracionComponent implements OnInit {
     const saved = localStorage.getItem('ecocycle_config');
     if (saved) {
       const cfg = JSON.parse(saved);
+      this.darkMode = cfg.darkMode ?? false;
       this.notifReciclaje = cfg.notifReciclaje ?? true;
       this.notifPromociones = cfg.notifPromociones ?? false;
       this.notifSonido = cfg.notifSonido ?? true;
-      this.compacto = cfg.compacto ?? false;
-      this.dashboardBotellas = cfg.dashboardBotellas ?? true;
-      this.dashboardPuntos = cfg.dashboardPuntos ?? true;
-      this.dashboardSesiones = cfg.dashboardSesiones ?? true;
     }
+  }
+
+  toggleDarkMode(): void {
+    this.darkMode = !this.darkMode;
+    document.documentElement.setAttribute('data-theme', this.darkMode ? 'dark' : 'light');
+    this.guardarTodo();
   }
 
   guardarTodo(): void {
     const cfg = {
+      darkMode: this.darkMode,
       notifReciclaje: this.notifReciclaje,
       notifPromociones: this.notifPromociones,
       notifSonido: this.notifSonido,
-      compacto: this.compacto,
-      dashboardBotellas: this.dashboardBotellas,
-      dashboardPuntos: this.dashboardPuntos,
-      dashboardSesiones: this.dashboardSesiones,
     };
     localStorage.setItem('ecocycle_config', JSON.stringify(cfg));
     this.notificationService.toastSuccess('Preferencias guardadas.');
-  }
-
-  get maquinaId(): string {
-    return 'MQ-ECO-01';
-  }
-
-  get visorUrl(): string {
-    return '104.248.187.43:3000';
-  }
-
-  get yoloThreshold(): string {
-    return '0.15';
   }
 }

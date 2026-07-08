@@ -6,124 +6,91 @@
       </h2>
       <p class="text-muted small">Personaliza tu experiencia en EcoCycle.</p>
     </div>
-    <button class="btn btn-success px-4" (click)="guardarTodo()">
-      <i class="fa-solid fa-save me-2"></i>Guardar Todo
-    </button>
   </div>
 
   <div class="row g-4">
 
-    <!-- Apariencia -->
     <div class="col-md-6">
       <div class="card shadow-sm border-0 h-100">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-3">
             <i class="fa-solid fa-palette text-primary me-2"></i>Apariencia
           </h5>
-          <p class="text-muted small mb-3">Personaliza la visualización del panel.</p>
+          <p class="text-muted small mb-3">Personaliza el aspecto visual del panel.</p>
 
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="compacto" id="modoCompacto">
-            <label class="form-check-label" for="modoCompacto">
-              <strong>Modo compacto</strong>
-              <p class="text-muted small mb-0">Reduce el espaciado para mostrar más información en pantalla.</p>
-            </label>
+          <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background: var(--hover-bg);">
+            <div>
+              <strong>
+                <i class="fa-solid fa-{{ darkMode ? 'moon' : 'sun' }} me-2"></i>
+                Modo {{ darkMode ? 'Oscuro' : 'Claro' }}
+              </strong>
+              <p class="text-muted small mb-0 mt-1">Cambia entre tema claro y oscuro.</p>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" [checked]="darkMode" (change)="toggleDarkMode()" id="darkMode">
+            </div>
           </div>
 
           <hr class="my-3">
 
-          <h6 class="fw-bold mb-2">Widgets del Dashboard</h6>
-          <p class="text-muted small mb-3">Elige qué secciones mostrar en tu panel principal.</p>
-
-          <div class="form-check form-switch mb-2">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardBotellas" id="widgetBotellas">
-            <label class="form-check-label" for="widgetBotellas">
-              <strong>Botellas recicladas</strong>
-              <p class="text-muted small mb-0">Gráfica de botellas por período.</p>
-            </label>
-          </div>
-          <div class="form-check form-switch mb-2">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardPuntos" id="widgetPuntos">
-            <label class="form-check-label" for="widgetPuntos">
-              <strong>Puntos acumulados</strong>
-              <p class="text-muted small mb-0">Resumen de puntos y recompensas.</p>
-            </label>
-          </div>
-          <div class="form-check form-switch mb-2">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardSesiones" id="widgetSesiones">
-            <label class="form-check-label" for="widgetSesiones">
-              <strong>Sesiones activas</strong>
-              <p class="text-muted small mb-0">Estado de las máquinas y sesiones en curso.</p>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Notificaciones -->
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-bell text-warning me-2"></i>Notificaciones
-          </h5>
+          <h6 class="fw-bold mb-2">Notificaciones</h6>
           <p class="text-muted small mb-3">Configura qué notificaciones deseas recibir.</p>
 
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" [(ngModel)]="notifReciclaje" id="notifReciclaje">
             <label class="form-check-label" for="notifReciclaje">
               <strong>Notificar reciclaje</strong>
-              <p class="text-muted small mb-0">Recibir aviso al completar una sesión de reciclaje.</p>
+              <p class="text-muted small mb-0">Recibir aviso al completar una sesión.</p>
             </label>
           </div>
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" [(ngModel)]="notifPromociones" id="notifPromo">
             <label class="form-check-label" for="notifPromo">
               <strong>Promociones y ofertas</strong>
-              <p class="text-muted small mb-0">Recibir noticias sobre promociones y puntos extra.</p>
+              <p class="text-muted small mb-0">Noticias sobre promociones y puntos extra.</p>
             </label>
           </div>
           <div class="form-check form-switch mb-3">
             <input class="form-check-input" type="checkbox" [(ngModel)]="notifSonido" id="notifSonido">
             <label class="form-check-label" for="notifSonido">
-              <strong>Sonido en la app</strong>
+              <strong>Sonido</strong>
               <p class="text-muted small mb-0">Reproducir sonido al completar una acción.</p>
             </label>
           </div>
+
+          <button class="btn btn-success mt-2" (click)="guardarTodo()">
+            <i class="fa-solid fa-save me-2"></i>Guardar Preferencias
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Información de la Máquina (solo admin) -->
-    <div class="col-12" *ngIf="esAdmin">
-      <div class="card shadow-sm border-0">
+    <div class="col-md-6" *ngIf="esAdmin">
+      <div class="card shadow-sm border-0 h-100">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-microchip text-success me-2"></i>Información de la Máquina
+            <i class="fa-solid fa-microchip text-success me-2"></i>Máquina
           </h5>
-          <p class="text-muted small mb-3">Detalles de conexión y configuración del prototipo IoT.</p>
+          <p class="text-muted small mb-3">Información del prototipo IoT.</p>
+
           <div class="table-responsive">
             <table class="table table-borderless mb-0">
               <tbody>
                 <tr>
-                  <td class="fw-bold" style="width: 200px;">ID de Máquina</td>
-                  <td><code>{{ maquinaId }}</code></td>
+                  <td class="fw-bold" style="width: 160px;">ID Máquina</td>
+                  <td><code>MQ-ECO-01</code></td>
                 </tr>
                 <tr>
-                  <td class="fw-bold">Servidor Visor</td>
-                  <td><code>{{ visorUrl }}</code></td>
+                  <td class="fw-bold">Visor</td>
+                  <td><code>104.248.187.43:3000</code></td>
                 </tr>
                 <tr>
-                  <td class="fw-bold">Umbral YOLO</td>
-                  <td><code>{{ yoloThreshold }}</code></td>
+                  <td class="fw-bold">YOLO</td>
+                  <td><code>puerto 8000 &bull; umbral 0.15</code></td>
                 </tr>
                 <tr>
-                  <td class="fw-bold">Servicio YOLO</td>
-                  <td><code>yolo:8000/detect</code></td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">Firebase RTDB</td>
-                  <td><code>maquinas/{{ maquinaId }}/gate_command</code></td>
+                  <td class="fw-bold">Firebase</td>
+                  <td><code>maquinas/MQ-ECO-01/</code></td>
                 </tr>
               </tbody>
             </table>
