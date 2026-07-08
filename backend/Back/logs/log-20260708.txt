@@ -267,3 +267,69 @@
 2026-07-08 15:53:54.263 +00:00 [INF] Executed action Back.Controllers.ReportesController.ObtenerTodos (Back) in 70.0376ms
 2026-07-08 15:53:54.263 +00:00 [INF] Executed endpoint 'Back.Controllers.ReportesController.ObtenerTodos (Back)'
 2026-07-08 15:53:54.263 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Reportes - 200 null application/json; charset=utf-8 70.7227ms
+2026-07-08 16:04:11.112 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - null null
+2026-07-08 16:04:11.112 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:11.112 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Recompensa/admin - 204 null null 0.2896ms
+2026-07-08 16:04:11.113 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - null null
+2026-07-08 16:04:11.113 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:11.113 +00:00 [INF] Executing endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-07-08 16:04:11.114 +00:00 [INF] Route matched with {action = "GetRecompensasAdmin", controller = "Recompensa"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetRecompensasAdmin() on controller Back.Controllers.RecompensaController (Back).
+2026-07-08 16:04:11.424 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.Recompensa, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-08 16:04:11.424 +00:00 [INF] Executed action Back.Controllers.RecompensaController.GetRecompensasAdmin (Back) in 310.8792ms
+2026-07-08 16:04:11.425 +00:00 [INF] Executed endpoint 'Back.Controllers.RecompensaController.GetRecompensasAdmin (Back)'
+2026-07-08 16:04:11.425 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Recompensa/admin - 200 null application/json; charset=utf-8 312.0376ms
+2026-07-08 16:04:12.340 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/compras-proveedores - null null
+2026-07-08 16:04:12.340 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:12.340 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/compras-proveedores - 204 null null 0.2061ms
+2026-07-08 16:04:12.341 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/compras-proveedores - null null
+2026-07-08 16:04:12.341 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:12.342 +00:00 [INF] Executing endpoint 'Back.Controllers.CompraProveedorController.GetCompras (Back)'
+2026-07-08 16:04:12.342 +00:00 [INF] Route matched with {action = "GetCompras", controller = "CompraProveedor"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetCompras() on controller Back.Controllers.CompraProveedorController (Back).
+2026-07-08 16:04:12.426 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.DTOs.CompraProveedorDTO, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-08 16:04:12.427 +00:00 [INF] Executed action Back.Controllers.CompraProveedorController.GetCompras (Back) in 85.0039ms
+2026-07-08 16:04:12.427 +00:00 [INF] Executed endpoint 'Back.Controllers.CompraProveedorController.GetCompras (Back)'
+2026-07-08 16:04:12.427 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/compras-proveedores - 200 null application/json; charset=utf-8 85.7433ms
+2026-07-08 16:04:13.181 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/MateriaPrima - null null
+2026-07-08 16:04:13.181 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:13.181 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/MateriaPrima - 204 null null 0.1832ms
+2026-07-08 16:04:13.181 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/MateriaPrima - null null
+2026-07-08 16:04:13.181 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:04:13.182 +00:00 [INF] Executing endpoint 'Back.Controllers.MateriaPrimaController.ObtenerTodas (Back)'
+2026-07-08 16:04:13.182 +00:00 [INF] Route matched with {action = "ObtenerTodas", controller = "MateriaPrima"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] ObtenerTodas() on controller Back.Controllers.MateriaPrimaController (Back).
+2026-07-08 16:04:13.288 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[System.Collections.Generic.List`1[[Back.Entities.MateriaPrima, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-07-08 16:04:13.288 +00:00 [INF] Executed action Back.Controllers.MateriaPrimaController.ObtenerTodas (Back) in 106.5439ms
+2026-07-08 16:04:13.289 +00:00 [INF] Executed endpoint 'Back.Controllers.MateriaPrimaController.ObtenerTodas (Back)'
+2026-07-08 16:04:13.289 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/MateriaPrima - 200 null application/json; charset=utf-8 107.214ms
+2026-07-08 16:05:35.491 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:05:35.492 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:05:35.492 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.2983ms
+2026-07-08 16:05:35.492 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:05:35.492 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:05:35.493 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:05:35.493 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-07-08 16:05:35.641 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-07-08 16:05:35.642 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 148.7341ms
+2026-07-08 16:05:35.642 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:05:35.642 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 150.1943ms
+2026-07-08 16:06:49.521 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Reportes - null null
+2026-07-08 16:06:49.521 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:06:49.521 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Reportes - 204 null null 0.2729ms
+2026-07-08 16:06:49.522 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Reportes - null null
+2026-07-08 16:06:49.522 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:06:49.523 +00:00 [INF] Executing endpoint 'Back.Controllers.ReportesController.ObtenerTodos (Back)'
+2026-07-08 16:06:49.523 +00:00 [INF] Route matched with {action = "ObtenerTodos", controller = "Reportes"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.ActionResult`1[System.Collections.Generic.IEnumerable`1[Back.DTOs.Response.ReporteResponse]]] ObtenerTodos() on controller Back.Controllers.ReportesController (Back).
+2026-07-08 16:06:49.650 +00:00 [INF] Executing OkObjectResult, writing value of type 'System.Linq.Enumerable+SelectListIterator`2[[Back.Entities.Reporte, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[Back.DTOs.Response.ReporteResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-07-08 16:06:49.650 +00:00 [INF] Executed action Back.Controllers.ReportesController.ObtenerTodos (Back) in 127.6288ms
+2026-07-08 16:06:49.651 +00:00 [INF] Executed endpoint 'Back.Controllers.ReportesController.ObtenerTodos (Back)'
+2026-07-08 16:06:49.651 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Reportes - 200 null application/json; charset=utf-8 128.7147ms
+2026-07-08 16:07:13.820 +00:00 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:07:13.820 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:07:13.820 +00:00 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:5000/api/Usuario/perfil - 204 null null 0.1932ms
+2026-07-08 16:07:13.821 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - null null
+2026-07-08 16:07:13.821 +00:00 [INF] CORS policy execution successful.
+2026-07-08 16:07:13.822 +00:00 [INF] Executing endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:07:13.822 +00:00 [INF] Route matched with {action = "GetPerfil", controller = "Usuario"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetPerfil() on controller Back.Controllers.UsuarioController (Back).
+2026-07-08 16:07:13.917 +00:00 [INF] Executing OkObjectResult, writing value of type 'Back.Wrappers.ApiResponse`1[[Back.DTOs.Response.UsuarioResponse, Back, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-07-08 16:07:13.918 +00:00 [INF] Executed action Back.Controllers.UsuarioController.GetPerfil (Back) in 95.9507ms
+2026-07-08 16:07:13.918 +00:00 [INF] Executed endpoint 'Back.Controllers.UsuarioController.GetPerfil (Back)'
+2026-07-08 16:07:13.918 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/api/Usuario/perfil - 200 null application/json; charset=utf-8 97.1068ms

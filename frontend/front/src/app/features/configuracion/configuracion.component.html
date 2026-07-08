@@ -1,123 +1,136 @@
 <div class="container-fluid p-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-      <h2 class="fw-bold m-0">Configuración</h2>
-      <p class="text-muted small">Administra tu contraseña y preferencias de la cuenta.</p>
+      <h2 class="fw-bold m-0">
+        <i class="fa-solid fa-sliders me-2"></i>Configuración
+      </h2>
+      <p class="text-muted small">Personaliza tu experiencia en EcoCycle.</p>
     </div>
+    <button class="btn btn-success px-4" (click)="guardarTodo()">
+      <i class="fa-solid fa-save me-2"></i>Guardar Todo
+    </button>
   </div>
 
   <div class="row g-4">
+
+    <!-- Apariencia -->
     <div class="col-md-6">
       <div class="card shadow-sm border-0 h-100">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-key text-primary me-2"></i>Cambiar Contraseña
+            <i class="fa-solid fa-palette text-primary me-2"></i>Apariencia
           </h5>
-          <p class="text-muted small mb-3">Actualiza tu contraseña periódicamente para mantener tu cuenta segura.</p>
+          <p class="text-muted small mb-3">Personaliza la visualización del panel.</p>
 
-          <div *ngIf="!mostrandoPassword">
-            <button class="btn btn-primary" (click)="mostrarPassword()">
-              <i class="fa-solid fa-pen me-2"></i>Cambiar Contraseña
-            </button>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="compacto" id="modoCompacto">
+            <label class="form-check-label" for="modoCompacto">
+              <strong>Modo compacto</strong>
+              <p class="text-muted small mb-0">Reduce el espaciado para mostrar más información en pantalla.</p>
+            </label>
           </div>
 
-          <div *ngIf="mostrandoPassword">
-            <form [formGroup]="passwordForm">
-              <div class="mb-3">
-                <label class="form-label fw-bold">Contraseña Actual</label>
-                <input type="password" class="form-control" formControlName="passwordActual" placeholder="Tu contraseña actual">
-                <div *ngIf="hasError('passwordActual', 'required')" class="text-danger small mt-1">Obligatorio.</div>
-                <div *ngIf="hasError('passwordActual', 'minlength')" class="text-danger small mt-1">Mínimo 6 caracteres.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Nueva Contraseña</label>
-                <input type="password" class="form-control" formControlName="nuevaPassword" placeholder="Tu nueva contraseña">
-                <div *ngIf="hasError('nuevaPassword', 'required')" class="text-danger small mt-1">Obligatorio.</div>
-                <div *ngIf="hasError('nuevaPassword', 'minlength')" class="text-danger small mt-1">Mínimo 6 caracteres.</div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-bold">Confirmar Nueva Contraseña</label>
-                <input type="password" class="form-control" formControlName="confirmarPassword" placeholder="Confirma tu nueva contraseña">
-                <div *ngIf="hasError('confirmarPassword', 'required')" class="text-danger small mt-1">Obligatorio.</div>
-              </div>
-              <div class="d-flex gap-2">
-                <button type="button" class="btn btn-secondary" (click)="cancelarPassword()">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="cambiarContrasena()" [disabled]="passwordForm.invalid">
-                  <i class="fa-solid fa-save me-2"></i>Guardar
-                </button>
-              </div>
-            </form>
+          <hr class="my-3">
+
+          <h6 class="fw-bold mb-2">Widgets del Dashboard</h6>
+          <p class="text-muted small mb-3">Elige qué secciones mostrar en tu panel principal.</p>
+
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardBotellas" id="widgetBotellas">
+            <label class="form-check-label" for="widgetBotellas">
+              <strong>Botellas recicladas</strong>
+              <p class="text-muted small mb-0">Gráfica de botellas por período.</p>
+            </label>
+          </div>
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardPuntos" id="widgetPuntos">
+            <label class="form-check-label" for="widgetPuntos">
+              <strong>Puntos acumulados</strong>
+              <p class="text-muted small mb-0">Resumen de puntos y recompensas.</p>
+            </label>
+          </div>
+          <div class="form-check form-switch mb-2">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="dashboardSesiones" id="widgetSesiones">
+            <label class="form-check-label" for="widgetSesiones">
+              <strong>Sesiones activas</strong>
+              <p class="text-muted small mb-0">Estado de las máquinas y sesiones en curso.</p>
+            </label>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Notificaciones -->
     <div class="col-md-6">
       <div class="card shadow-sm border-0 h-100">
         <div class="card-body p-4">
           <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-bell text-warning me-2"></i>Preferencias de Notificación
+            <i class="fa-solid fa-bell text-warning me-2"></i>Notificaciones
           </h5>
           <p class="text-muted small mb-3">Configura qué notificaciones deseas recibir.</p>
 
-          <form [formGroup]="notifForm">
-            <div class="form-check form-switch mb-3">
-              <input class="form-check-input" type="checkbox" formControlName="emailReciclaje" id="notifReciclaje">
-              <label class="form-check-label" for="notifReciclaje">
-                <strong>Notificar reciclaje</strong>
-                <p class="text-muted small mb-0">Recibir correo al completar una sesión de reciclaje.</p>
-              </label>
-            </div>
-            <div class="form-check form-switch mb-3">
-              <input class="form-check-input" type="checkbox" formControlName="emailPromociones" id="notifPromo">
-              <label class="form-check-label" for="notifPromo">
-                <strong>Promociones y ofertas</strong>
-                <p class="text-muted small mb-0">Recibir noticias sobre promociones y puntos extra.</p>
-              </label>
-            </div>
-            <div class="form-check form-switch mb-3">
-              <input class="form-check-input" type="checkbox" formControlName="sonido" id="notifSonido">
-              <label class="form-check-label" for="notifSonido">
-                <strong>Sonido en la app</strong>
-                <p class="text-muted small mb-0">Reproducir sonido al detectar una botella.</p>
-              </label>
-            </div>
-            <button type="button" class="btn btn-success mt-2" (click)="guardarNotificaciones()">
-              <i class="fa-solid fa-save me-2"></i>Guardar Preferencias
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row g-4 mt-2">
-    <div class="col-12">
-      <div class="card shadow-sm border-0">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-circle-info text-info me-2"></i>Información de la Cuenta
-          </h5>
-          <div class="row g-3">
-            <div class="col-md-3">
-              <small class="text-muted d-block">Nombre</small>
-              <strong>{{ perfil?.nombre || '---' }} {{ perfil?.apellidos || '' }}</strong>
-            </div>
-            <div class="col-md-3">
-              <small class="text-muted d-block">Correo</small>
-              <strong>{{ perfil?.correo || perfil?.email || '---' }}</strong>
-            </div>
-            <div class="col-md-3">
-              <small class="text-muted d-block">Rol</small>
-              <span class="badge bg-success">{{ (perfil?.rol || 'usuario') | uppercase }}</span>
-            </div>
-            <div class="col-md-3">
-              <small class="text-muted d-block">Puntos</small>
-              <strong><i class="fa-solid fa-coins text-warning me-1"></i>{{ perfil?.saldoPuntos || 0 }}</strong>
-            </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="notifReciclaje" id="notifReciclaje">
+            <label class="form-check-label" for="notifReciclaje">
+              <strong>Notificar reciclaje</strong>
+              <p class="text-muted small mb-0">Recibir aviso al completar una sesión de reciclaje.</p>
+            </label>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="notifPromociones" id="notifPromo">
+            <label class="form-check-label" for="notifPromo">
+              <strong>Promociones y ofertas</strong>
+              <p class="text-muted small mb-0">Recibir noticias sobre promociones y puntos extra.</p>
+            </label>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="notifSonido" id="notifSonido">
+            <label class="form-check-label" for="notifSonido">
+              <strong>Sonido en la app</strong>
+              <p class="text-muted small mb-0">Reproducir sonido al completar una acción.</p>
+            </label>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Información de la Máquina (solo admin) -->
+    <div class="col-12" *ngIf="esAdmin">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-3">
+            <i class="fa-solid fa-microchip text-success me-2"></i>Información de la Máquina
+          </h5>
+          <p class="text-muted small mb-3">Detalles de conexión y configuración del prototipo IoT.</p>
+          <div class="table-responsive">
+            <table class="table table-borderless mb-0">
+              <tbody>
+                <tr>
+                  <td class="fw-bold" style="width: 200px;">ID de Máquina</td>
+                  <td><code>{{ maquinaId }}</code></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Servidor Visor</td>
+                  <td><code>{{ visorUrl }}</code></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Umbral YOLO</td>
+                  <td><code>{{ yoloThreshold }}</code></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Servicio YOLO</td>
+                  <td><code>yolo:8000/detect</code></td>
+                </tr>
+                <tr>
+                  <td class="fw-bold">Firebase RTDB</td>
+                  <td><code>maquinas/{{ maquinaId }}/gate_command</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
