@@ -3,8 +3,8 @@
 .sidebar {
   width: 320px;
   height: 100vh;
-  background: #092C1D; /* Verde Esmeralda Muy Oscuro (Súper elegante) */
-  color: #FFFFFF; /* Texto principal en blanco puro */
+  background: #144b1b; 
+  color: #FFFFFF; 
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@
 
 .logo-text span {
   font-size: 12px;
-  color: #fafafa; /* Un toque de verde esmeralda brillante */
+  color: #fafafa; 
 }
 
 .menu-btn {
@@ -82,7 +82,7 @@
 }
 
 .search-box i {
-  color: #A3D9C9; /* Tono menta suave para los iconos secundarios */
+  color: #ffffff; /* Tono menta suave para los iconos secundarios */
   font-size: 14px;
 }
 
@@ -135,7 +135,7 @@
   gap: 14px;
   border-radius: 10px;
   border-left: 4px solid transparent;
-  color: #A3D9C9; /* Pestañas inactivas en un menta pastel apagado */
+  color: #f1fff3;
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -159,10 +159,10 @@
 }
 
 .item-menu.activo {
-  background: #00A86B; /* Esmeralda Vivo para resaltar la selección */
+  background: #29a131; /* Esmeralda Vivo para resaltar la selección */
   color: #FFFFFF;
   font-weight: 600;
-  border-left: 4px solid #50C878; /* Detalle de borde más claro */
+  border-left: 4px solid #5bb162; /* Detalle de borde más claro */
 }
 
 .item-menu.activo i {
@@ -180,7 +180,7 @@
 
 .sidebar-bottom small {
   margin-left: auto;
-  background: #50C878; /* Badge verde esmeralda brillante */
+  background: #38a05a; /* Badge verde esmeralda brillante */
   color: #04140D;
   font-weight: bold;
   font-size: 11px;
@@ -302,7 +302,7 @@
   bottom: 75px;
   left: 0;
   width: 270px;
-  background: #0D3E29; 
+  background: #0D2E10; 
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 12px 35px rgba(0, 0, 0, .4);

@@ -18,7 +18,7 @@ export interface ProductoDisponible {
 @Component({
   selector: 'app-compras-cliente',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './compras-cliente.component.html',
   styleUrls: ['./compras-cliente.component.scss']
 })

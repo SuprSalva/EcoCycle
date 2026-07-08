@@ -1,6 +1,6 @@
-// 📁 Back/Controllers/CompraProductoController.cs
+
 using System.Security.Claims;
-using Back.DTOs.Request;  // ✅ IMPORTANTE: Agregar este using
+using Back.DTOs.Request;  
 using Back.Entities;
 using Back.Repositories.Interfaces;
 using Back.Wrappers;

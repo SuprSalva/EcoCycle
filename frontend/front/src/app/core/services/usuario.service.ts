@@ -13,12 +13,10 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ CREAR CLIENTE CON ENVÍO DE CORREO
   crearCliente(datos: any): Observable<ApiResponse<any>> {
     return this.http.post<ApiResponse<any>>(`${this.apiUrl}/crear-cliente`, datos);
   }
 
-  // OBTENER TODOS LOS USUARIOS
   obtenerTodos(): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/todos`);
   }

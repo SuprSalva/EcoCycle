@@ -46,7 +46,7 @@ public class UsuarioController : ControllerBase
     {
         try
         {
-            Console.WriteLine($"🔍 Intentando crear cliente: {request.Email}");
+            Console.WriteLine($"Intentando crear cliente: {request.Email}");
 
             // Verificar que el usuario es admin
             var adminId = GetUserId();
@@ -61,7 +61,7 @@ public class UsuarioController : ControllerBase
 
             // Generar contraseña temporal
             var passwordTemporal = GenerarPasswordTemporal();
-            Console.WriteLine($"🔑 Contraseña generada: {passwordTemporal}");
+            Console.WriteLine($"Contraseña generada: {passwordTemporal}");
 
             // Crear usuario en Firestore
             var usuario = new Usuario
@@ -79,13 +79,13 @@ public class UsuarioController : ControllerBase
             };
 
             await _usuarioRepository.GuardarAsync(usuario);
-            Console.WriteLine($"✅ Usuario guardado en Firestore: {usuario.Id}");
+            Console.WriteLine($"Usuario guardado en Firestore: {usuario.Id}");
 
-            // ✅ Enviar correo con credenciales
+           
             var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
             var linkAcceso = $"{frontendUrl}/login";
 
-            Console.WriteLine($"📧 Enviando correo a {request.Email}...");
+            Console.WriteLine($" Enviando correo a {request.Email}...");
             var enviado = await _emailService.EnviarCredencialesClienteAsync(
                 request.Email,
                 request.Nombre,
@@ -95,11 +95,11 @@ public class UsuarioController : ControllerBase
 
             if (enviado)
             {
-                Console.WriteLine($"✅ Correo enviado exitosamente a {request.Email}");
+                Console.WriteLine($"Correo enviado exitosamente a {request.Email}");
             }
             else
             {
-                Console.WriteLine($"⚠️ No se pudo enviar el correo a {request.Email}");
+                Console.WriteLine($"No se pudo enviar el correo a {request.Email}");
             }
 
             return Ok(ApiResponse<object>.Ok(new

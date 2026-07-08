@@ -118,7 +118,7 @@
               </td>
             </tr>
 
-            <!-- Empty State -->
+        
             <tr *ngIf="paginatedUsuarios.length === 0 && !cargando">
               <td colspan="6" class="text-center py-5 text-muted">
                 <i class="fa-solid fa-users fs-1 mb-3" style="opacity: 0.2;"></i>
@@ -130,7 +130,6 @@
         </table>
       </div>
 
-      <!-- Paginador Footer -->
       <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border) !important;" *ngIf="paginatedUsuarios.length > 0">
         <span class="text-muted small fw-medium">Página {{ currentPage }} de {{ totalPages }}</span>
         
@@ -155,7 +154,6 @@
     </div>
   </div>
 
-  <!-- VISTA FORMULARIO -->
   <div *ngIf="vistaActual === 'formulario'" class="fade-in-up">
     <app-usuario-form 
       [idSeleccionado]="idEdicion" 
@@ -165,7 +163,6 @@
 
 </div>
 
-<!-- Estilos extra para la tabla interactiva -->
 <style>
   .cursor-pointer { cursor: pointer; }
   .btn-action { transition: all 0.2s ease; }

@@ -1,91 +1,400 @@
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-primary fw-bold">Registrar Compra</h2>
-    <a routerLink="/panel/compras-proveedores" class="btn btn-outline-secondary rounded-pill px-4">
-      <i class="bi bi-arrow-left me-2"></i>Volver
-    </a>
-  </div>
+<div class="container-fluid min-vh-100" style="background-color: var(--background-color);">
 
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body p-4 p-md-5">
-      
-      <form [formGroup]="form" (ngSubmit)="guardar()">
-        
-        <div class="mb-5">
-          <label class="form-label fw-bold fs-5 border-bottom pb-2 mb-3 w-100 text-secondary">
-            <i class="bi bi-building me-2"></i>1. Seleccionar Proveedor
-          </label>
-          <div class="row">
-            <div class="col-md-6">
-              <select class="form-select form-select-lg bg-light" formControlName="proveedorId">
-                <option value="">-- Seleccione un proveedor --</option>
-                <option *ngFor="let p of proveedores" [value]="p.id">{{ p.empresa }} (Contacto: {{ p.nombre }})</option>
-              </select>
-              <div class="text-danger small mt-1" *ngIf="form.get('proveedorId')?.invalid && form.get('proveedorId')?.touched">
-                Debe seleccionar un proveedor.
-              </div>
-            </div>
-          </div>
-        </div>
+  <!-- ENCABEZADO -->
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+    <div>
+      <h2 class="fw-bold m-0"
+          style="font-size:1.75rem;color:var(--on-background-color)!important;letter-spacing:-0.02em;">
+        Registrar Compra
+      </h2>
 
-        <div class="mb-4">
-          <label class="form-label fw-bold fs-5 border-bottom pb-2 mb-3 w-100 text-secondary d-flex justify-content-between align-items-center">
-            <span><i class="bi bi-box-seam me-2"></i>2. Materias Primas a reabastecer</span>
-            <button type="button" class="btn btn-sm btn-primary rounded-pill" (click)="agregarDetalle()">
-              <i class="bi bi-plus-lg me-1"></i>Añadir Línea
-            </button>
-          </label>
-          
-          <div formArrayName="detalles">
-            <div class="row g-3 align-items-center mb-3 p-3 bg-light rounded-3 border" 
-                 *ngFor="let detalle of detalles.controls; let i = index" [formGroupName]="i">
-              
-              <div class="col-md-5">
-                <label class="form-label small text-muted mb-1">Materia Prima</label>
-                <div class="input-group">
-                  <span class="input-group-text bg-light"><i class="bi bi-box"></i></span>
-                  <select class="form-select" formControlName="nombreMateriaPrima">
-                    <option value="">Seleccionar...</option>
-                    <option *ngFor="let m of materiasPrimas" [value]="m.nombre">{{ m.nombre }} (Stock actual: {{ m.stockActual }} {{ m.unidad }})</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="col-md-2">
-                <label class="form-label small text-muted mb-1">Cantidad</label>
-                <input type="number" class="form-control" formControlName="cantidad" min="1">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label small text-muted mb-1">Precio Unitario ($)</label>
-                <input type="number" class="form-control" formControlName="precioUnitario" step="0.01" min="0">
-              </div>
-
-              <div class="col-md-2 text-end mt-4">
-                <button type="button" class="btn btn-outline-danger btn-sm rounded-circle" (click)="removerDetalle(i)" [disabled]="detalles.length === 1">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-              
-            </div>
-          </div>
-
-        </div>
-
-        <div class="bg-light p-4 rounded-3 text-end mb-4 border">
-          <h4 class="mb-0 text-success fw-bold">Total estimado: ${{ calcularTotal() | number:'1.2-2' }}</h4>
-        </div>
-
-        <div class="d-flex justify-content-end gap-3">
-          <button type="button" routerLink="/panel/compras-proveedores" class="btn btn-light px-4">Cancelar</button>
-          <button type="submit" class="btn btn-success px-5 shadow-sm" [disabled]="form.invalid || guardando">
-            <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
-            Registrar Compra
-          </button>
-        </div>
-
-      </form>
-
+      <p class="text-muted small m-0 mt-1" style="font-size:.9rem;">
+        Completa la información para registrar una nueva compra de materias primas a un proveedor.
+      </p>
     </div>
+
+    <button
+      type="button"
+      routerLink="/admin/compras-proveedores"
+      class="btn btn-light d-flex align-items-center gap-2 px-3 py-2 shadow-sm rounded-3"
+      style="background-color:var(--surface-color);border:1px solid var(--surface-variant-color);">
+
+      <span class="material-symbols-outlined fs-5">
+        arrow_back
+      </span>
+
+      <span class="fw-semibold"
+            style="color:var(--on-surface-color);">
+        Regresar
+      </span>
+
+    </button>
   </div>
+
+  <!-- CARD -->
+  <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 p-4"
+       style="background-color:var(--surface-color);">
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <div class="row">
+
+        <div class="col-12 mt-2 mb-4 pb-3 border-bottom"
+             style="border-color: #EDEDED!important;">
+
+          <h5 class="fw-bold m-0"
+              style="color:var(--on-surface-color);">
+
+            Seleccionar Proveedor
+
+          </h5>
+
+          <p class="text-muted small mt-1 mb-0">
+            Elige el proveedor al que pertenece esta compra.
+          </p>
+
+        </div>
+
+        <div class="col-md-6">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            PROVEEDOR
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span
+              class="input-group-text border-end-0 rounded-start-3"
+              style="background-color:var(--surface-variant-color);
+              border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined">
+                apartment
+              </span>
+
+            </span>
+
+            <select
+              formControlName="proveedorId"
+              class="form-select rounded-end-3 border-start-0 shadow-none"
+              style="background-color:var(--background-color);
+              border:1px solid var(--surface-variant-color);
+              color:var(--on-surface-color);">
+
+              <option value="">
+                -- Seleccione un proveedor --
+              </option>
+
+              <option
+                *ngFor="let p of proveedores"
+                [value]="p.id">
+
+                {{ p.empresa }}
+                (Contacto: {{ p.nombre }})
+
+              </option>
+
+            </select>
+
+          </div>
+
+          <div
+            class="text-danger small mt-1"
+            *ngIf="form.get('proveedorId')?.invalid && form.get('proveedorId')?.touched">
+
+            Debe seleccionar un proveedor.
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="row mt-5">
+
+        <div class="col-12 mt-2 mb-4 pb-3 border-bottom d-flex justify-content-between align-items-center"
+             style="border-color:#EDEDED !important;">
+
+          <div>
+
+            <h5 class="fw-bold m-0"
+                style="color:var(--on-surface-color);">
+
+              Materias Primas
+
+            </h5>
+
+            <p class="text-muted small mt-1 mb-0">
+              Agrega una o más materias primas para esta compra.
+            </p>
+
+          </div>
+
+          <button
+            type="button"
+            (click)="agregarDetalle()"
+            class="btn d-flex align-items-center gap-2 px-3 py-2 rounded-3 shadow-sm border-0 fw-semibold"
+            style="background:#0D631B;color:#fff;">
+
+            <span class="material-symbols-outlined">
+              add_circle
+            </span>
+          </button>
+
+        </div>
+
+      </div>
+
+      <div formArrayName="detalles">
+
+        <div
+          class="p-4 rounded-4 mb-4"
+          *ngFor="let detalle of detalles.controls; let i=index"
+          [formGroupName]="i"
+          style="
+            background-color:var(--background-color);
+            border:1px solid var(--surface-variant-color);">
+
+          <div class="row g-4 align-items-end">
+
+            <!-- MATERIA PRIMA -->
+
+            <div class="col-md-5">
+
+              <label
+                class="form-label fw-bold mb-1"
+                style="
+                color:var(--on-surface-color);
+                font-size:.85rem;
+                letter-spacing:.03em;">
+
+                MATERIA PRIMA
+
+              </label>
+
+              <div class="input-group">
+
+                <span
+                  class="input-group-text border-end-0 rounded-start-3"
+                  style="
+                  background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+                  <span class="material-symbols-outlined">
+                    inventory_2
+                  </span>
+
+                </span>
+
+                <select
+                  formControlName="nombreMateriaPrima"
+                  class="form-select rounded-end-3 border-start-0 shadow-none"
+                  style="
+                  background-color:var(--background-color);
+                  border:1px solid var(--surface-variant-color);">
+
+                  <option value="">
+                    Seleccionar...
+                  </option>
+
+                  <option
+                    *ngFor="let m of materiasPrimas"
+                    [value]="m.nombre">
+
+                    {{ m.nombre }}
+                    (Stock: {{ m.stockActual }} {{ m.unidad }})
+
+                  </option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+            <!-- CANTIDAD -->
+
+            <div class="col-md-2">
+
+              <label
+                class="form-label fw-bold mb-1"
+                style="
+                color:var(--on-surface-color);
+                font-size:.85rem;
+                letter-spacing:.03em;">
+
+                CANTIDAD
+
+              </label>
+
+              <input
+                type="number"
+                formControlName="cantidad"
+                min="1"
+                class="form-control rounded-3 shadow-none"
+                style="
+                background-color:var(--background-color);
+                border:1px solid var(--surface-variant-color);
+                color:var(--on-surface-color);">
+
+            </div>
+
+            <!-- PRECIO -->
+
+            <div class="col-md-3">
+
+              <label
+                class="form-label fw-bold mb-1"
+                style="
+                color:var(--on-surface-color);
+                font-size:.85rem;
+                letter-spacing:.03em;">
+
+                PRECIO UNITARIO
+
+              </label>
+
+              <input
+                type="number"
+                formControlName="precioUnitario"
+                step="0.01"
+                min="0"
+                class="form-control rounded-3 shadow-none"
+                style="
+                background-color:var(--background-color);
+                border:1px solid var(--surface-variant-color);
+                color:var(--on-surface-color);">
+
+            </div>
+
+            <div class="col-md-2 text-end">
+              <button
+              type="button"
+              (click)="removerDetalle(i)"
+              [disabled]="detalles.length===1"
+              class="btn btn-light rounded-3 d-flex align-items-center justify-content-center shadow-sm btn-delete">
+          
+              <span class="material-symbols-outlined">
+                  delete
+              </span>
+          
+          </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+            <!-- =============================== -->
+      <!-- TOTAL -->
+      <!-- =============================== -->
+
+      <div class="mt-4">
+
+        <div class="card border-0 shadow-sm rounded-4"
+             style="
+             background-color:var(--background-color);
+             border:1px solid var(--surface-variant-color)!important;">
+
+          <div class="card-body py-4">
+
+            <p class="text-uppercase fw-bold mb-1"
+               style="
+               color:var(--primary-color);
+               font-size:.85rem;
+               letter-spacing:.08em;">
+
+              Total estimado
+
+            </p>
+
+            <h2 class="fw-bold mb-0"
+                style="
+                color:#0D631B;
+                letter-spacing:-0.02em;">
+
+              ${{ calcularTotal() | number:'1.2-2' }}
+
+            </h2>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- =============================== -->
+      <!-- BOTONES -->
+      <!-- =============================== -->
+
+      <div
+        class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top"
+        style="
+        border-top:1px solid var(--surface-variant-color)!important;">
+
+        <!-- CANCELAR -->
+
+        <button
+          type="button"
+          routerLink="/panel/compras-proveedores"
+          class="btn btn-light fw-semibold px-4 py-2 shadow-sm rounded-3"
+          style="
+          font-size:.95rem;
+          border:1px solid var(--surface-variant-color);
+          background-color:var(--background-color);
+          color:var(--on-background-color);">
+
+          Cancelar
+
+        </button>
+
+        <!-- REGISTRAR -->
+
+        <button
+          type="submit"
+          [disabled]="form.invalid || guardando"
+          class="btn d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3 border-0 fw-semibold"
+          style="
+          background-color:#0D631B;
+          color:#FFFFFF;
+          font-size:.95rem;">
+
+          <span
+            *ngIf="guardando"
+            class="spinner-border spinner-border-sm">
+          </span>
+
+          <ng-container *ngIf="!guardando">
+
+            <span class="material-symbols-outlined fs-5">
+
+              check_circle
+
+            </span>
+
+          </ng-container>
+
+          <span>
+
+            Registrar Compra
+
+          </span>
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
 </div>
