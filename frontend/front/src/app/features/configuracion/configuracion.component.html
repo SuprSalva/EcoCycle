@@ -4,100 +4,164 @@
       <h2 class="fw-bold m-0">
         <i class="fa-solid fa-sliders me-2"></i>Configuración
       </h2>
-      <p class="text-muted small">Personaliza tu experiencia en EcoCycle.</p>
+      <p class="text-muted small">Información legal y de la aplicación.</p>
     </div>
   </div>
 
   <div class="row g-4">
-
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body p-4">
-          <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-palette text-primary me-2"></i>Apariencia
-          </h5>
-          <p class="text-muted small mb-3">Personaliza el aspecto visual del panel.</p>
-
-          <div class="d-flex align-items-center justify-content-between p-3 rounded-3" style="background: var(--hover-bg);">
-            <div>
-              <strong>
-                <i class="fa-solid fa-{{ darkMode ? 'moon' : 'sun' }} me-2"></i>
-                Modo {{ darkMode ? 'Oscuro' : 'Claro' }}
-              </strong>
-              <p class="text-muted small mb-0 mt-1">Cambia entre tema claro y oscuro.</p>
-            </div>
-            <div class="form-check form-switch mb-0">
-              <input class="form-check-input" type="checkbox" [checked]="darkMode" (change)="toggleDarkMode()" id="darkMode">
-            </div>
-          </div>
-
-          <hr class="my-3">
-
-          <h6 class="fw-bold mb-2">Notificaciones</h6>
-          <p class="text-muted small mb-3">Configura qué notificaciones deseas recibir.</p>
-
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="notifReciclaje" id="notifReciclaje">
-            <label class="form-check-label" for="notifReciclaje">
-              <strong>Notificar reciclaje</strong>
-              <p class="text-muted small mb-0">Recibir aviso al completar una sesión.</p>
-            </label>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="notifPromociones" id="notifPromo">
-            <label class="form-check-label" for="notifPromo">
-              <strong>Promociones y ofertas</strong>
-              <p class="text-muted small mb-0">Noticias sobre promociones y puntos extra.</p>
-            </label>
-          </div>
-          <div class="form-check form-switch mb-3">
-            <input class="form-check-input" type="checkbox" [(ngModel)]="notifSonido" id="notifSonido">
-            <label class="form-check-label" for="notifSonido">
-              <strong>Sonido</strong>
-              <p class="text-muted small mb-0">Reproducir sonido al completar una acción.</p>
-            </label>
-          </div>
-
-          <button class="btn btn-success mt-2" (click)="guardarTodo()">
-            <i class="fa-solid fa-save me-2"></i>Guardar Preferencias
-          </button>
-        </div>
+    <div class="col-md-3">
+      <div class="list-group shadow-sm border-0">
+        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0"
+          [class.active]="seccion === 'privacidad'" (click)="seccion = 'privacidad'">
+          <i class="fa-solid fa-shield-halved fs-5"></i>
+          <span>Aviso de Privacidad</span>
+        </button>
+        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0"
+          [class.active]="seccion === 'terminos'" (click)="seccion = 'terminos'">
+          <i class="fa-solid fa-file-contract fs-5"></i>
+          <span>Términos y Condiciones</span>
+        </button>
+        <button class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0"
+          [class.active]="seccion === 'acerca'" (click)="seccion = 'acerca'">
+          <i class="fa-solid fa-circle-info fs-5"></i>
+          <span>Acerca de</span>
+        </button>
       </div>
     </div>
 
-    <div class="col-md-6" *ngIf="esAdmin">
-      <div class="card shadow-sm border-0 h-100">
+    <div class="col-md-9">
+      <div class="card shadow-sm border-0">
         <div class="card-body p-4">
-          <h5 class="fw-bold mb-3">
-            <i class="fa-solid fa-microchip text-success me-2"></i>Máquina
-          </h5>
-          <p class="text-muted small mb-3">Información del prototipo IoT.</p>
 
-          <div class="table-responsive">
-            <table class="table table-borderless mb-0">
-              <tbody>
-                <tr>
-                  <td class="fw-bold" style="width: 160px;">ID Máquina</td>
-                  <td><code>MQ-ECO-01</code></td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">Visor</td>
-                  <td><code>104.248.187.43:3000</code></td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">YOLO</td>
-                  <td><code>puerto 8000 &bull; umbral 0.15</code></td>
-                </tr>
-                <tr>
-                  <td class="fw-bold">Firebase</td>
-                  <td><code>maquinas/MQ-ECO-01/</code></td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Aviso de Privacidad -->
+          <div *ngIf="seccion === 'privacidad'">
+            <h4 class="fw-bold mb-3">
+              <i class="fa-solid fa-shield-halved text-success me-2"></i>Aviso de Privacidad
+            </h4>
+            <p class="text-muted small">Última actualización: Julio 2026</p>
+            <hr>
+            <p>
+              EcoCycle, con domicilio en México, es el responsable del tratamiento de sus datos personales.
+            </p>
+            <h6 class="fw-bold mt-4">1. Datos que recopilamos</h6>
+            <p>
+              Nombre, correo electrónico, teléfono, dirección e imágenes de las botellas recicladas 
+              proporcionadas a través de la tableta de la máquina y la aplicación móvil.
+            </p>
+            <h6 class="fw-bold mt-4">2. Finalidad del tratamiento</h6>
+            <p>
+              Los datos se utilizan para: (a) gestionar su cuenta de usuario, (b) registrar las sesiones 
+              de reciclaje, (c) acumular puntos y recompensas, (d) mejorar nuestros servicios, y 
+              (e) enviar comunicaciones sobre promociones (solo con su consentimiento).
+            </p>
+            <h6 class="fw-bold mt-4">3. Transferencia de datos</h6>
+            <p>
+              No compartimos sus datos personales con terceros, excepto cuando sea requerido por ley 
+              o con su consentimiento expreso. Los datos se almacenan de forma segura en Firebase 
+              (Google Cloud) y en servidores propios.
+            </p>
+            <h6 class="fw-bold mt-4">4. Derechos ARCO</h6>
+            <p>
+              Usted tiene derecho a Acceder, Rectificar, Cancelar u Oponerse al tratamiento de sus 
+              datos. Para ejercer estos derechos, envíe un correo a 
+              <a href="mailto:privacidad@ecocyclemx.tech">privacidad&#64;ecocyclemx.tech</a>.
+            </p>
+            <h6 class="fw-bold mt-4">5. Imágenes capturadas</h6>
+            <p>
+              Las imágenes tomadas por las cámaras de la máquina (tableta y ESP32-CAM) se utilizan 
+              exclusivamente para la detección y validación de botellas mediante YOLO. No se 
+              almacenan ni comparten con terceros.
+            </p>
           </div>
+
+          <!-- Términos y Condiciones -->
+          <div *ngIf="seccion === 'terminos'">
+            <h4 class="fw-bold mb-3">
+              <i class="fa-solid fa-file-contract text-primary me-2"></i>Términos y Condiciones
+            </h4>
+            <p class="text-muted small">Última actualización: Julio 2026</p>
+            <hr>
+            <h6 class="fw-bold mt-4">1. Aceptación</h6>
+            <p>
+              Al utilizar la aplicación EcoCycle, usted acepta los presentes términos y condiciones. 
+              Si no está de acuerdo, no utilice la aplicación.
+            </p>
+            <h6 class="fw-bold mt-4">2. Uso del sistema</h6>
+            <p>
+              El usuario se compromete a utilizar el sistema de reciclaje de manera responsable, 
+              depositando únicamente botellas de plástico PET. El mal uso del sistema puede resultar 
+              en la suspensión de la cuenta.
+            </p>
+            <h6 class="fw-bold mt-4">3. Puntos y recompensas</h6>
+            <p>
+              Cada botella válida otorga 20 puntos. Los puntos no tienen valor monetario y no son 
+              transferibles. EcoCycle se reserva el derecho de modificar el sistema de puntos.
+            </p>
+            <h6 class="fw-bold mt-4">4. Responsabilidad</h6>
+            <p>
+              EcoCycle no se hace responsable por daños derivados del mal funcionamiento del 
+              prototipo IoT, interrupciones del servicio o pérdida de datos por causas ajenas 
+              a nuestra voluntad.
+            </p>
+          </div>
+
+          <!-- Acerca de -->
+          <div *ngIf="seccion === 'acerca'">
+            <h4 class="fw-bold mb-3">
+              <i class="fa-solid fa-circle-info text-info me-2"></i>Acerca de EcoCycle
+            </h4>
+            <hr>
+            <div class="text-center py-3">
+              <img src="/logo_esmeralda.png" alt="EcoCycle" height="80" class="mb-3">
+              <h5 class="fw-bold">EcoCycle</h5>
+              <p class="text-muted">Recicla + Gana</p>
+            </div>
+            <div class="row g-3 mt-2">
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Versión</small>
+                  <strong>2.0.0</strong>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Entorno</small>
+                  <strong>Producción</strong>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Frontend</small>
+                  <strong>Angular 19</strong>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Backend</small>
+                  <strong>.NET + NestJS</strong>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Detección</small>
+                  <strong>YOLOv8</strong>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="p-3 rounded-3" style="background: var(--hover-bg);">
+                  <small class="text-muted d-block">Base de datos</small>
+                  <strong>Firebase + Firestore</strong>
+                </div>
+              </div>
+            </div>
+            <hr class="mt-4">
+            <p class="text-muted small text-center mb-0">
+              &copy; 2026 EcoCycle. Todos los derechos reservados.
+            </p>
+          </div>
+
         </div>
       </div>
     </div>
-
   </div>
 </div>
