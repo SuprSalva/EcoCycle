@@ -143,6 +143,6 @@ export const routes: Routes = [
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
-  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }
 ];
