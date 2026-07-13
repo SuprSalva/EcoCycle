@@ -82,7 +82,13 @@ public class EmailService : IEmailService
             var smtpHost = _configuration["Email:SmtpHost"] ?? "smtp.gmail.com";
             var smtpPort = int.Parse(_configuration["Email:SmtpPort"] ?? "587");
             var smtpUser = _configuration["Email:SmtpUser"];
+            // La contraseña viene de variable de entorno (SMTP_PASSWORD o Email__SmtpPassword),
+            // nunca del appsettings.json versionado.
             var smtpPass = _configuration["Email:SmtpPassword"];
+            if (string.IsNullOrEmpty(smtpPass))
+            {
+                smtpPass = _configuration["SMTP_PASSWORD"];
+            }
             var fromEmail = _configuration["Email:FromEmail"] ?? smtpUser;
 
             if (string.IsNullOrEmpty(smtpUser) || string.IsNullOrEmpty(smtpPass))
@@ -199,11 +205,12 @@ public class EmailService : IEmailService
 
     public async Task<bool> EnviarBienvenidaAsync(string email, string nombre, string password, string linkAcceso)
     {
+        // Nunca se incluye la contraseña en el correo de bienvenida:
+        // el usuario ya la eligió al registrarse y enviarla en texto plano es inseguro.
         var mensaje = $@"
-            Bienvenido a EcoCycle. Aquí están tus credenciales:
+            Bienvenido a EcoCycle. Tu cuenta fue creada exitosamente.
             <div class='credentials'>
                 <p><strong>📧 Correo:</strong> {email}</p>
-                <p><strong>🔑 Contraseña:</strong> <code style='background: #e9ecef; padding: 4px 8px; border-radius: 4px;'>{password}</code></p>
             </div>
             <p style='margin-top: 20px;'>
                 <a href='{linkAcceso}' class='btn'>🔗 Iniciar Sesión</a>

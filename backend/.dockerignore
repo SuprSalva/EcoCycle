@@ -1,0 +1,7 @@
+# No copiar artefactos ni secretos a la imagen
+Back/bin/
+Back/obj/
+Back/Logs/
+Back/logs/
+Back/firebase-key.json
+Back/node_modules/

@@ -7,9 +7,11 @@ using Back.Middleware;
 using FluentValidation;
 using Back.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Reflection;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,18 +97,46 @@ builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
+builder.Services.AddScoped<IFirebaseAuthService, FirebaseAuthService>();
+
+// Orígenes permitidos configurables (appsettings/variable de entorno, separados por coma)
+var allowedOrigins = (builder.Configuration["AllowedOrigins"] ?? "http://localhost:4200")
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
+});
+
+// Rate limiting para endpoints sensibles (login): 10 intentos por minuto por IP
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("auth", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+});
+
+// Respetar X-Forwarded-For / X-Forwarded-Proto cuando corre detrás de nginx
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
 });
 
 var app = builder.Build();
@@ -114,6 +144,7 @@ var app = builder.Build();
 // ==========================================
 // CONFIGURAR EL PIPELINE DE HTTP REQUEST
 // ==========================================
+app.UseForwardedHeaders();
 app.UseMiddleware<ExceptionMiddleware>();
 
 if (app.Environment.IsDevelopment())
@@ -122,8 +153,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("AllowAngular");
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

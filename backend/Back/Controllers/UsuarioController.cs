@@ -1,7 +1,9 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
+using Back.Auth;
 using Back.DTOs.Request;
 using Back.DTOs.Response;
-using Back.Entities;  // ✅ IMPORTANTE
+using Back.Entities;
 using Back.Repositories.Interfaces;
 using Back.Services;
 using Back.Wrappers;
@@ -20,50 +22,41 @@ public class UsuarioController : ControllerBase
     private readonly IRecompensaRepository _recompensaRepository;
     private readonly IEmailService _emailService;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<UsuarioController> _logger;
 
     public UsuarioController(
         IUsuarioRepository usuarioRepository,
         ISesionReciclajeRepository sesionRepository,
         IRecompensaRepository recompensaRepository,
         IEmailService emailService,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        ILogger<UsuarioController> logger)
     {
         _usuarioRepository = usuarioRepository;
         _sesionRepository = sesionRepository;
         _recompensaRepository = recompensaRepository;
         _emailService = emailService;
         _configuration = configuration;
+        _logger = logger;
     }
 
-    private string GetUserId() => 
-        User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
-        User.FindFirst("user_id")?.Value ?? 
+    private string GetUserId() =>
+        User.FindFirst(ClaimTypes.NameIdentifier)?.Value ??
+        User.FindFirst("user_id")?.Value ??
         string.Empty;
 
-    // ✅ CREAR CLIENTE CON ENVÍO DE CORREO
     [HttpPost("crear-cliente")]
+    [AdminOnly]
     public async Task<IActionResult> CrearCliente([FromBody] CrearClienteRequest request)
     {
         try
         {
-            Console.WriteLine($"Intentando crear cliente: {request.Email}");
-
-            // Verificar que el usuario es admin
-            var adminId = GetUserId();
-            var admin = await _usuarioRepository.ObtenerPorIdAsync(adminId);
-            if (admin?.Rol?.ToLower() != "admin")
-                return Forbid("Acceso denegado. Solo administradores.");
-
-            // Verificar si el email ya existe
             var existente = await _usuarioRepository.ObtenerPorEmailAsync(request.Email);
             if (existente != null)
                 return BadRequest(ApiResponse<object>.Fail("El email ya está registrado."));
 
-            // Generar contraseña temporal
             var passwordTemporal = GenerarPasswordTemporal();
-            Console.WriteLine($"Contraseña generada: {passwordTemporal}");
 
-            // Crear usuario en Firestore
             var usuario = new Usuario
             {
                 Id = Guid.NewGuid().ToString(),
@@ -79,13 +72,11 @@ public class UsuarioController : ControllerBase
             };
 
             await _usuarioRepository.GuardarAsync(usuario);
-            Console.WriteLine($"Usuario guardado en Firestore: {usuario.Id}");
+            _logger.LogInformation("Cliente creado por admin: {UsuarioId}", usuario.Id);
 
-           
             var frontendUrl = _configuration["AppSettings:FrontendUrl"] ?? "http://localhost:4200";
             var linkAcceso = $"{frontendUrl}/login";
 
-            Console.WriteLine($" Enviando correo a {request.Email}...");
             var enviado = await _emailService.EnviarCredencialesClienteAsync(
                 request.Email,
                 request.Nombre,
@@ -93,13 +84,9 @@ public class UsuarioController : ControllerBase
                 linkAcceso
             );
 
-            if (enviado)
+            if (!enviado)
             {
-                Console.WriteLine($"Correo enviado exitosamente a {request.Email}");
-            }
-            else
-            {
-                Console.WriteLine($"No se pudo enviar el correo a {request.Email}");
+                _logger.LogWarning("No se pudo enviar el correo de credenciales a {Email}", request.Email);
             }
 
             return Ok(ApiResponse<object>.Ok(new
@@ -114,17 +101,16 @@ public class UsuarioController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error al crear cliente: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error al crear cliente: {ex.Message}"));
+            _logger.LogError(ex, "Error al crear cliente");
+            return StatusCode(500, ApiResponse<object>.Fail("Error al crear el cliente. Intente más tarde."));
         }
     }
 
-    private string GenerarPasswordTemporal()
+    private static string GenerarPasswordTemporal()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
-        var random = new Random();
-        return new string(Enumerable.Repeat(chars, 10)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
+        var bytes = RandomNumberGenerator.GetBytes(12);
+        return new string(bytes.Select(b => chars[b % chars.Length]).ToArray());
     }
 
     [HttpGet("perfil")]
@@ -132,26 +118,17 @@ public class UsuarioController : ControllerBase
     {
         try
         {
-            Console.WriteLine($"🔍 Obteniendo perfil del usuario...");
-            
             var userId = GetUserId();
-            Console.WriteLine($"🔍 UserId obtenido: '{userId}'");
-            
-            if (string.IsNullOrEmpty(userId)) 
+            if (string.IsNullOrEmpty(userId))
             {
-                Console.WriteLine($"❌ UserId vacío");
                 return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
             }
 
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
-            
-            if (usuario == null) 
+            if (usuario == null)
             {
-                Console.WriteLine($"❌ Usuario no encontrado en Firestore para ID: {userId}");
                 return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
             }
-
-            Console.WriteLine($"✅ Perfil encontrado: {usuario.Email}, Rol: {usuario.Rol}");
 
             var response = new UsuarioResponse
             {
@@ -172,8 +149,8 @@ public class UsuarioController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error en GetPerfil: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+            _logger.LogError(ex, "Error en GetPerfil");
+            return StatusCode(500, ApiResponse<object>.Fail("Error interno. Intente más tarde."));
         }
     }
 
@@ -191,7 +168,7 @@ public class UsuarioController : ControllerBase
 
             var historial = new List<HistorialItemResponse>();
 
-            foreach(var s in sesiones)
+            foreach (var s in sesiones)
             {
                 historial.Add(new HistorialItemResponse
                 {
@@ -204,7 +181,7 @@ public class UsuarioController : ControllerBase
                 });
             }
 
-            foreach(var c in canjes)
+            foreach (var c in canjes)
             {
                 var r = recompensasTodas.FirstOrDefault(x => x.Id == c.RecompensaId);
                 historial.Add(new HistorialItemResponse
@@ -224,8 +201,8 @@ public class UsuarioController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error en GetHistorial: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+            _logger.LogError(ex, "Error en GetHistorial");
+            return StatusCode(500, ApiResponse<object>.Fail("Error interno. Intente más tarde."));
         }
     }
 
@@ -238,18 +215,18 @@ public class UsuarioController : ControllerBase
             if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
 
             var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
-            if (usuario == null) 
+            if (usuario == null)
                 return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
             if (!string.IsNullOrEmpty(request.Nombre))
                 usuario.Nombre = request.Nombre;
-            
+
             if (!string.IsNullOrEmpty(request.Apellidos))
                 usuario.Apellidos = request.Apellidos;
-            
+
             if (!string.IsNullOrEmpty(request.Telefono))
                 usuario.Telefono = request.Telefono;
-            
+
             if (request.Direccion != null)
                 usuario.Direccion = request.Direccion;
 
@@ -262,12 +239,13 @@ public class UsuarioController : ControllerBase
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error en ActualizarPerfil: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+            _logger.LogError(ex, "Error en ActualizarPerfil");
+            return StatusCode(500, ApiResponse<object>.Fail("Error interno. Intente más tarde."));
         }
     }
 
     [HttpGet("todos")]
+    [AdminOnly]
     public async Task<IActionResult> ObtenerTodos()
     {
         var usuarios = await _usuarioRepository.ObtenerTodosAsync();
@@ -289,10 +267,11 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [AdminOnly]
     public async Task<IActionResult> ObtenerPorId(string id)
     {
         var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) 
+        if (usuario == null)
             return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
         var response = new UsuarioResponse
@@ -313,24 +292,25 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [AdminOnly]
     public async Task<IActionResult> ActualizarUsuario(string id, [FromBody] ActualizarUsuarioRequest request)
     {
         var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) 
+        if (usuario == null)
             return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
         if (!string.IsNullOrEmpty(request.Nombre))
             usuario.Nombre = request.Nombre;
-        
+
         if (!string.IsNullOrEmpty(request.Apellidos))
             usuario.Apellidos = request.Apellidos;
-        
+
         if (!string.IsNullOrEmpty(request.Telefono))
             usuario.Telefono = request.Telefono;
-        
+
         if (request.Direccion != null)
             usuario.Direccion = request.Direccion;
-        
+
         if (!string.IsNullOrEmpty(request.Rol))
             usuario.Rol = request.Rol;
 
@@ -343,15 +323,16 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [AdminOnly]
     public async Task<IActionResult> Eliminar(string id)
     {
         var usuario = await _usuarioRepository.ObtenerPorIdAsync(id);
-        if (usuario == null) 
+        if (usuario == null)
             return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
 
         await _usuarioRepository.EliminarAsync(id);
+        _logger.LogInformation("Usuario {UsuarioId} eliminado por {AdminId}", id, GetUserId());
 
         return Ok(ApiResponse<object>.Ok(null, "Usuario eliminado correctamente."));
     }
 }
-

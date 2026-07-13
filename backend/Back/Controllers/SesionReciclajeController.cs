@@ -1,7 +1,7 @@
 using System.Security.Claims;
+using Back.Auth;
 using Back.DTOs.Request;
 using Back.Entities;
-using Back.Repositories.Interfaces;
 using Back.Repositories.Interfaces;
 using Back.Wrappers;
 using Microsoft.AspNetCore.Authorization;
@@ -11,12 +11,13 @@ namespace Back.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SesionReciclajeController(Back.Repositories.Interfaces.ISesionReciclajeRepository sesionRepository, Back.Repositories.Interfaces.IUsuarioRepository usuarioRepository) : ControllerBase
+public class SesionReciclajeController(ISesionReciclajeRepository sesionRepository, IUsuarioRepository usuarioRepository) : ControllerBase
 {
     private string GetUserId() => User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value ?? string.Empty;
 
     [HttpPost]
-    // NOTA: Para la máquina IoT podrías requerir API Key en lugar de un JWT en el futuro.
+    // Endpoint usado por la máquina IoT: se protege con API key (cabecera X-Api-Key).
+    [MachineApiKey]
     public async Task<IActionResult> RegistrarSesion([FromBody] SesionReciclajeRequest request)
     {
         if (request.Botellas <= 0) return BadRequest(ApiResponse<object>.Fail("La cantidad de botellas debe ser mayor a 0."));
@@ -47,6 +48,7 @@ public class SesionReciclajeController(Back.Repositories.Interfaces.ISesionRecic
 
     [HttpGet("todas")]
     [Authorize]
+    [AdminOnly]
     public async Task<IActionResult> GetTodas()
     {
         var sesiones = await sesionRepository.ObtenerTodasAsync();
