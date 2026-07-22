@@ -11,6 +11,7 @@ namespace Back.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ReportesController : ControllerBase
     {
         private readonly IReporteRepository _reporteRepository;

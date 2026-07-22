@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Back.Models;
 using Back.Models.DTOs.Request;
@@ -14,6 +15,7 @@ namespace Back.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ComentariosController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
