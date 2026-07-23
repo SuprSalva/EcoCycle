@@ -54,8 +54,8 @@
           </div>
   
           <div class="actions">
-            <a href="javascript:void(0)" class="btn btn-primary">Cotizar Equipamiento</a>
-            <a href="javascript:void(0)" class="btn btn-secondary">Descargar Ficha Técnica (PDF)</a>
+            <a href="#contacto" class="btn btn-primary">Cotizar Equipamiento</a>
+            <a href="#specs" class="btn btn-secondary">Descargar Ficha Técnica (PDF)</a>
           </div>
         </div>
   
@@ -63,6 +63,47 @@
     </div>
   </section>
   
+
+  <section id="how-it-works" class="how-it-works">
+    <div class="container">
+      
+      <div class="how-it-works__header">
+        <span class="badge">Paso a Paso</span>
+        <h2 class="section-title">¿Cómo funciona <span class="verde">nuestra plataforma?</span></h2>
+         
+        <p class="section-subtitle">
+          Aprende cómo transformar tus residuos en un impacto ecológico real en 3 sencillos pasos.
+        </p>
+      </div>
+  
+      <div class="steps-timeline">
+        <div class="step-item" *ngFor="let step of steps; let last = last">
+  
+            <div class="step-item__image-preview">
+            <img [src]="step.imageUrl" [alt]="step.title" />
+          </div>
+  
+          <div class="step-item__marker">
+            <div class="step-item__icon-box">
+              <svg class="step-item__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="step.iconPath" />
+              </svg>
+              <span class="step-item__number">{{ step.number }}</span>
+            </div>
+            <div *ngIf="!last" class="step-item__connector"></div>
+          </div>
+  
+          <div class="step-item__content">
+            <h3 class="step-item__title">{{ step.title }}</h3>
+            <p class="step-item__text">{{ step.description }}</p>
+          </div>
+  
+        </div>
+      </div>
+  
+    </div>
+  </section>
+
   <section class="products-section">
     <div class="container">
       
@@ -179,7 +220,7 @@
             </div>
             
             <div *ngIf="cargandoComentarios" style="text-align: center; padding: 20px; color: #666;">
-              <p>Cargando opiniones de EcoCycle 🌱...</p>
+              <p>Cargando opiniones de EcoCycle ...</p>
             </div>
           
             <div class="comments-carousel" *ngIf="!cargandoComentarios && listaComentarios.length > 0">
@@ -211,7 +252,7 @@
               <p>Aún no hay opiniones publicadas. ¡Sé el primero en calificar tu Smart RVM!</p>
             </div>
           </div>
-          
+
         </div>
       </div>
     </section>

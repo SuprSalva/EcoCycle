@@ -15,9 +15,6 @@ using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==========================================
-// CONFIGURACIÓN DE SERILOG (LOGS)
-// ==========================================
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -26,9 +23,6 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// ==========================================
-// CONFIGURAR AUTENTICACIÓN (FIREBASE JWT)
-// ==========================================
 var firebaseProjectId = builder.Configuration["Firestore:ProjectId"];
 if (string.IsNullOrEmpty(firebaseProjectId))
 {
@@ -51,9 +45,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// ==========================================
-// CONFIGURAR FIRESTORE
-// ==========================================
 var firestoreKeyPath = builder.Configuration["Firestore:KeyPath"];
 string credentialsPath = null;
 if (!string.IsNullOrEmpty(firestoreKeyPath))

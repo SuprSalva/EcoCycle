@@ -7,6 +7,15 @@ import { ComentariosService } from '../../core/services/comentario.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { Comentario } from '../../models/comentario.model';
 
+
+export interface Step {
+  number: string;
+  title: string;
+  description: string;
+  iconPath: string;
+  imageUrl: string;
+}
+
 @Component({
   selector: 'app-producto',
   standalone: true,
@@ -21,6 +30,27 @@ import { Comentario } from '../../models/comentario.model';
 
 export class ProductoComponent implements OnInit {
 
+ steps: Step[] = [
+        {
+          number: '01',
+          title: 'Regístrate en la Plataforma',
+          description: 'Crea tu cuenta en menos de un minuto para acceder a las campañas activas y seguir tu impacto.',
+          iconPath: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
+          imageUrl:'/home/slider_home4.avif'
+        },
+        {
+          number: '02',
+          title: 'Deposita tus Materiales',
+          description: 'Acércate a nuestros puntos de acopio o contenedores inteligentes y clasifica tu plástico PET o aluminio.',
+          iconPath: 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
+          imageUrl:'/home/slider_home3.jpg'},
+        {
+          number: '03',
+          title: 'Acumula Puntos y Recompensas',
+          description: 'Por cada depósito escaneado recibes puntos instantáneos en tu perfil canjeables por beneficios.',
+          iconPath: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+          imageUrl:'/home/slider_home5.webp'}
+      ];
 
   public mainImage = signal<string>('/maquina1.jpg');
 

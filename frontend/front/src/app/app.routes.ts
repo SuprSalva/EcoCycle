@@ -22,6 +22,7 @@ import { AdminComprasComponent } from './features/admin-compras/admin-compras.co
 import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
 import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component'
 import {ComentariosComponent} from './features/comentarios/comentarios.component'
+import {HomeComponent} from './features/home/home.component'
 
 
 export const routes: Routes = [
@@ -31,6 +32,7 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
+  { path: 'home', component: HomeComponent },
 
   { 
     path: 'cliente',
@@ -144,9 +146,6 @@ export const routes: Routes = [
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
-  // ============================================
-  // REDIRECCIONES
-  // ============================================
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }
 ];

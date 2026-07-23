@@ -32,7 +32,6 @@
     align-items:center;
   
     text-align:center;
-  
     color:white;
   
   
@@ -43,40 +42,30 @@
       color:white;
     }
   
-  
     p {
       color:white;
       font-size:1.5rem;
     }
   
-    button {
-        background-color: #14A36D;
-        color: white;
-        padding: 15px 40px;
-        border: none;
+    button { 
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 17px;
+      border-radius: 16px;
+      border:none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      background-color: #14A36D;
+      color: #ffffff;
 
-        border-radius: 8px;
-      
-        cursor: pointer;
-    
-        font-size: 15px;  
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        transition: all 0.3s ease;
-      
-      
-        &:hover {
+      &:hover {
       
           background-color: #0E754E;
           transform: translateY(-3px);
-          box-shadow: 0 8px 20px rgba(46, 196, 182, 0.35);
-      
         }
       
       }
   
   }
-  
 
   .galeria {  
     display:grid;
@@ -91,7 +80,7 @@
       border-radius:10px;
   
     }
-  
+
   }
   
   
@@ -103,8 +92,7 @@
     color: #1a1a1a;
   
     h2 {
-      color: #666;
-      font-family: Georgia, 'Times New Roman', serif;
+      color: #202020;
       font-size: 42px;
       font-weight: 700;
       text-transform: uppercase;
@@ -119,68 +107,49 @@
         content: "";
   
         display: block;
-  
         width: 90px;
-  
         height: 4px;
-  
         background: #9a9a9a;
-  
         margin: 25px auto 0;
-  
         border-radius: 10px;
-  
+
       }
-  
-    }
-  
-  
+    }  
   
     .texto {
-  
       font-family: 'Montserrat', Arial, sans-serif;
-  
       font-size: 18px;
-  
       font-weight: 300;
-  
       line-height: 1.9;
-  
       letter-spacing: 1px;
-  
       color: #444;
-  
+
+      text-align: justify;
+      text-justify: inter-word;
+      hyphens: auto;
   
       p {
-  
         margin-bottom: 25px;
-  
       }
-  
     }
-  
   }
   
   .btn-primary {
 
-    background-color: #1a1a1a;
-    color: white;
-    padding: 15px 40px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-  
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 16px;
+    border:none;
+    font-size: 17px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #14A36D;
+    color: #ffffff;
+
     &:hover {
-      background-color: #14A36D; 
+      background-color: #0E754E;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(46, 196, 182, 0.35);
     }
   }
-  
   
   .descubre {
     background: #111 radial-gradient(
@@ -295,7 +264,7 @@
 }
 
 .card:hover .card-box h3 {
-    letter-spacing: 4px;
+    letter-spacing: 2px;
 }
 
   .final-section {
@@ -325,9 +294,9 @@
     }
   
     p {
-      font-size:22px;
+      font-size:18px;
       max-width:600px;
-  
+      text-align: justify;
     }
   }
 
@@ -372,10 +341,11 @@
 
 .text-card-vision:hover{
     transform: translateY(-8px);
-}
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  }
 
 .text-card-vision {
-  background: #1ea7a0;
+  background: #14A36D;
   color: white;
 
   display: flex;
@@ -387,6 +357,8 @@
   padding: 40px;
   
   font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif; 
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
 }
 
 .text-card-vision h2 {
@@ -398,31 +370,33 @@
 }
 
 .text-card-vision p {
-  font-size: 1.2rem;            
+  font-size: 17px;            
   font-weight: 400;           
   line-height: 1.6;           
   max-width: 600px;           
-  opacity: 0.9;            
+  opacity: 0.9;    
+  text-align: justify;        
 }
 
 .text-card-mision:hover{
     transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
 }
 
 .text-card-mision {
-  background: #1ea73c;
+  background: #14A36D;
   color: white;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   text-align: center;
-  padding: 40px;
-  
+  padding: 40px;  
   font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif; 
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
+
 
 .text-card-mision h2 {
   font-size: 2rem;           
@@ -433,17 +407,17 @@
 }
 
 .text-card-mision p {
-  font-size: 1.2rem;            
+  font-size: 17px;            
   font-weight: 400;           
   line-height: 1.6;           
   max-width: 600px;           
+  text-align: justify;
   opacity: 0.9;            
 }
 
 .valores-section{
     width: 100%;
     padding: 90px 8%;
-    background: #f3f3f3;
 }
 
 .titulo-valores{
@@ -454,14 +428,20 @@
 
 .titulo-valores h2{
     font-size: 2.5rem;
-    color: #965b04;
+    color: #000000;
     margin-bottom: 15px;
 }
 
+.titulo-valores span{
+  font-size: 2.5rem;
+  color: #14A36D;
+  margin-bottom: 15px;
+}
+
 .titulo-valores p{
-    color: #666;
-    font-size: 1.05rem;
-    max-width: 700px;
+    color: #575757;
+    font-size: 17px;
+    max-width: 600px;
     margin: auto;
     line-height: 1.8;
 }
@@ -473,7 +453,7 @@
 }
 
 .card-valor{
-    background: #4d340f;
+    background: #116b49;
     border-radius: 18px;
     padding: 45px 30px;
     text-align: center;
@@ -501,7 +481,8 @@
 .card-valor p{
     color: #fafafa;
     line-height: 1.8;
-    font-size: .98rem;
+    font-size: 17px;
+    text-align: justify;
 }
 
 
