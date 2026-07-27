@@ -1,0 +1,383 @@
+<div class="container-fluid min-vh-100" style="padding:3rem;background-color:var(--background-color);">
+
+    <div class="fade-in-up">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+
+            <div>
+                <h2 class="fw-bold m-0" style="font-size:1.8rem;color:var(--on-background-color);">
+                    Administración de Cotizaciones
+                </h2>
+                <p class="text-muted small m-0 mt-1">
+                    Consulta y administra las solicitudes de cotización recibidas.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="tarjetas-grid">
+
+            <div class="tarjeta azul">
+              <p>
+                <i class="fa-solid fa-file-signature me-2"></i>
+                Total
+              </p>
+          
+              <h3>{{ countTodas }}</h3>
+          
+              <span>Solicitudes recibidas</span>
+            </div>
+          
+            <div class="tarjeta naranja">
+              <p>
+                <i class="fa-solid fa-clock me-2"></i>
+                Pendientes
+              </p>
+          
+              <h3>{{ countPendientes }}</h3>
+          
+              <span>En espera de revisión</span>
+            </div>
+          
+            <div class="tarjeta verde">
+              <p>
+                <i class="fa-solid fa-circle-check me-2"></i>
+                Aceptadas
+              </p>
+          
+              <h3>{{ countAceptadas }}</h3>
+          
+              <span>Proyecto aprobado</span>
+            </div>
+          </div>
+
+        <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+
+            <div class="row g-3 align-items-center">
+
+                <div class="col-lg-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-0">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" class="form-control border-0 bg-light"
+                            placeholder="Buscar por cliente, empresa, correo o ciudad..." [(ngModel)]="filtroBusqueda"
+                            (input)="aplicarBusqueda()">
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <select class="form-select" [(ngModel)]="filtroEstado" (change)="cambiarFiltro(filtroEstado)">
+                        <option value="Todas">Todas</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Contactado">Contactado</option>
+                        <option value="Aceptada">Aceptada</option>
+                        <option value="Rechazada">Rechazada</option>
+                    </select>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead style="background:#f8fafc;">
+
+                        <tr class="text-uppercase text-muted" style="font-size:.75rem;">
+
+                            <th class="ps-4">Cliente</th>
+                            <th>Empresa</th>
+                            <th>Proyecto</th>
+                            <th>Ciudad</th>
+                            <th>Máquinas</th>
+                            <th>Fecha</th>
+                            <th class="text-center pe-4">Estatus</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let c of cotizacionesFiltradas" (click)="verDetalle(c)">
+                            <td class="ps-4">
+
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                                        style="width:42px;height:42px;background:var(--primary-container-color);color:var(--primary-color);">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div>
+
+                                        <div class="fw-bold">{{c.nombre}}</div>
+                                        <small class="text-muted">{{c.correo}}</small>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>{{c.empresa || '-'}}</td>
+                            <td>{{c.tipoProyecto}}</td>
+                            <td>{{c.ciudad}}, {{c.estado}}</td>
+                            <td>{{c.cantidadMaquinas}}</td>
+                            <td>{{c.fechaCreacion | date:'dd/MM/yyyy'}}</td>
+                            <td>
+
+                                <span class="badge rounded-pill" [ngClass]="getEstadoClass(c.estatus)">
+                                    <i class="fa-solid me-1" [ngClass]="getEstadoIcon(c.estatus)"></i>
+                                    {{c.estatus}}
+                                </span>
+                            </td>
+                
+                        </tr>
+                        <tr *ngIf="!cargando && cotizacionesFiltradas.length===0">
+                            <td colspan="8" class="text-center py-5">
+                                <i class="fa-solid fa-inbox fs-1 text-muted mb-3"></i>
+                                <h5>No hay cotizaciones</h5>
+                                <p class="text-muted mb-0">
+                                    No existen solicitudes registradas.
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade show d-block" *ngIf="mostrarDetalle"
+    style="background:rgba(0,0,0,.55);backdrop-filter:blur(3px);">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content border-0 rounded-4 shadow-lg">
+
+            <div class="modal-header border-0 pb-0">
+
+                <div>
+                    <h4 class="fw-bold mb-1">Detalle de la Cotización</h4>
+                    <p class="text-muted mb-0">Información enviada por el cliente.</p>
+                </div>
+
+                <button type="button" class="btn-close" (click)="cerrarDetalle()">
+                </button>
+
+            </div>
+
+            <div class="modal-body pt-4" *ngIf="cotizacionSeleccionada">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            <div class="card-body">
+
+                                <h6 class="fw-bold mb-3">Datos del Cliente</h6>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Nombre</label>
+                                    <div class="fw-semibold">{{cotizacionSeleccionada.nombre}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Empresa</label>
+                                    <div>{{cotizacionSeleccionada.empresa||'-'}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Cargo</label>
+                                    <div>{{cotizacionSeleccionada.cargo||'-'}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Correo</label>
+                                    <div>{{cotizacionSeleccionada.correo}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Teléfono</label>
+                                    <div>{{cotizacionSeleccionada.telefono}}</div>
+                                </div>
+
+                                <div>
+                                    <label class="small text-muted">Medio de contacto</label>
+                                    <div>{{cotizacionSeleccionada.medioContacto}}</div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            <div class="card-body">
+
+                                <h6 class="fw-bold mb-3">Proyecto</h6>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Tipo de proyecto</label>
+                                    <div>{{cotizacionSeleccionada.tipoProyecto}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Cantidad de máquinas</label>
+                                    <div>{{cotizacionSeleccionada.cantidadMaquinas}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Ubicación</label>
+                                    <div>{{cotizacionSeleccionada.ciudad}}, {{cotizacionSeleccionada.estado}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Objetivo</label>
+                                    <div>{{cotizacionSeleccionada.objetivo}}</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="small text-muted">Personas impactadas</label>
+                                    <div>{{cotizacionSeleccionada.personasImpactadas||'-'}}</div>
+                                </div>
+
+                                <div>
+                                    <label class="small text-muted">Fecha de implementación</label>
+                                    <div>{{cotizacionSeleccionada.fechaImplementacion||'-'}}</div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="card border-0 shadow-sm rounded-4">
+
+                            <div class="card-body">
+
+                                <h6 class="fw-bold mb-3">Materiales</h6>
+
+                                <div class="d-flex flex-wrap gap-2 mb-4">
+
+                                    <span class="badge rounded-pill px-3 py-2 bg-success"
+                                        *ngFor="let material of cotizacionSeleccionada.materiales">
+
+                                        {{material}}
+
+                                    </span>
+
+                                    <span class="text-muted" *ngIf="cotizacionSeleccionada.materiales.length===0">
+
+                                        Sin materiales seleccionados.
+
+                                    </span>
+
+                                </div>
+
+                                <h6 class="fw-bold mb-2">Descripción</h6>
+
+                                <div class="border rounded-3 p-3 bg-light">
+
+                                    {{cotizacionSeleccionada.descripcion||'Sin descripción.'}}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <div class="card border-0 shadow-sm rounded-4">
+
+                            <div class="card-body">
+
+                                <div class="row align-items-end">
+
+                                    <div class="col-md-8">
+
+                                        <label class="form-label fw-semibold">
+                                            Cambiar estatus
+                                        </label>
+
+                                        <select class="form-select" #estatus>
+
+                                            <option value="Pendiente">Pendiente</option>
+
+                                            <option value="Contactado">Contactado</option>
+
+                                            <option value="Aceptada">Aceptada</option>
+
+                                            <option value="Rechazada">Rechazada</option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="col-md-4 d-grid">
+
+                                        <button class="btn text-white fw-semibold" style="background:#0D631B;"
+                                            (click)="cambiarEstatus(cotizacionSeleccionada,estatus.value)">
+
+                                            <i class="fa-solid fa-floppy-disk me-2"></i>
+
+                                            Actualizar Estatus
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-0">
+
+                <button class="btn btn-secondary rounded-3 px-4" (click)="cerrarDetalle()">
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .fade-in-up {
+        animation: fadeInUp .35s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

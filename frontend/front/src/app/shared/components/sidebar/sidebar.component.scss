@@ -3,13 +3,29 @@
 .sidebar {
   width: 320px;
   height: 100vh;
-  background: #144b1b; 
+  background: #144b3d; 
   color: #FFFFFF; 
   padding: 20px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.btn-theme-toggle {
+  background-color: rgba(255, 255, 255, 0.856);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  color:#ffffff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .sidebar.collapsed {
@@ -159,10 +175,11 @@
 }
 
 .item-menu.activo {
-  background: #29a131; /* Esmeralda Vivo para resaltar la selección */
+  background: #29a191; 
   color: #FFFFFF;
   font-weight: 600;
-  border-left: 4px solid #5bb162; /* Detalle de borde más claro */
+  border-left: 4px solid #2be9c9;
+  margin-right: 10px;
 }
 
 .item-menu.activo i {
@@ -180,7 +197,7 @@
 
 .sidebar-bottom small {
   margin-left: auto;
-  background: #38a05a; /* Badge verde esmeralda brillante */
+  background: #38a05a; 
   color: #04140D;
   font-weight: bold;
   font-size: 11px;
@@ -302,7 +319,7 @@
   bottom: 75px;
   left: 0;
   width: 270px;
-  background: #0D2E10; 
+  background: #0d2e2a; 
   border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 12px 35px rgba(0, 0, 0, .4);

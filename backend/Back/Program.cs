@@ -71,13 +71,15 @@ builder.Services.AddScoped<Back.Repositories.Interfaces.IRecompensaRepository, B
 builder.Services.AddScoped<Back.Repositories.Interfaces.IProveedorRepository, Back.Repositories.ProveedorRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProveedorRepository, Back.Repositories.CompraProveedorRepository>();
 builder.Services.AddScoped<IReporteRepository, ReporteRepository>();
-
+builder.Services.AddScoped<ICotizacionRepository, CotizacionRepository>();
+builder.Services.AddScoped<IProductosRepository, ProductosRepository>();
+builder.Services.AddScoped<IRecetasRepository, RecetasRepository>();
+builder.Services.AddScoped<IRecetasDetalleRepository, RecetasDetalleRepository>();
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaRepository, Back.Repositories.MateriaPrimaRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaTransaccionRepository, Back.Repositories.MateriaPrimaTransaccionRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.ICompraProductoRepository, Back.Repositories.CompraProductoRepository>();
 builder.Services.AddScoped<IComentariosRepository, ComentariosRepository>();
-
 builder.Services.AddScoped<INotificacionViewModel, NotificacionViewModel>();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
@@ -92,6 +94,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 builder.Services.AddScoped<IFirebaseAuthService, FirebaseAuthService>();
+builder.Services.AddScoped<ProductosService>();
 
 // Orígenes permitidos configurables (appsettings/variable de entorno, separados por coma)
 var allowedOrigins = (builder.Configuration["AllowedOrigins"] ?? "http://localhost:4200")

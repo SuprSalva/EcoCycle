@@ -68,7 +68,8 @@ namespace Back.Controllers
             return Ok(response);
         }
 
-        // POST: api/reportes
+       
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Crear(CrearReporteRequest request)
         {

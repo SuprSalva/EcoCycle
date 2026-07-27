@@ -1,9 +1,9 @@
-<!-- 📁 src/app/features/perfil-cliente/perfil-cliente.component.html -->
-<div class="container-fluid p-4">
-  <!-- Encabezado -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
+
+<div class="container-fluid" style="padding: 3rem">
+
+  <div class="d-flex justify-content-between pl-2 align-items-center mb-4">
     <div>
-      <h2 class="fw-bold m-0">👤 Mi Perfil</h2>
+      <h2 class="fw-bold m-0">Mi Perfil</h2>
       <p class="text-muted small">Administra tus datos personales y configuración de cuenta.</p>
     </div>
     <button *ngIf="!editando && !mostrandoCambioPassword" class="btn btn-primary" (click)="habilitarEdicion()">
@@ -19,11 +19,9 @@
     <p class="text-muted mt-2">{{ mensajeCarga }}</p>
   </div>
 
-  <!-- Tarjeta de Perfil -->
-  <div *ngIf="!cargando" class="card shadow-sm border-0">
+  <div *ngIf="!cargando" class="card shadow-sm border-0" style="border-radius: 2rem;">
     <div class="card-body p-4">
       
-      <!-- Avatar y nombre -->
       <div class="d-flex align-items-center gap-4 mb-4 pb-3 border-bottom position-relative">
         <div class="position-relative">
           <div *ngIf="!imagenPreviewUrl" class="avatar-circle bg-primary text-white" style="width: 80px; height: 80px; font-size: 2rem;">
@@ -43,7 +41,6 @@
         <div>
           <h4 class="mb-0">{{ perfil?.nombre }} {{ perfil?.apellidos }}</h4>
           <span class="text-muted">{{ perfil?.email }}</span>
-          <span class="badge bg-success ms-2">{{ perfil?.rol | uppercase }}</span>
         </div>
       </div>
 
@@ -138,11 +135,10 @@
     </div>
   </div>
 
-  <!-- ✅ SECCIÓN DE CAMBIO DE CONTRASEÑA -->
-  <div class="row g-4 mt-3">
+  <div class="row g-4 mt-3" >
     <div class="col-md-6">
-      <div class="card shadow-sm border-0 h-100">
-        <div class="card-body">
+      <div class="card shadow-sm border-0 h-100" style="border-radius: 1rem; padding: 10px">
+        <div class="card-body" >
           <h6 class="card-title fw-bold"><i class="fa-solid fa-shield-alt text-primary me-2"></i>Seguridad</h6>
           <p class="text-muted small">Tu cuenta está protegida con autenticación segura.</p>
           <button class="btn btn-outline-primary btn-sm" (click)="mostrarCambioPassword()">
@@ -151,8 +147,8 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0 h-100">
+    <div class="col-md-6" >
+      <div class="card shadow-sm border-0 h-100" style="border-radius: 2rem; padding: 10px">
         <div class="card-body">
           <h6 class="card-title fw-bold"><i class="fa-solid fa-info-circle text-info me-2"></i>Información</h6>
           <p class="text-muted small">Última actualización: {{ (perfil?.creadoEn | date:'dd/MM/yyyy HH:mm') || 'No disponible' }}</p>
