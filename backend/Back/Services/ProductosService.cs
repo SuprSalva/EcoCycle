@@ -29,6 +29,30 @@ namespace Back.Services
             _recetasDetalleRepository = recetasDetalleRepository;
         }
 
+        // Activa/desactiva el producto y su receta asociada en una sola operación atómica.
+        // Antes solo se cambiaba el estatus del producto y la receta quedaba desincronizada.
+        public async Task ActualizarEstatusProductoAsync(string productoId, bool activo)
+        {
+            var producto = await _productosRepository.ObtenerProductoPorIdAsync(productoId);
+            if (producto == null)
+                throw new KeyNotFoundException("El producto no existe.");
+
+            var batch = _firestore.StartBatch();
+
+            var productoRef = _firestore.Collection("productos").Document(productoId);
+            batch.Update(productoRef, "Activo", activo);
+
+            // La receta asociada (si existe) hereda el mismo estatus que el producto.
+            var receta = await _recetasRepository.ObtenerPorProductoIdAsync(productoId);
+            if (receta != null && !string.IsNullOrEmpty(receta.Id))
+            {
+                var recetaRef = _firestore.Collection("recetas").Document(receta.Id);
+                batch.Update(recetaRef, "Activo", activo);
+            }
+
+            await batch.CommitAsync();
+        }
+
         public async Task<ProductoCompletoResponse?> ObtenerProductoCompletoAsync(string productoId)
         {
             // Buscar producto
@@ -55,6 +79,7 @@ namespace Back.Services
 
                 Nombre = producto.Nombre,
                 Descripcion = producto.Descripcion,
+                ImagenUrl = producto.ImagenUrl,
                 Activo = producto.Activo,
 
                 TiempoEstimadoMinutos = receta.TiempoEstimadoMinutos,
@@ -96,6 +121,8 @@ namespace Back.Services
             producto.Nombre = request.Nombre;
 
             producto.Descripcion = request.Descripcion;
+
+            producto.ImagenUrl = request.ImagenUrl;
 
 
             await _productosRepository
@@ -218,6 +245,7 @@ namespace Back.Services
                 Id = productoRef.Id,
                 Nombre = request.Nombre,
                 Descripcion = request.Descripcion,
+                ImagenUrl = request.ImagenUrl,
                 Activo = true
             };
             batch.Set(productoRef, nuevoProducto);

@@ -136,6 +136,11 @@ export const routes: Routes = [
           .then(c => c.RecetasComponent)
       },
       {
+        path: 'produccion',
+        loadComponent: () => import('./features/produccion/produccion.component')
+          .then(c => c.ProduccionComponent)
+      },
+      {
         path: 'recetas/nueva',
         loadComponent: () => import('./features/recetas/recetas-form/recetas-form.component')
           .then(c => c.RecetasFormComponent)

@@ -8,6 +8,8 @@ namespace Back.Models.DTOs.Request
 
         public string Descripcion { get; set; }
 
+        public string? ImagenUrl { get; set; }
+
         public int TiempoEstimadoMinutos { get; set; }
 
         public List<DetalleRecetaInput> Insumos { get; set; }

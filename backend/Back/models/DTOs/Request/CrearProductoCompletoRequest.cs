@@ -7,6 +7,7 @@ namespace Back.Models.DTOs.Request
         // --- Datos del Producto ---
         public string Nombre { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
+        public string? ImagenUrl { get; set; }
 
         // --- Datos de la Receta ---
         public double TiempoEstimadoMinutos { get; set; }

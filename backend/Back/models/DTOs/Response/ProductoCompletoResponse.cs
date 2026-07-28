@@ -11,6 +11,8 @@ public class ProductoCompletoResponse
 
     public string Descripcion { get; set; }
 
+    public string? ImagenUrl { get; set; }
+
     public bool Activo { get; set; }
 
     public double TiempoEstimadoMinutos { get; set; }

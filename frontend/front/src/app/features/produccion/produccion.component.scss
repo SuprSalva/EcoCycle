@@ -1,0 +1,29 @@
+.btn-action {
+  transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.prod-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1055;
+  padding: 1rem;
+}
+
+.prod-modal-card {
+  background: var(--surface-color, #ffffff);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}

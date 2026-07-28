@@ -2,6 +2,7 @@ export interface Producto {
     id?: string;
     nombre: string;
     descripcion?: string;
+    imagenUrl?: string;
     activo: boolean;
   }
 
@@ -20,15 +21,17 @@ export interface Producto {
     recetaId: string;
     nombre: string;
     descripcion: string;
+    imagenUrl?: string;
     activo: boolean;
     tiempoEstimadoMinutos: number;
     insumos: DetalleRecetaInput[];
-  
+
   }
 
   export interface CrearProductoCompletoRequest {
     nombre: string;
     descripcion: string;
+    imagenUrl?: string;
     tiempoEstimadoMinutos: number;
     insumos: DetalleRecetaInput[];
   }
