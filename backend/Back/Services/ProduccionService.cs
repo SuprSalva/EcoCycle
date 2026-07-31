@@ -7,24 +7,30 @@ namespace Back.Services
 {
     public class ProduccionService
     {
+        // Estados válidos de una corrida de producción.
+        public static readonly string[] EstadosValidos = { "Completada", "En proceso", "Cancelada" };
+
         private readonly FirestoreDb _firestore;
         private readonly IProductosRepository _productosRepository;
         private readonly IRecetasRepository _recetasRepository;
         private readonly IRecetasDetalleRepository _recetasDetalleRepository;
         private readonly IMateriaPrimaRepository _materiaPrimaRepository;
+        private readonly IProduccionRepository _produccionRepository;
 
         public ProduccionService(
             FirestoreDb firestore,
             IProductosRepository productosRepository,
             IRecetasRepository recetasRepository,
             IRecetasDetalleRepository recetasDetalleRepository,
-            IMateriaPrimaRepository materiaPrimaRepository)
+            IMateriaPrimaRepository materiaPrimaRepository,
+            IProduccionRepository produccionRepository)
         {
             _firestore = firestore;
             _productosRepository = productosRepository;
             _recetasRepository = recetasRepository;
             _recetasDetalleRepository = recetasDetalleRepository;
             _materiaPrimaRepository = materiaPrimaRepository;
+            _produccionRepository = produccionRepository;
         }
 
         // Registra una corrida de producción: valida stock, descuenta materia prima
@@ -132,6 +138,115 @@ namespace Back.Services
 
             await batch.CommitAsync();
 
+            return produccion;
+        }
+
+        // Cambia el estado de una producción. Ajusta el inventario según la transición:
+        //  - Activa (Completada / En proceso) -> Cancelada: devuelve la materia prima al stock (Entrada).
+        //  - Cancelada -> activa: vuelve a descontar la materia prima (Salida), validando disponibilidad.
+        //  - Entre dos estados activos: solo cambia la etiqueta, sin tocar inventario.
+        // Todo se aplica en un batch atómico de Firestore.
+        public async Task<Produccion> CambiarEstadoAsync(string id, string nuevoEstado, string usuarioId)
+        {
+            if (string.IsNullOrWhiteSpace(nuevoEstado) || !EstadosValidos.Contains(nuevoEstado))
+                throw new ArgumentException(
+                    $"Estado no válido. Estados permitidos: {string.Join(", ", EstadosValidos)}.");
+
+            var produccion = await _produccionRepository.ObtenerPorIdAsync(id);
+            if (produccion == null)
+                throw new KeyNotFoundException("La producción no existe.");
+
+            var estadoAnterior = produccion.Estado;
+            if (estadoAnterior == nuevoEstado)
+                return produccion; // Sin cambios.
+
+            bool eraCancelada = estadoAnterior == "Cancelada";
+            bool seraCancelada = nuevoEstado == "Cancelada";
+
+            var batch = _firestore.StartBatch();
+            var ahora = DateTime.UtcNow;
+
+            if (!eraCancelada && seraCancelada)
+            {
+                // Devolver la materia prima consumida al inventario.
+                foreach (var consumo in produccion.MaterialesConsumidos)
+                {
+                    var mp = await _materiaPrimaRepository.ObtenerPorIdAsync(consumo.MateriaPrimaId);
+                    if (mp == null)
+                        continue; // El material ya no existe; no hay a dónde devolver el stock.
+
+                    var mpRef = _firestore.Collection("materia_prima").Document(mp.Id);
+                    batch.Update(mpRef, new Dictionary<string, object>
+                    {
+                        { "stock_actual", mp.StockActual + consumo.Cantidad },
+                        { "ultima_actualizacion", ahora }
+                    });
+
+                    var transRef = _firestore.Collection("materia_prima_transacciones").Document();
+                    batch.Set(transRef, new MateriaPrimaTransaccion
+                    {
+                        Id = transRef.Id,
+                        MateriaPrimaId = mp.Id,
+                        Tipo = "Entrada",
+                        Cantidad = consumo.Cantidad,
+                        CostoUnitario = consumo.CostoUnitario,
+                        Fecha = ahora,
+                        UsuarioId = usuarioId
+                    });
+                }
+            }
+            else if (eraCancelada && !seraCancelada)
+            {
+                // Reactivar: volver a descontar la materia prima. Validar disponibilidad primero.
+                var materiasPrimas = new Dictionary<string, MateriaPrima>();
+                foreach (var consumo in produccion.MaterialesConsumidos)
+                {
+                    var mp = await _materiaPrimaRepository.ObtenerPorIdAsync(consumo.MateriaPrimaId);
+                    if (mp == null)
+                        throw new KeyNotFoundException(
+                            $"La materia prima '{consumo.Nombre}' ya no existe; no se puede reactivar la producción.");
+                    if (mp.StockActual < consumo.Cantidad)
+                        throw new InvalidOperationException(
+                            $"Stock insuficiente de '{mp.Nombre}' para reactivar. Requerido: {consumo.Cantidad} {mp.Unidad}, " +
+                            $"disponible: {mp.StockActual} {mp.Unidad}.");
+                    materiasPrimas[mp.Id] = mp;
+                }
+
+                foreach (var consumo in produccion.MaterialesConsumidos)
+                {
+                    var mp = materiasPrimas[consumo.MateriaPrimaId];
+
+                    var mpRef = _firestore.Collection("materia_prima").Document(mp.Id);
+                    batch.Update(mpRef, new Dictionary<string, object>
+                    {
+                        { "stock_actual", mp.StockActual - consumo.Cantidad },
+                        { "ultima_actualizacion", ahora }
+                    });
+
+                    var transRef = _firestore.Collection("materia_prima_transacciones").Document();
+                    batch.Set(transRef, new MateriaPrimaTransaccion
+                    {
+                        Id = transRef.Id,
+                        MateriaPrimaId = mp.Id,
+                        Tipo = "Salida",
+                        Cantidad = consumo.Cantidad,
+                        CostoUnitario = consumo.CostoUnitario,
+                        Fecha = ahora,
+                        UsuarioId = usuarioId
+                    });
+                }
+            }
+            // Transición entre dos estados activos: no se toca el inventario.
+
+            var produccionRef = _firestore.Collection("producciones").Document(id);
+            batch.Update(produccionRef, new Dictionary<string, object>
+            {
+                { "estado", nuevoEstado }
+            });
+
+            await batch.CommitAsync();
+
+            produccion.Estado = nuevoEstado;
             return produccion;
         }
     }

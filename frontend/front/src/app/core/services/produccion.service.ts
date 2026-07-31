@@ -24,4 +24,8 @@ export class ProduccionService {
   crear(request: CrearProduccionRequest): Observable<any> {
     return this.http.post<any>(this.apiUrl, request);
   }
+
+  cambiarEstado(id: string, estado: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/${id}/estado`, { estado });
+  }
 }

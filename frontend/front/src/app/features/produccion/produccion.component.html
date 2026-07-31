@@ -47,33 +47,29 @@
               <th class="py-3 fw-bold border-bottom-0">Cantidad</th>
               <th class="py-3 fw-bold border-bottom-0">Costo total</th>
               <th class="py-3 fw-bold border-bottom-0">Fecha</th>
-              <th class="py-3 fw-bold border-bottom-0">Estado</th>
-              <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Detalle</th>
+              <th class="pe-4 py-3 fw-bold border-bottom-0">Estado</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let p of produccionesFiltradas" class="border-bottom">
+            <tr *ngFor="let p of produccionesFiltradas" class="border-bottom fila-clickable"
+              role="button" (click)="verDetalle(p)" title="Ver detalle">
               <td class="ps-4 py-3 fw-bold">{{p.nombreProducto}}</td>
               <td class="py-3">{{p.cantidad}}</td>
               <td class="py-3">${{p.costoTotal | number:'1.2-2'}}</td>
               <td class="py-3 text-muted">{{p.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
-              <td class="py-3">
-                <span class="badge rounded-pill px-3 py-2 fw-semibold"
-                  style="background-color:#e6f4ea;color:#137333;">
-                  <i class="fa-solid fa-circle me-1" style="font-size:7px;"></i>
+              <td class="py-3 pe-4">
+                <button type="button" class="badge-estado"
+                  [ngStyle]="{'background-color': estadoEstilo(p.estado).bg, 'color': estadoEstilo(p.estado).color}"
+                  (click)="toggleEstadoMenu(p, $event)" title="Cambiar estado">
+                  <i class="fa-solid fa-circle" style="font-size:7px;"></i>
                   {{p.estado}}
-                </span>
-              </td>
-              <td class="text-center pe-4">
-                <button class="btn btn-sm rounded-circle shadow-sm btn-action btn-outline-success"
-                  style="width:36px;height:36px;" (click)="verDetalle(p)" title="Ver detalle">
-                  <i class="fa-solid fa-eye"></i>
+                  <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i>
                 </button>
               </td>
             </tr>
 
             <tr *ngIf="produccionesFiltradas.length === 0">
-              <td colspan="6" class="text-center py-5 text-muted">
+              <td colspan="5" class="text-center py-5 text-muted">
                 <i class="fa-solid fa-industry fs-1 mb-3" style="opacity: 0.2;"></i>
                 <h5 class="fw-bold text-secondary">No hay producciones registradas</h5>
                 <p class="small mb-0">Haz clic en "Nueva Producción" para registrar la primera.</p>
@@ -92,6 +88,20 @@
     </div>
 
   </div>
+</div>
+
+<!-- Cierra el menú de estado al hacer clic fuera -->
+<div class="estado-backdrop" *ngIf="estadoMenuAbiertoId" (click)="cerrarEstadoMenu()"></div>
+
+<!-- Menú flotante de cambio de estado (fuera de la tabla para que no se recorte) -->
+<div class="estado-menu" *ngIf="estadoMenuProd as prod"
+  [style.top.px]="estadoMenuPos.top" [style.left.px]="estadoMenuPos.left">
+  <button type="button" class="estado-opcion" *ngFor="let e of estados"
+    [class.activa]="e === prod.estado" (click)="cambiarEstado(prod, e, $event)">
+    <i class="fa-solid fa-circle" [ngStyle]="{'color': estadoEstilo(e).color}" style="font-size:7px;"></i>
+    {{e}}
+    <i *ngIf="e === prod.estado" class="fa-solid fa-check ms-auto"></i>
+  </button>
 </div>
 
 <!-- Modal: Nueva Producción -->
