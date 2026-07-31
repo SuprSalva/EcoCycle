@@ -1,0 +1,37 @@
+.mi-cuenta {
+  min-height: 100%;
+}
+
+.mi-cuenta__tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 1.5rem 3rem 0;
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+  background-color: var(--background-color);
+}
+
+.mi-cuenta__tabs .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.1rem;
+  color: var(--text-muted, #6b7280);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.mi-cuenta__tabs .tab:hover {
+  color: var(--text);
+}
+
+.mi-cuenta__tabs .tab.activo {
+  color: var(--primary-color, #10b981);
+  border-bottom-color: var(--primary-color, #10b981);
+}
+
+.mi-cuenta__contenido {
+  /* Cada hijo (perfil / mis-compras) controla su propio padding interno. */
+}

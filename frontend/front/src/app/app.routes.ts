@@ -19,7 +19,6 @@ import { ContactoComponent } from './features/contacto/contacto.component';
 import { ProductoComponent } from './features/producto/producto.component';
 import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
 import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
-import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
 import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component';
 import {ComentariosComponent} from './features/comentarios/comentarios.component';
 import {CotizacionesComponent} from './features/cotizaciones/cotizaciones.component';
@@ -43,12 +42,6 @@ export const routes: Routes = [
     canActivate: [clienteGuard],
     children: [
 
-
-      {
-        path: 'materia-prima',
-        loadComponent: () => import('./features/materia-prima/materia-prima.component').then(m => m.MateriaPrimaComponent)
-      },
-
       {
         path: 'mi-perfil',
         loadComponent: () => import('./features/cliente-panel/cliente-panel.component').then(m => m.ClientePanelComponent),
@@ -59,12 +52,7 @@ export const routes: Routes = [
         ]
       },
 
-      { path: 'usuarios', component: UsuariosComponent },
-
-      // RUTA HIJA: Terminal Ingesta IoT (/panel/reciclaje)
-      { path: 'reciclaje', component: SesionReciclajeComponent },
-
-      // 🌟 RUTA HIJA NUEVA: Catálogo Maestro (/panel/catalogo)
+      // 🌟 Catálogo Maestro
       { path: 'catalogo', component: CatalogoComponent },
 
       // RUTA HIJA: Notificaciones (/panel/notificaciones)
@@ -73,13 +61,9 @@ export const routes: Routes = [
       // RUTA HIJA: Historial de Recompensas (/panel/historial-recompensas)
       { path: 'historial-recompensas', component: HistorialRecompensasComponent },
 
-      // RUTA HIJA: Reportes Núcleo (/panel/reportes)
-      { path: 'reportes', component: ReportesComponent },
       { path: 'dashboard', component: DashboardClienteComponent },
-      { path: 'soporte', component: SoporteComponent },
-      { path: 'perfil', component: PerfilClienteComponent },
       { path: 'mis-compras', component: ComprasClienteComponent },
-      { path: 'historial-recompensas', component: HistorialRecompensasComponent },
+      { path: 'soporte', component: SoporteComponent },
       { path: 'configuracion', loadComponent: () => import('./features/configuracion/configuracion.component').then(m => m.ConfiguracionComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
