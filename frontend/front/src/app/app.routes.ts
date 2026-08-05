@@ -20,8 +20,12 @@ import { ProductoComponent } from './features/producto/producto.component';
 import { ComprasClienteComponent } from './features/compras-cliente/compras-cliente.component';
 import { AdminComprasComponent } from './features/admin-compras/admin-compras.component';
 import { PerfilClienteComponent } from './features/perfil-cliente/perfil-cliente.component';
-import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component'
-import {ComentariosComponent} from './features/comentarios/comentarios.component'
+import {MateriaPrimaComponent} from './features/materia-prima/materia-prima.component';
+import {ComentariosComponent} from './features/comentarios/comentarios.component';
+import {CotizacionesComponent} from './features/cotizaciones/cotizaciones.component';
+import {AdminProductosComponent} from './features/admin-productos/admin-productos.component';
+import {RecetasComponent} from './features/recetas/recetas.component';
+import {HomeComponent} from './features/home/home.component';
 
 
 export const routes: Routes = [
@@ -31,6 +35,7 @@ export const routes: Routes = [
   { path: 'nosotros', component: NosotrosComponent },
   { path: 'contacto', component: ContactoComponent },
   { path: 'producto', component: ProductoComponent },
+  { path: 'home', component: HomeComponent },
 
   { 
     path: 'cliente',
@@ -86,7 +91,6 @@ export const routes: Routes = [
     component: PanelComponent,
     canActivate: [adminGuard],
     children: [
-      // Dashboard
       { path: 'dashboard', component: DashboardGlobalComponent },
 
       {
@@ -110,6 +114,32 @@ export const routes: Routes = [
       { path: 'soporte', component: SoporteComponent },
       { path: 'compras', component: AdminComprasComponent },
       { path: 'comentarios', component: ComentariosComponent },
+      { path: 'cotizaciones', component: CotizacionesComponent },
+      {
+        path: 'admin-productos',
+        loadComponent: () => import('./features/admin-productos/admin-productos.component')
+          .then(c => c.AdminProductosComponent)
+      },
+      {
+        path: 'admin-productos-form',
+        loadComponent: () => import('./features/admin-productos/admin-productos-form/admin-productos-form.component')
+          .then(c => c.ProductoCompletaComponent)
+      },
+      {
+        path: 'admin-productos-form/:id',
+        loadComponent: () => import('./features/admin-productos/admin-productos-form/admin-productos-form.component')
+          .then(c => c.ProductoCompletaComponent)
+      },
+      {
+        path: 'recetas',
+        loadComponent: () => import('./features/recetas/recetas.component')
+          .then(c => c.RecetasComponent)
+      },
+      {
+        path: 'recetas/nueva',
+        loadComponent: () => import('./features/recetas/recetas-form/recetas-form.component')
+          .then(c => c.RecetasFormComponent)
+      },
        {
         path: 'proveedores',
         loadComponent: () => import('./features/proveedores/proveedores-list/proveedores-list.component')
@@ -144,9 +174,6 @@ export const routes: Routes = [
   { path: 'error/:code', component: ErrorPageComponent },
   { path: 'error', component: ErrorPageComponent },
 
-  // ============================================
-  // REDIRECCIONES
-  // ============================================
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: '**', redirectTo: 'error/404' }
 ];

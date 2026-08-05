@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Back.DTOs.Request;
 using Back.DTOs.Response;
-using Back.Entities;  // ✅ IMPORTANTE
+using Back.Entities; 
 using Back.Repositories.Interfaces;
 using Back.Services;
 using Back.Wrappers;
@@ -40,7 +40,7 @@ public class UsuarioController : ControllerBase
         User.FindFirst("user_id")?.Value ?? 
         string.Empty;
 
-    // ✅ CREAR CLIENTE CON ENVÍO DE CORREO
+   
     [HttpPost("crear-cliente")]
     public async Task<IActionResult> CrearCliente([FromBody] CrearClienteRequest request)
     {
@@ -48,22 +48,18 @@ public class UsuarioController : ControllerBase
         {
             Console.WriteLine($"Intentando crear cliente: {request.Email}");
 
-            // Verificar que el usuario es admin
             var adminId = GetUserId();
             var admin = await _usuarioRepository.ObtenerPorIdAsync(adminId);
             if (admin?.Rol?.ToLower() != "admin")
                 return Forbid("Acceso denegado. Solo administradores.");
 
-            // Verificar si el email ya existe
             var existente = await _usuarioRepository.ObtenerPorEmailAsync(request.Email);
             if (existente != null)
                 return BadRequest(ApiResponse<object>.Fail("El email ya está registrado."));
 
-            // Generar contraseña temporal
             var passwordTemporal = GenerarPasswordTemporal();
             Console.WriteLine($"Contraseña generada: {passwordTemporal}");
 
-            // Crear usuario en Firestore
             var usuario = new Usuario
             {
                 Id = Guid.NewGuid().ToString(),
@@ -163,9 +159,7 @@ public class UsuarioController : ControllerBase
                 Direccion = usuario.Direccion,
                 Rol = usuario.Rol,
                 SaldoPuntos = (double)usuario.SaldoPuntos,
-                Activo = usuario.Activo,
-                AvatarUrl = usuario.AvatarUrl,
-                CreadoEn = usuario.CreadoEn
+                Activo = usuario.Activo
             };
 
             return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -173,96 +167,6 @@ public class UsuarioController : ControllerBase
         catch (Exception ex)
         {
             Console.WriteLine($"❌ Error en GetPerfil: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
-        }
-    }
-
-    [HttpGet("historial")]
-    public async Task<IActionResult> GetHistorial()
-    {
-        try
-        {
-            var userId = GetUserId();
-            if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-            var sesiones = await _sesionRepository.ObtenerPorUsuarioAsync(userId);
-            var canjes = await _recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
-            var recompensasTodas = await _recompensaRepository.ObtenerTodasAsync();
-
-            var historial = new List<HistorialItemResponse>();
-
-            foreach(var s in sesiones)
-            {
-                historial.Add(new HistorialItemResponse
-                {
-                    Id = s.Id,
-                    Titulo = "Sesión de Reciclaje",
-                    Subtitulo = $"{s.Botellas} botellas en {s.MaquinaId}",
-                    Puntos = $"+{s.Puntos}",
-                    EsPositivo = true,
-                    Fecha = s.Fecha
-                });
-            }
-
-            foreach(var c in canjes)
-            {
-                var r = recompensasTodas.FirstOrDefault(x => x.Id == c.RecompensaId);
-                historial.Add(new HistorialItemResponse
-                {
-                    Id = c.Id,
-                    Titulo = "Canje de Recompensa",
-                    Subtitulo = r?.Nombre ?? "Recompensa",
-                    Puntos = $"-{c.PuntosUsados}",
-                    EsPositivo = false,
-                    Fecha = c.Fecha
-                });
-            }
-
-            historial = historial.OrderByDescending(x => x.Fecha).ToList();
-
-            return Ok(ApiResponse<List<HistorialItemResponse>>.Ok(historial));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Error en GetHistorial: {ex.Message}");
-            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
-        }
-    }
-
-    [HttpPut("perfil")]
-    public async Task<IActionResult> ActualizarPerfil([FromBody] ActualizarPerfilRequest request)
-    {
-        try
-        {
-            var userId = GetUserId();
-            if (string.IsNullOrEmpty(userId)) return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
-
-            var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
-            if (usuario == null) 
-                return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
-
-            if (!string.IsNullOrEmpty(request.Nombre))
-                usuario.Nombre = request.Nombre;
-            
-            if (!string.IsNullOrEmpty(request.Apellidos))
-                usuario.Apellidos = request.Apellidos;
-            
-            if (!string.IsNullOrEmpty(request.Telefono))
-                usuario.Telefono = request.Telefono;
-            
-            if (request.Direccion != null)
-                usuario.Direccion = request.Direccion;
-
-            if (request.AvatarUrl != null)
-                usuario.AvatarUrl = request.AvatarUrl;
-
-            await _usuarioRepository.GuardarAsync(usuario);
-
-            return Ok(ApiResponse<object>.Ok(null, "Perfil actualizado correctamente."));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"❌ Error en ActualizarPerfil: {ex.Message}");
             return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
         }
     }
@@ -281,8 +185,7 @@ public class UsuarioController : ControllerBase
             Direccion = u.Direccion,
             Rol = u.Rol,
             SaldoPuntos = (double)u.SaldoPuntos,
-            Activo = u.Activo,
-            AvatarUrl = u.AvatarUrl
+            Activo = u.Activo
         }).ToList();
 
         return Ok(ApiResponse<List<UsuarioResponse>>.Ok(response));
@@ -305,8 +208,7 @@ public class UsuarioController : ControllerBase
             Direccion = usuario.Direccion,
             Rol = usuario.Rol,
             SaldoPuntos = (double)usuario.SaldoPuntos,
-            Activo = usuario.Activo,
-            AvatarUrl = usuario.AvatarUrl
+            Activo = usuario.Activo
         };
 
         return Ok(ApiResponse<UsuarioResponse>.Ok(response));
@@ -333,9 +235,6 @@ public class UsuarioController : ControllerBase
         
         if (!string.IsNullOrEmpty(request.Rol))
             usuario.Rol = request.Rol;
-
-        if (request.AvatarUrl != null)
-            usuario.AvatarUrl = request.AvatarUrl;
 
         await _usuarioRepository.GuardarAsync(usuario);
 

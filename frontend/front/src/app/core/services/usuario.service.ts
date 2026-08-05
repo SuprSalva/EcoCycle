@@ -1,4 +1,3 @@
-// 📁 src/app/core/services/usuario.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -21,17 +20,14 @@ export class UsuarioService {
     return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/todos`);
   }
 
-  // OBTENER USUARIO POR ID
   obtenerPorId(id: string): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}`);
   }
 
-  // ACTUALIZAR USUARIO
   actualizar(id: string, datos: any): Observable<ApiResponse<any>> {
     return this.http.put<ApiResponse<any>>(`${this.apiUrl}/${id}`, datos);
   }
 
-  // ELIMINAR USUARIO
   eliminar(id: string): Observable<ApiResponse<any>> {
     return this.http.delete<ApiResponse<any>>(`${this.apiUrl}/${id}`);
   }

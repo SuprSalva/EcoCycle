@@ -1,13 +1,17 @@
+using Back.Auth;
 using Back.DTOs;
 using Back.Entities;
 using Back.Repositories.Interfaces;
 using Back.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Back.Controllers;
 
 [ApiController]
 [Route("api/compras-proveedores")]
+[Authorize]
+[AdminOnly]
 public class CompraProveedorController(
     ICompraProveedorRepository compraRepository,
     IProveedorRepository proveedorRepository,

@@ -11,6 +11,7 @@ namespace Back.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ReportesController : ControllerBase
     {
         private readonly IReporteRepository _reporteRepository;
@@ -67,7 +68,8 @@ namespace Back.Controllers
             return Ok(response);
         }
 
-        // POST: api/reportes
+       
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Crear(CrearReporteRequest request)
         {

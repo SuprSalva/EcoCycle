@@ -1,6 +1,6 @@
 :host{
   display:block;
-  padding:24px;
+  padding:50px;
   background:#f5f7fb;
   min-height:100vh;
   box-sizing: border-box;
@@ -71,19 +71,11 @@
   color:#16a34a;
 }
 
-/*==============================
-      GRID PRINCIPAL
-==============================*/
-
 .dashboard{
   display:grid;
   grid-template-columns:repeat(12,minmax(0,1fr));
   gap:24px;
 }
-
-/*==============================
-      TARJETAS GRANDES
-==============================*/
 
 .card-dashboard{
   background:#fff;
@@ -255,10 +247,6 @@ tbody tr:hover{
   justify-content: center;
   align-items: center;
 }
-
-/*==============================
-      RESPONSIVE
-==============================*/
 
 @media(max-width:1200px){
 

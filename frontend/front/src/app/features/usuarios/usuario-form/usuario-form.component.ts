@@ -54,7 +54,6 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
         this.esEdicion = false;
         if (this.usuarioForm) {
           this.usuarioForm.reset({ rol: 'usuario' });
-          // ✅ AGREGAR VALIDACIONES PARA NUEVOS USUARIOS (CONTRASEÑA OBLIGATORIA)
           this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
           this.usuarioForm.get('password')?.updateValueAndValidity();
           this.usuarioForm.get('confirmarPassword')?.setValidators([Validators.required]);
@@ -134,7 +133,6 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
 
     const valores = this.usuarioForm.getRawValue();
 
-    // ✅ VALIDAR CONTRASEÑA EN NUEVOS USUARIOS
     if (!this.esEdicion) {
       if (valores.password !== valores.confirmarPassword) {
         this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
@@ -147,7 +145,6 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
       }
     }
 
-    // ✅ VALIDAR CONTRASEÑA EN EDICIÓN (si se quiere cambiar)
     if (this.esEdicion && valores.password) {
       if (valores.password !== valores.confirmarPassword) {
         this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');

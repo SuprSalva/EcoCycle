@@ -1,267 +1,772 @@
 <section class="machine-showcase">
-    <app-bar [forceSolid]="true"></app-bar>
-  
-    <div class="container">
-      <div class="machine-grid">
-        
-        <div class="product-gallery">
-            <div class="thumbnails">
-                <button 
-                  type="button"
-                  class="thumb-btn" 
-                  [class.active]="mainImage() === '/maquina1.jpg'"
-                  (click)="changeImage('/maquina1.jpg')">
-                  Vista frontal
-                </button>
-                
-                <button 
-                  type="button"
-                  class="thumb-btn" 
-                  [class.active]="mainImage() === '/maquina2.jpg'"
-                  (click)="changeImage('/maquina2.jpg')">
-                  Vista lateral
-                </button>
-                
-                <button 
-                  type="button"
-                  class="thumb-btn" 
-                  [class.active]="mainImage() === 'img/machine-screen.jpg'"
-                  (click)="changeImage('img/machine-screen.jpg')">
-                  Pantalla táctil
-                </button>
-              </div>
+  <app-bar [forceSolid]="true"></app-bar>
 
-              <div class="main-preview">
-                <img [src]="mainImage()" alt="EcoCycle Smart RVM Hardware" id="mainProductImg">
-              </div>
+  <div class="container">
+    <div class="machine-grid">
+
+      <div class="product-gallery">
+        <div class="thumbnails">
+          <button type="button" class="thumb-btn" [class.active]="mainImage() === '/maquina1.jpg'"
+            (click)="changeImage('/maquina1.jpg')">
+            Vista frontal
+          </button>
+
+          <button type="button" class="thumb-btn" [class.active]="mainImage() === '/maquina2.jpg'"
+            (click)="changeImage('/maquina2.jpg')">
+            Vista lateral
+          </button>
+
+          <button type="button" class="thumb-btn" [class.active]="mainImage() === 'img/machine-screen.jpg'"
+            (click)="changeImage('img/machine-screen.jpg')">
+            Pantalla táctil
+          </button>
         </div>
-  
-        <div class="product-info">
-          <span class="badge">Hardware IoT</span>
-          <h2>EcoCycle Smart RVM v1.0</h2>
-          <p class="subtitle">Estación automatizada de reciclaje inverso con analítica en tiempo real.</p>
-          
-          <hr class="divider">
-  
-          <div class="specs-list">
-            <h3>Especificaciones Técnicas</h3>
-            <ul>
-              <li><strong>Clasificación Automatizada:</strong> Identificación selectiva de botellas PET y latas de aluminio mediante sensores de proximidad y peso.</li>
-              <li><strong>Interfaz de Usuario:</strong> Pantalla táctil interactiva con guías dinámicas para el usuario final.</li>
-              <li><strong>Ecosistema IoT:</strong> Conectividad en tiempo real para actualización de inventario de tolva, alertas de mantenimiento y control de recompensas.</li>
-              <li><strong>Capacidad Compacta:</strong> Optimizado para supermercados, universidades y espacios públicos de alto tráfico.</li>
-            </ul>
-          </div>
-  
-          <div class="actions">
-            <a href="javascript:void(0)" class="btn btn-primary">Cotizar Equipamiento</a>
-            <a href="javascript:void(0)" class="btn btn-secondary">Descargar Ficha Técnica (PDF)</a>
-          </div>
+
+        <div class="main-preview">
+          <img [src]="mainImage()" alt="EcoCycle Smart RVM Hardware" id="mainProductImg">
         </div>
-  
+      </div>
+
+      <div class="product-info">
+        <span class="badge">Hardware IoT</span>
+        <h2>EcoCycle Smart RVM v1.0</h2>
+        <p class="subtitle">Estación automatizada de reciclaje inverso con analítica en tiempo real.</p>
+
+        <hr class="divider">
+
+        <div class="specs-list">
+          <h3>Especificaciones Técnicas</h3>
+          <ul>
+            <li><strong>Clasificación Automatizada:</strong> Identificación selectiva de botellas PET y latas de
+              aluminio mediante sensores de proximidad y peso.</li>
+            <li><strong>Interfaz de Usuario:</strong> Pantalla táctil interactiva con guías dinámicas para el usuario
+              final.</li>
+            <li><strong>Ecosistema IoT:</strong> Conectividad en tiempo real para actualización de inventario de tolva,
+              alertas de mantenimiento y control de recompensas.</li>
+            <li><strong>Capacidad Compacta:</strong> Optimizado para supermercados, universidades y espacios públicos de
+              alto tráfico.</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" (click)="abrirCotizacion();">
+            Cotizar Equipamiento
+          </button>
+          <a href="#specs" class="btn btn-secondary">Descargar Ficha Técnica (PDF)</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" class="how-it-works">
+  <div class="container">
+
+    <div class="how-it-works__header">
+      <span class="badge">Paso a Paso</span>
+      <h2 class="section-title">¿Cómo funciona <span class="verde">nuestra plataforma?</span></h2>
+
+      <p class="section-subtitle">
+        Aprende cómo transformar tus residuos en un impacto ecológico real en 3 sencillos pasos.
+      </p>
+    </div>
+
+    <div class="steps-timeline">
+      <div class="step-item" *ngFor="let step of steps; let last = last">
+
+        <div class="step-item__image-preview">
+          <img [src]="step.imageUrl" [alt]="step.title" />
+        </div>
+
+        <div class="step-item__marker">
+          <div class="step-item__icon-box">
+            <svg class="step-item__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="step.iconPath" />
+            </svg>
+            <span class="step-item__number">{{ step.number }}</span>
+          </div>
+          <div *ngIf="!last" class="step-item__connector"></div>
+        </div>
+
+        <div class="step-item__content">
+          <h3 class="step-item__title">{{ step.title }}</h3>
+          <p class="step-item__text">{{ step.description }}</p>
+        </div>
+
       </div>
     </div>
-  </section>
-  
-  <section class="products-section">
-    <div class="container">
-      
-      <div class="products-header">
-        <h2 class="products-title">Nuestros Productos</h2>
-        <div class="products-line"></div>
-        <p class="products-subtitle">
-          Descubre nuestras soluciones tecnológicas e innovadoras diseñadas para facilitar el reciclaje y transformar tus hábitos.
+
+  </div>
+</section>
+
+<section class="products-section">
+  <div class="container">
+
+    <div class="products-header">
+      <h2 class="products-title">Nuestros Productos</h2>
+      <div class="products-line"></div>
+      <p class="products-subtitle">
+        Descubre nuestras soluciones tecnológicas e innovadoras diseñadas para facilitar el reciclaje y transformar tus
+        hábitos.
+      </p>
+    </div>
+
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=600"
+            alt="EcoCycle Smart Eco-Bin">
+        </div>
+        <div class="product-content">
+          <h3 class="product-name">EcoCycle Smart Eco-Bin</h3>
+          <p class="product-description">
+            Nuestra máquina de reciclaje inteligente automatizada. Clasifica botellas de PET al instante y genera
+            recompensas directas para el usuario de forma transparente.
+          </p>
+          <button class="product-btn">Saber más</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=600"
+            alt="EcoCycle App Premium">
+        </div>
+        <div class="product-content">
+          <h3 class="product-name">EcoCycle App Premium</h3>
+          <p class="product-description">
+            Llevas el control de tu impacto ambiental. Monitorea tus botellas recicladas, consulta tus puntos acumulados
+            y canjea beneficios exclusivos.
+          </p>
+          <button class="product-btn">Saber más</button>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-image">
+          <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600"
+            alt="EcoKit Empresarial">
+        </div>
+        <div class="product-content">
+          <h3 class="product-name">EcoKit Empresarial</h3>
+          <p class="product-description">
+            La solución perfecta para escuelas y oficinas. Incluye un sistema modular de recolección y acceso a talleres
+            interactivos sobre economía circular.
+          </p>
+          <button class="product-btn">Saber más</button>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="section-divider">
+  </div>
+</section>
+<section class="products-feedback">
+  <div class="container">
+    <div class="feedback-grid">
+
+      <div class="comment-form-container">
+        <span class="feedback-badge">Feedback</span>
+        <h3>Tu opinión nos impulsa</h3>
+        <p class="form-subtitle">
+          Comparte tu experiencia con nuestro ecosistema de reciclaje automatizado.
         </p>
-      </div>
-    
-      <div class="products-grid">
-        
-        <div class="product-card">
-          <div class="product-image">
-            <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=600" alt="EcoCycle Smart Eco-Bin">
+
+        <form class="feedback-form" [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()">
+
+          <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="email" formControlName="email" placeholder="correo@ejemplo.com">
           </div>
-          <div class="product-content">
-            <h3 class="product-name">EcoCycle Smart Eco-Bin</h3>
-            <p class="product-description">
-              Nuestra máquina de reciclaje inteligente automatizada. Clasifica botellas de PET al instante y genera recompensas directas para el usuario de forma transparente.
-            </p>
-            <button class="product-btn">Saber más</button>
+
+          <div class="form-group">
+            <label>Calificación</label>
+            <div class="stars-selector">
+              <span *ngFor="let estrella of [1, 2, 3, 4, 5]" class="star-icon"
+                [class.active]="comentarioForm.get('estrellas')?.value >= estrella"
+                (click)="comentarioForm.get('estrellas')?.setValue(estrella)">
+                ★
+              </span>
+            </div>
           </div>
-        </div>
-    
-        <div class="product-card">
-          <div class="product-image">
-            <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=600" alt="EcoCycle App Premium">
-          </div>
-          <div class="product-content">
-            <h3 class="product-name">EcoCycle App Premium</h3>
-            <p class="product-description">
-              Llevas el control de tu impacto ambiental. Monitorea tus botellas recicladas, consulta tus puntos acumulados y canjea beneficios exclusivos.
-            </p>
-            <button class="product-btn">Saber más</button>
-          </div>
-        </div>
-    
-        <div class="product-card">
-          <div class="product-image">
-            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600" alt="EcoKit Empresarial">
-          </div>
-          <div class="product-content">
-            <h3 class="product-name">EcoKit Empresarial</h3>
-            <p class="product-description">
-              La solución perfecta para escuelas y oficinas. Incluye un sistema modular de recolección y acceso a talleres interactivos sobre economía circular.
-            </p>
-            <button class="product-btn">Saber más</button>
-          </div>
-        </div>
-    
-      </div>
-  
-      <hr class="section-divider">
-    </div>
-    </section>
-    <section class="products-feedback">
-      <div class="container">
-        <div class="feedback-grid">
-    
-          <div class="comment-form-container">
-            <span class="feedback-badge">Feedback</span>
-            <h3>Tu opinión nos impulsa</h3>
-            <p class="form-subtitle">
-              Comparte tu experiencia con nuestro ecosistema de reciclaje automatizado.
-            </p>
-    
-            <form class="feedback-form" [formGroup]="comentarioForm" (ngSubmit)="enviarComentario()">
-    
-              <div class="form-group">
-                <label>Correo electrónico</label>
-                <input
-                  type="email"
-                  formControlName="email"
-                  placeholder="correo@ejemplo.com">
-              </div>
-    
-              <div class="form-group">
-                <label>Calificación</label>
-                <div class="stars-selector">
-                  <span 
-                    *ngFor="let estrella of [1, 2, 3, 4, 5]" 
-                    class="star-icon"
-                    [class.active]="comentarioForm.get('estrellas')?.value >= estrella"
-                    (click)="comentarioForm.get('estrellas')?.setValue(estrella)">
-                    ★
-                  </span>
-                </div>
-              </div>
-    
-              <div class="form-group">
-                <label>Mensaje</label>
-                <textarea
-                  rows="4"
-                  formControlName="mensaje"
-                  placeholder="Escribe tu comentario...">
+
+          <div class="form-group">
+            <label>Mensaje</label>
+            <textarea rows="4" formControlName="mensaje" placeholder="Escribe tu comentario...">
                 </textarea>
-              </div>
-    
-              <button
-                type="submit"
-                class="btn-submit"
-                [disabled]="comentarioForm.invalid || cargando">
-                {{ cargando ? 'Enviando...' : 'Enviar opinión' }}
-              </button>
-    
-            </form>
           </div>
-    
-          <div class="comments-carousel-wrapper">
-            <div class="carousel-header">
-              <h4>Opiniones de la Comunidad</h4>
-            </div>
-            
-            <div *ngIf="cargandoComentarios" style="text-align: center; padding: 20px; color: #666;">
-              <p>Cargando opiniones de EcoCycle 🌱...</p>
-            </div>
-          
-            <div class="comments-carousel" *ngIf="!cargandoComentarios && listaComentarios.length > 0">
-              <div class="comment-card" *ngFor="let comentario of listaComentarios">
-                <div class="card-top">
-                  <div class="avatar">{{ obtenerIniciales(comentario.email) }}</div>
-                  <div class="user-meta">
-                    <h5>{{ formatearEmail(comentario.email) }}</h5>
-                    <span>Miembro de la Comunidad</span>
-                  </div>
-                </div>
-                <p class="comment-text">
-                  "{{ comentario.mensaje }}"
-                </p>
-                
-                <div class="stars" style="color: #ffc107;">
-                  {{ '★'.repeat(comentario.estrellas) }}{{ '☆'.repeat(5 - comentario.estrellas) }}
-                </div>
-          
-                <div class="admin-reply-box" *ngIf="comentario.respuestaAdmin" 
-                     style="margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 6px; font-size: 0.9em; border-left: 4px solid #0D631B;">
-                  <p style="margin: 0; color: #0D631B; font-weight: bold; font-size: 12px;">Respuesta de EcoCycle 🌱:</p>
-                  <p style="margin: 4px 0 0 0; font-style: italic; color: #2e7d32;">"{{ comentario.respuestaAdmin }}"</p>
-                </div>
+
+          <button type="submit" class="btn-submit" [disabled]="comentarioForm.invalid || cargando">
+            {{ cargando ? 'Enviando...' : 'Enviar opinión' }}
+          </button>
+
+        </form>
+      </div>
+
+      <div class="comments-carousel-wrapper">
+        <div class="carousel-header">
+          <h4>Opiniones de la Comunidad</h4>
+        </div>
+
+        <div *ngIf="cargandoComentarios" style="text-align: center; padding: 20px; color: #666;">
+          <p>Cargando opiniones de EcoCycle ...</p>
+        </div>
+
+        <div class="comments-carousel" *ngIf="!cargandoComentarios && listaComentarios.length > 0">
+          <div class="comment-card" *ngFor="let comentario of listaComentarios">
+            <div class="card-top">
+              <div class="avatar">{{ obtenerIniciales(comentario.email) }}</div>
+              <div class="user-meta">
+                <h5>{{ formatearEmail(comentario.email) }}</h5>
+                <span>Miembro de la Comunidad</span>
               </div>
             </div>
-          
-            <div *ngIf="!cargandoComentarios && listaComentarios.length === 0" style="text-align: center; padding: 20px; color: #999;">
-              <p>Aún no hay opiniones publicadas. ¡Sé el primero en calificar tu Smart RVM!</p>
+            <p class="comment-text">
+              "{{ comentario.mensaje }}"
+            </p>
+
+            <div class="stars" style="color: #ffc107;">
+              {{ '★'.repeat(comentario.estrellas) }}{{ '☆'.repeat(5 - comentario.estrellas) }}
+            </div>
+
+            <div class="admin-reply-box" *ngIf="comentario.respuestaAdmin"
+              style="margin-top: 12px; padding: 10px; background: #e8f5e9; border-radius: 6px; font-size: 0.9em; border-left: 4px solid #0D631B;">
+              <p style="margin: 0; color: #0D631B; font-weight: bold; font-size: 12px;">Respuesta de EcoCycle 🌱:</p>
+              <p style="margin: 4px 0 0 0; font-style: italic; color: #2e7d32;">"{{ comentario.respuestaAdmin }}"</p>
             </div>
           </div>
-          
+        </div>
+
+        <div *ngIf="!cargandoComentarios && listaComentarios.length === 0"
+          style="text-align: center; padding: 20px; color: #999;">
+          <p>Aún no hay opiniones publicadas. ¡Sé el primero en calificar tu Smart RVM!</p>
         </div>
       </div>
-    </section>
 
-  <footer class="footer">
+    </div>
+  </div>
+</section>
 
-    <div class="footer-container">
+<footer class="footer">
 
-        <div class="footer-logo">
-            <h2>EcoCycle</h2>
-            <p>
-                Resguardando y cuidando el medio ambiente.
-            </p>
-        </div>
+  <div class="footer-container">
 
-        <div class="footer-links">
-
-            <h3>Enlaces</h3>
-
-            <a href="index.html">Inicio</a>
-            <a href="productos.html">Productos</a>
-            <a href="nosotros.html">Nosotros</a>
-            <a href="contacto.html">Contacto</a>
-
-        </div>
-
-        <div class="footer-contacto">
-
-            <h3>Contacto</h3>
-
-            <p><i class="fa-solid fa-location-dot"></i> Ciudad, México</p>
-            <p><i class="fa-solid fa-phone"></i>+52 123 456 7890</p>
-            <p><i class="fa-solid fa-envelope"></i> contactoEcocycle.com</p>
-
-        </div>
-
-        <div class="footer-social">
-
-            <h3>Síguenos</h3>
-
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-tiktok"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
+    <div class="footer-logo">
+      <h2>EcoCycle</h2>
+      <p>
+        Resguardando y cuidando el medio ambiente.
+      </p>
     </div>
 
-    <div class="footer-bottom">
-        © 2026 EcoCycle| Todos los derechos reservados.
+    <div class="footer-links">
+
+      <h3>Enlaces</h3>
+
+      <a href="index.html">Inicio</a>
+      <a href="productos.html">Productos</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+
     </div>
+
+    <div class="footer-contacto">
+
+      <h3>Contacto</h3>
+
+      <p><i class="fa-solid fa-location-dot"></i> Ciudad, México</p>
+      <p><i class="fa-solid fa-phone"></i>+52 123 456 7890</p>
+      <p><i class="fa-solid fa-envelope"></i> contactoEcocycle.com</p>
+
+    </div>
+
+    <div class="footer-social">
+
+      <h3>Síguenos</h3>
+
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 EcoCycle| Todos los derechos reservados.
+  </div>
 </footer>
+
+@if (mostrarModalCotizacion) {
+
+<div class="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+  <div class="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+    (click)="cerrarCotizacion()">
+  </div>
+
+  <div
+    class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-gray-200 max-h-[90vh] flex flex-col overflow-hidden">
+
+    <div class=" text-gray-600 hrink-0 relative">
+      <div class="flex items-center gap-4">
+
+        <div>
+          <h2 class="pl-12 pt-10 text-2xl md:text-3xl font-bold leading-tight">
+            Solicita tu Cotización
+          </h2>
+          <p class="pl-12 text-gray-600 text-m md:text-base mt-1">
+            Responde unas preguntas y prepararemos una propuesta personalizada.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pb-2 px-12 mb-2">
+      <div class="flex justify-between text-xs md:text-sm mb-2">
+        <span class="font-medium text-gray-600">
+          Paso {{currentStep}} de {{totalSteps}}
+        </span>
+        <span class="font-semibold text-emerald-600">
+          {{progreso}}%
+        </span>
+      </div>
+
+      <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+          [style.width.%]="progreso">
+        </div>
+      </div>
+    </div>
+
+
+    <div class="overflow-y-auto flex-1 px-6 md:px-12 py-2">
+
+      @if(!cotizacionEnviada){
+
+      <form [formGroup]="cotizacionForm" (ngSubmit)="enviarCotizacion()">
+
+        @if (currentStep == 1) {
+        <div class="animate-fade">
+          <div class="mb-6">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800">
+              Cuéntanos sobre tu proyecto
+            </h3>
+            <p class="text-gray-500 text-sm mt-1">
+              Selecciona el tipo de proyecto para recomendarte la mejor solución.
+            </p>
+          @if(cotizacionForm.get('tipoProyecto')?.touched && cotizacionForm.get('tipoProyecto')?.invalid){
+            <p class="text-red-500 mt-4 text-xs md:text-sm">
+              Selecciona una opción para continuar.
+            </p>
+            }
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <label class="relative cursor-pointer group">
+              <input type="radio" class="hidden" value="Universidad" formControlName="tipoProyecto">
+              <div class="border-2 rounded-2xl p-5 transition-all duration-300 hover:border-emerald-500 hover:shadow-md"
+                [ngClass]="{
+                        'border-emerald-600 bg-emerald-50 shadow-md': cotizacionForm.get('tipoProyecto')?.value == 'Universidad',
+                        'border-gray-200': cotizacionForm.get('tipoProyecto')?.value != 'Universidad'
+                      }">
+                <div
+                  class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-3">
+                  <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h4 class="font-bold text-base md:text-lg">Universidad</h4>
+                <p class="text-xs md:text-sm text-gray-500 mt-1">Ideal para campus, escuelas y centros educativos.</p>
+                @if(cotizacionForm.get('tipoProyecto')?.value == 'Universidad'){
+                <div class="absolute top-4 right-4 text-emerald-600 font-bold"></div>
+                }
+              </div>
+            </label>
+
+            <label class="relative cursor-pointer group">
+              <input type="radio" class="hidden" value="Empresa" formControlName="tipoProyecto">
+              <div class="border-2 rounded-2xl p-5 transition-all duration-300 hover:border-emerald-500 hover:shadow-md"
+                [ngClass]="{
+                        'border-emerald-600 bg-emerald-50 shadow-md': cotizacionForm.get('tipoProyecto')?.value == 'Empresa',
+                        'border-gray-200': cotizacionForm.get('tipoProyecto')?.value != 'Empresa'
+                      }">
+                <div
+                  class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-3">
+                  <i class="fa-solid fa-building"></i>
+                </div>
+                <h4 class="font-bold text-base md:text-lg">Empresa</h4>
+                <p class="text-xs md:text-sm text-gray-500 mt-1">Oficinas, industrias o programas de responsabilidad
+                  social.</p>
+                @if(cotizacionForm.get('tipoProyecto')?.value == 'Empresa'){
+                <div class="absolute top-4 right-4 text-emerald-600 font-bold"></div>
+                }
+              </div>
+            </label>
+
+            <label class="relative cursor-pointer group">
+              <input type="radio" class="hidden" value="Gobierno" formControlName="tipoProyecto">
+              <div class="border-2 rounded-2xl p-5 transition-all duration-300 hover:border-emerald-500 hover:shadow-md"
+                [ngClass]="{
+                        'border-emerald-600 bg-emerald-50 shadow-md': cotizacionForm.get('tipoProyecto')?.value == 'Gobierno',
+                        'border-gray-200': cotizacionForm.get('tipoProyecto')?.value != 'Gobierno'
+                      }">
+
+                <div
+                  class="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xl mb-3">
+                  <i class="fa-solid fa-landmark"></i>
+                </div>
+                <h4 class="font-bold text-base md:text-lg">Gobierno</h4>
+                <p class="text-xs md:text-sm text-gray-500 mt-1">Municipios, dependencias y espacios públicos.</p>
+                @if(cotizacionForm.get('tipoProyecto')?.value == 'Gobierno'){
+                <div class="absolute top-4 right-4 text-emerald-600 font-bold"></div>
+                }
+              </div>
+            </label>
+
+            <!-- Otro -->
+            <label class="relative cursor-pointer group">
+              <input type="radio" class="hidden" value="Otro" formControlName="tipoProyecto">
+              <div class="border-2 rounded-2xl p-5 transition-all duration-300 hover:border-emerald-500 hover:shadow-md"
+                [ngClass]="{
+                        'border-emerald-600 bg-emerald-50 shadow-md': cotizacionForm.get('tipoProyecto')?.value == 'Otro',
+                        'border-gray-200': cotizacionForm.get('tipoProyecto')?.value != 'Otro'
+                      }">
+                <div
+                  class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-3">
+                  <i class="fa-solid fa-globe"></i>
+                </div>
+                <h4 class="font-bold text-base md:text-lg">Otro proyecto</h4>
+                <p class="text-xs md:text-sm text-gray-500 mt-1">Si tu proyecto no entra en las categorías anteriores.
+                </p>
+                @if(cotizacionForm.get('tipoProyecto')?.value == 'Otro'){
+                <div class="absolute top-4 right-4 text-emerald-600 font-bold"></div>
+                }
+              </div>
+            </label>
+          </div>
+        </div>
+        }
+
+        <!-- PASO 2 -->
+        @if(currentStep == 2){
+        <div class="animate-fade">
+          <div class="mb-6">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Configura tu proyecto</h3>
+            <p class="text-gray-500 text-sm mt-1">Esta información nos ayudará a preparar una propuesta adecuada.</p>
+          </div>
+
+          <div class="mb-6">
+            <label class="font-semibold text-gray-700 block mb-2 text-sm md:text-base">
+              ¿Cuántas máquinas necesitas?
+            </label>
+            <input type="number" formControlName="cantidadMaquinas" min="1"
+              class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm md:text-base">Ciudad</label>
+              <input type="text" formControlName="ciudad" placeholder="Ej. León"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm md:text-base">Estado</label>
+              <input type="text" formControlName="estado" placeholder="Ej. Guanajuato"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="font-semibold text-gray-700 block mb-3 text-sm md:text-base">
+              ¿Qué materiales deseas reciclar?
+            </label>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+              @for(material of materialesDisponibles; track material){
+              <button type="button" 
+                (click)="toggleMaterial(material)"
+                class="tarjeta-material" 
+                [class.seleccionado]="materialSeleccionado(material)">
+          
+                <!-- Check de selección activa -->
+                @if(materialSeleccionado(material)){
+                  <div class="badge-check">
+                    ✓
+                  </div>
+                }
+          
+                <!-- Contenedor del icono circular -->
+                <div class="icono-circulo">
+                  <i class="fa-solid fa-recycle"></i>
+                </div>
+          
+                <!-- Nombre del material -->
+                <span class="texto-material">
+                  {{material}}
+                </span>
+              </button>
+              }
+            </div>
+          </div>
+        </div>
+        }
+
+        @if(currentStep == 3){
+        <div class="animate-fade">
+          <div class="mb-6">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Háblanos sobre tu proyecto</h3>
+            <p class="text-gray-500 text-sm mt-1">Entre más información tengamos, mejor podremos recomendarte la
+              solución ideal.</p>
+          </div>
+
+          <!-- Objetivo -->
+          <div class="mb-6">
+            <label class="block font-semibold text-gray-700 mb-3 text-sm md:text-base">
+              ¿Cuál es el objetivo principal?
+            </label>
+            <div class="grid md:grid-cols-2 gap-3">
+              <label class="cursor-pointer">
+                <input class="hidden" type="radio" value="Programa Ambiental" formControlName="objetivo">
+                <div class="border-2 rounded-2xl p-4 transition" [ngClass]="{
+                          'border-emerald-600 bg-emerald-50 shadow': cotizacionForm.get('objetivo')?.value == 'Programa Ambiental',
+                          'border-gray-200 hover:border-emerald-500': cotizacionForm.get('objetivo')?.value != 'Programa Ambiental'
+                        }">
+                  
+                  <h4 class="font-bold text-sm md:text-base mt-1">Programa Ambiental</h4>
+                  <p class="text-xs text-gray-500 mt-1">Fomentar el reciclaje dentro de la organización.</p>
+                </div>
+              </label>
+
+              <label class="cursor-pointer">
+                <input class="hidden" type="radio" value="Incentivos" formControlName="objetivo">
+                <div class="border-2 rounded-2xl p-4 transition" [ngClass]="{
+                          'border-emerald-600 bg-emerald-50 shadow': cotizacionForm.get('objetivo')?.value == 'Incentivos',
+                          'border-gray-200 hover:border-emerald-500': cotizacionForm.get('objetivo')?.value != 'Incentivos'
+                        }">
+                  
+                  <h4 class="font-bold text-sm md:text-base mt-1">Programa de Incentivos</h4>
+                  <p class="text-xs text-gray-500 mt-1">Motivar a los usuarios mediante recompensas.</p>
+                </div>
+              </label>
+
+              <label class="cursor-pointer">
+                <input class="hidden" type="radio" value="Responsabilidad Social" formControlName="objetivo">
+                <div class="border-2 rounded-2xl p-4 transition" [ngClass]="{
+                          'border-emerald-600 bg-emerald-50 shadow': cotizacionForm.get('objetivo')?.value == 'Responsabilidad Social',
+                          'border-gray-200 hover:border-emerald-500': cotizacionForm.get('objetivo')?.value != 'Responsabilidad Social'
+                        }">
+                  
+                  <h4 class="font-bold text-sm md:text-base mt-1">Responsabilidad Social</h4>
+                  <p class="text-xs text-gray-500 mt-1">Fortalecer las iniciativas ESG o de sostenibilidad.</p>
+                </div>
+              </label>
+
+              <label class="cursor-pointer">
+                <input class="hidden" type="radio" value="Otro" formControlName="objetivo">
+                <div class="border-2 rounded-2xl p-4 transition" [ngClass]="{
+                          'border-emerald-600 bg-emerald-50 shadow': cotizacionForm.get('objetivo')?.value == 'Otro',
+                          'border-gray-200 hover:border-emerald-500': cotizacionForm.get('objetivo')?.value != 'Otro'
+                        }">
+                  
+                  <h4 class="font-bold text-sm md:text-base mt-1">Otro objetivo</h4>
+                  <p class="text-xs text-gray-500 mt-1">Cuéntanos cuál es tu necesidad.</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Personas e Implementación -->
+          <div class="grid md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-2 text-sm md:text-base">Personas impactadas</label>
+              <input type="number" formControlName="personasImpactadas" placeholder="Ej. 1200"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block font-semibold text-gray-700 mb-2 text-sm md:text-base">¿Cuándo deseas
+                implementarlo?</label>
+              <select formControlName="fechaImplementacion"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+                <option value="">Selecciona una opción</option>
+                <option>Lo antes posible</option>
+                <option>1 a 3 meses</option>
+                <option>3 a 6 meses</option>
+                <option>Más de 6 meses</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Comentarios -->
+          <div>
+            <label class="block font-semibold text-gray-700 mb-2 text-sm md:text-base">Cuéntanos más sobre tu
+              proyecto</label>
+            <textarea rows="3" formControlName="descripcion"
+              placeholder="Ej. Buscamos instalar dos máquinas dentro del campus universitario..."
+              class="w-full rounded-2xl border border-gray-300 p-3.5 resize-none focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+          </div>
+        </div>
+        }
+
+        <!-- PASO 4 -->
+        @if(currentStep == 4){
+        <div class="animate-fade">
+          <div class="mb-6">
+            <h3 class="text-xl md:text-2xl font-bold text-gray-800">Ya casi terminamos </h3>
+            <p class="text-gray-500 text-sm mt-1">Déjanos tus datos para enviarte una propuesta personalizada.</p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm">Nombre completo *</label>
+              <input type="text" formControlName="nombre" placeholder="Juan Pérez"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm">Empresa</label>
+              <input type="text" formControlName="empresa" placeholder="EcoCycle"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm">Cargo</label>
+              <input type="text" formControlName="cargo" placeholder="Gerente de Sustentabilidad"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="font-semibold text-gray-700 block mb-2 text-sm">Correo electrónico *</label>
+              <input type="email" formControlName="correo" placeholder="correo@empresa.com"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+            <div class="md:col-span-2">
+              <label class="font-semibold text-gray-700 block mb-2 text-sm">Teléfono / WhatsApp *</label>
+              <input type="text" formControlName="telefono" placeholder="+52 477 123 4567"
+                class="w-full rounded-xl border border-gray-300 p-3.5 focus:ring-2 focus:ring-emerald-500 outline-none">
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h4 class="font-semibold text-gray-700 mb-3 text-sm">
+              ¿Cómo prefieres que te contactemos?
+            </h4>
+          
+            <div class="grid grid-cols-3 gap-3">
+          
+              <!-- WhatsApp -->
+              <label class="cursor-pointer">
+                <input type="radio" class="hidden" formControlName="medioContacto" value="WhatsApp">
+                <div class="tarjeta-contacto whatsapp" 
+                  [class.seleccionado]="cotizacionForm.get('medioContacto')?.value == 'WhatsApp'">
+                  
+                  <div class="icono-circulo">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </div>
+                  <span class="texto-contacto">WhatsApp</span>
+                </div>
+              </label>
+          
+              <!-- Llamada -->
+              <label class="cursor-pointer">
+                <input type="radio" class="hidden" formControlName="medioContacto" value="Llamada">
+                <div class="tarjeta-contacto llamada" 
+                  [class.seleccionado]="cotizacionForm.get('medioContacto')?.value == 'Llamada'">
+                  
+                  <div class="icono-circulo">
+                    <i class="fa-solid fa-phone"></i>
+                  </div>
+                  <span class="texto-contacto">Llamada</span>
+                </div>
+              </label>
+          
+              <!-- Correo -->
+              <label class="cursor-pointer">
+                <input type="radio" class="hidden" formControlName="medioContacto" value="Correo">
+                <div class="tarjeta-contacto correo" 
+                  [class.seleccionado]="cotizacionForm.get('medioContacto')?.value == 'Correo'">
+                  
+                  <div class="icono-circulo">
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+                  <span class="texto-contacto">Correo</span>
+                </div>
+              </label>
+          
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" formControlName="aceptaAviso" class="mt-1 accent-emerald-600">
+              <span class="text-xs md:text-sm text-gray-600">
+                Acepto el tratamiento de mis datos personales y el aviso de privacidad para recibir mi cotización.
+              </span>
+            </label>
+          </div>
+        </div>
+        }
+
+      </form>
+
+      } @else {
+
+      <div class="py-2 text-center animate-fade">
+        <div class="mx-auto h-20 w-20 rounded-full bg-emerald-100 flex items-center justify-center">
+          <div
+            class="h-14 w-14 rounded-full bg-emerald-600 text-white flex items-center justify-center text-3xl font-bold">
+            ✓
+          </div>
+        </div>
+
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mt-6">¡Solicitud enviada!</h2>
+        <p class="text-gray-600 text-m mt-3 leading-6 max-w-lg mx-auto">
+          Hemos recibido correctamente tu solicitud. Uno de nuestros asesores revisará la información de tu proyecto y
+          se pondrá en contacto contigo pronto.
+        </p>
+
+        <div class="my-6  rounded-2xl bg-emerald-50 border border-emerald-200 p-4 max-w-md mx-auto">
+          <div class="font-semibold text-emerald-700 text-sm">Tiempo estimado de respuesta</div>
+          <div class="text-emerald-600 text-xs mt-1">Menos de 24 horas hábiles.</div>
+        </div>
+
+        <button type="button" (click)="cerrarCotizacion()"
+          class="btn_enviar">
+          Finalizar
+        </button>
+      </div>
+
+      }
+
+    </div>
+
+    <!-- Footer de Botones Fijo (Solo visible mientras no esté enviada la cotización) -->
+    @if(!cotizacionEnviada){
+    <div class="border-t border-gray-200 px-6 md:px-8 py-4 flex justify-between items-center bg-gray-50 shrink-0">
+      <div>
+        @if(currentStep > 1){
+        <button type="button" (click)="currentStep = currentStep - 1" class="btn_cancelar">
+          <span>Anterior</span>
+        </button>
+        } @else {
+        <button type="button" (click)="cerrarCotizacion()" class="btn_cancelar">
+          Cancelar
+        </button>
+        }
+      </div>
+
+      <div>
+        @if(currentStep < totalSteps){ <button type="button" (click)="siguientePaso()"
+        class="btn_enviar">
+          Siguiente
+          </button>
+          } @else {
+          <button type="submit" (click)="enviarCotizacion()" [disabled]="cotizacionForm.invalid"
+            class="btn_enviar">
+            Enviar Cotización
+          </button>
+          }
+      </div>
+    </div>
+    }
+
+  </div>
+</div>
+
+}

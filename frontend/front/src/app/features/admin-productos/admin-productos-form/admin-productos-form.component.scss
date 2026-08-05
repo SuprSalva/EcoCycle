@@ -1,0 +1,46 @@
+.step-circle{
+
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#e9ecef;
+    color:#6c757d;
+    font-size:20px;
+    margin:auto;
+    transition:.25s;
+    }
+    
+    .step-circle.active{
+    background:var(--primary-color);
+    color:white;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    }
+    
+    .step-line{
+    flex:1;
+    height:3px;
+    background:#dee2e6;
+    margin:0 12px;
+    margin-top:25px;
+    }
+    
+    .btn-action{
+    transition:.25s;
+    }
+    
+    .btn-action:hover{
+    transform:scale(1.08);
+    }
+    
+    .table tbody tr{
+    transition:.25s;
+    }
+    
+    .table tbody tr:hover{
+    background:#f8fafc;
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,0,0,.05);
+    }

@@ -11,7 +11,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   let authReq = req;
   
-  // No agregar token para el endpoint de login
   if (!req.url.includes('/Auth/login') && !req.headers.has('Authorization') && token) {
     authReq = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
   }

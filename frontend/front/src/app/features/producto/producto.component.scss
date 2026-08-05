@@ -7,12 +7,197 @@ $color-bg-card: #f9fafb;
 $border-color: #e5e7eb;
 $border-radius: 1rem;
 
-// 1. Estilos Showcase Hardware Mágnum
+
+.btn_cancelar {
+  display: inline-block;
+  padding: 10px 32px;
+  font-weight: 600;
+  border-radius: 16px;
+  border: 0.5px solid rgb(204, 203, 203);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  background: white;
+  color:rgb(54, 54, 54);
+  }
+
+.btn_cancelar:hover{
+  background: rgb(204, 203, 203);
+}
+
+
+.btn_enviar {
+  display: inline-block;
+  padding: 10px 32px;
+  font-weight: 600;
+  border-radius: 16px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  background-color: #14A36D;
+  color: #ffffff;
+}
+
+.btn_enviar:hover{
+  background-color: #087e51;
+}
+
+/* Estilos para las tarjetas de materiales */
+.tarjeta-material {
+  position: relative;
+  border-radius: 20px; /* Bordes suavemente redondeados */
+  border: 2px solid #e5e7eb;
+  background-color: #ffffff;
+  padding: 0.875rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    border-color: #6ee7b7;
+    background-color: rgba(249, 250, 251, 0.5);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  /* Estado Seleccionado */
+  &.seleccionado {
+    border-color: #059669;
+    background-color: rgba(236, 253, 245, 0.7);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #064e3b;
+  }
+
+  /* Badge Check */
+  .badge-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #059669;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+  }
+
+  .icono-circulo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    background-color: #d1fae5;
+    color: #059669;
+    transition: background-color 0.2s ease;
+  }
+
+  &.seleccionado .icono-circulo {
+    background-color: #059669;
+    color: #ffffff;
+  }
+
+  .texto-material {
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.2;
+  }
+}
+
+/* Estilos para los botones de medio de contacto */
+.tarjeta-contacto {
+  position: relative;
+  border-radius: 20px; /* Bordes bien redondeados */
+  border: 2px solid #e5e7eb;
+  background-color: #ffffff;
+  padding: 0.875rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    border-color: #a7f3d0;
+    background-color: rgba(249, 250, 251, 0.6);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  /* Estado Seleccionado */
+  &.seleccionado {
+    border-color: #059669;
+    background-color: rgba(236, 253, 245, 0.7);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Círculo del icono base */
+  .icono-circulo {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+    transition: all 0.2s ease;
+  }
+
+  /* Colores según el tipo de contacto (Estado Normal) */
+  &.whatsapp .icono-circulo {
+    background-color: #dcfce7;
+    color: #16a34a;
+  }
+
+  &.llamada .icono-circulo {
+    background-color: #dbeafe;
+    color: #2563eb;
+  }
+
+  &.correo .icono-circulo {
+    background-color: #f3e8ff;
+    color: #9333ea;
+  }
+
+  /* Estado Seleccionado: Icono a verde sólido */
+  &.seleccionado .icono-circulo {
+    background-color: #059669;
+    color: #ffffff;
+  }
+
+  /* Texto */
+  .texto-contacto {
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #374151;
+  }
+
+  &.seleccionado .texto-contacto {
+    color: #064e3b;
+  }
+}
+
 .machine-showcase {
     width: 100%;
     box-sizing: border-box;
     background-color: #ffffff;
-    padding: 7rem 0 4rem 0;
+    padding: 8rem 0 4rem 0;
     scroll-margin-top: 80px;
     
 
@@ -23,6 +208,7 @@ $border-radius: 1rem;
     padding: 0 1rem;
     box-sizing: border-box;
   }
+
   .machine-grid {
     display: grid;
     grid-template-columns: 1.2fr 1fr;
@@ -242,6 +428,7 @@ $border-radius: 1rem;
 
 // 2. Estilos Sección Catálogo de Productos Inferior
 .products-section {
+  box-shadow:0 8px 30px rgba(0,0,0,.35);
   padding: 5rem 0;
   border-top: 1px solid $border-color;
   background: #f3f3f3;
@@ -364,6 +551,7 @@ $border-radius: 1rem;
 
 
   .products-feedback {
+
     padding: 5rem 0;
     width: 100%;
     background: #ffffff;
@@ -654,5 +842,204 @@ $border-radius: 1rem;
   
   .star-icon:hover,
   .star-icon.active {
-    color: #ffca28; /* Color dorado brillante para estrellas seleccionadas/activas */
+    color: #ffca28;
   }
+
+  
+.how-it-works {
+  background-color: #ffffff;
+  padding-bottom: 5rem;
+
+  &__header {
+    text-align: center;
+    max-width: 650px;
+    margin: 0 auto 4rem auto;
+
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #3cce79;
+      background-color: #e2ffe0;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .section-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+    }
+
+    
+    .verde {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #1e966a;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+  }
+}
+
+.steps-timeline {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+
+  @media (max-width: 868px) {
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+}
+
+.step-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  @media (max-width: 868px) {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  &__image-preview {
+    width: 100%;
+    max-width: 340px;
+    height: 240px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    border: 1px solid #e2e8f0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+  }
+
+  &__marker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  &__icon-box {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #1d966d;
+    border: 1px solid #1d966d;
+    color:#ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: all 0.3s ease;
+  }
+
+  &__icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  &__number {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: #3cce79;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__connector {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background-color: #e2e8f0;
+    z-index: 1;
+    transform: translateY(-50%);
+
+    @media (max-width: 868px) {
+      display: none;
+    }
+  }
+  &:hover {
+    .step-item__image-preview {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.08);
+
+      img {
+        transform: scale(1.05);
+      }
+    }
+
+    .step-item__icon-box {
+      background-color: #13684c;
+      color: #ffffff;
+      border-color: #13684c;
+    }
+  }
+
+  &__content {
+    max-width: 300px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 20px -5px rgba(0, 0, 0, 0.08);
+      }    
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+  }
+
+  &__text {
+    font-size: 0.9rem;
+    color: #64748b;
+    line-height: 1.5;
+  }
+}

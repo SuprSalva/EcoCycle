@@ -1,5 +1,4 @@
 <div class="dashboard-container">
-
   
   <div class="tarjetas-grid">
 
@@ -55,9 +54,9 @@
 
       <div class="card-header">
         <div>
-          <h3>Consola de Administración de comentarios y ordenes</h3>
+          <h3>Consola de Administración de ordenes</h3>
           <span>
-            Monitoreo de flujos comerciales, estatus de entrega y feedback de clientes
+            Monitoreo de flujos comerciales, estatus de entrega
           </span>
         </div>
       </div>
@@ -149,23 +148,14 @@
             <tr>
 
               <th>#</th>
-
               <th>Producto</th>
-
               <th>Cliente</th>
-
               <th>Fecha</th>
-
               <th>Total</th>
-
               <th>Estado</th>
-
               <th>Opinión</th>
-
               <th>Acciones</th>
-
             </tr>
-
           </thead>
 
           <tbody>
@@ -173,27 +163,17 @@
             <tr *ngFor="let compra of comprasFiltradas; let i=index">
 
               <td>{{i+1}}</td>
-
               <td>Producto</td>
-
               <td>Cliente</td>
-
               <td>Fecha</td>
-
               <td>$0.00</td>
-
               <td>
 
                 <span class="badge-estado pendiente">
-
                   Pendiente
-
                 </span>
-
               </td>
-
               <td>Sin opinión</td>
-
               <td>
 
                 <button class="btn-opinar-tabla">

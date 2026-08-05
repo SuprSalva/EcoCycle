@@ -7,7 +7,7 @@ import { NotificationService } from '../../core/services/notification.service';
 @Component({
   selector: 'app-admin-compras',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule],
   templateUrl: './admin-compras.component.html',
   styleUrls: ['./admin-compras.component.scss']
 })
@@ -18,14 +18,12 @@ export class AdminComprasComponent implements OnInit {
   filtroEstado: string = 'Todas';
   filtroBusqueda: string = '';
   
-  // Contadores
   countTodas: number = 0;
   countCompletadas: number = 0;
   countPendientes: number = 0;
   countCanceladas: number = 0;
   countSinOpinion: number = 0;
   
-  // Modal de respuesta
   compraSeleccionada: CompraProducto | null = null;
   respuestaForm = {
     respuesta: ''
@@ -43,7 +41,6 @@ export class AdminComprasComponent implements OnInit {
 
   cargarCompras(): void {
   this.cargando = true;
-  // ✅ USAR EL MÉTODO PARA ADMIN
   this.compraClienteService.obtenerTodasLasCompras().subscribe({
     next: (response) => {
       this.cargando = false;
@@ -257,8 +254,7 @@ export class AdminComprasComponent implements OnInit {
         this.notificationService.toastSuccess(`Estado cambiado a "${nuevoEstado}"`);
         this.calcularContadores();
         this.aplicarFiltro();
-      } else {
-        // Revertir el cambio visual
+      } else {   // Revertir el cambio visual
         this.cargarCompras();
       }
     });

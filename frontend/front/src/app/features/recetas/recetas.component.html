@@ -1,0 +1,224 @@
+<div class="container-fluid min-vh-100" style="padding: 3rem; background-color: var(--background-color);">
+
+    <div class="fade-in-up">
+
+        <!-- Encabezado -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
+            <div>
+                <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--text); letter-spacing: -0.02em;">
+                    Control de Recetas
+                </h2>
+
+                <p class="text-muted small m-0 mt-1">
+                    Administra las recetas de producción y sus versiones.
+                </p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 card-modern p-3 mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+
+                <div class="input-group" style="max-width:400px;">
+                    <span class="input-group-text border-end-0 rounded-start-pill text-muted px-3">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+
+                    <input type="text" class="form-control border-start-0 rounded-end-pill ps-0"
+                        placeholder="Buscar receta por nombre..." [(ngModel)]="searchTerm">
+                </div>
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <span class="text-muted small fw-semibold">
+                        Mostrar:
+                    </span>
+
+                    <select class="form-select form-select-sm rounded-pill border-0 shadow-sm fw-bold"
+                        style="width:90px;" (change)="cambiarItemsPorPagina($event)">
+
+                        <option *ngFor="let opt of itemsPerPageOptions" [value]="opt" [selected]="opt===itemsPerPage">
+
+                            {{opt}}
+
+                        </option>
+
+                    </select>
+
+                    <span class="text-muted small fw-semibold">
+                        filas
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="cargando" class="card shadow-sm border-0 rounded-4 p-5 text-center">
+
+            <div class="spinner-border text-primary"></div>
+
+            <p class="text-muted mt-3 mb-0">
+                Cargando recetas...
+            </p>
+
+        </div>
+
+        <!-- Tabla -->
+        <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 overflow-hidden hover-lift">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead>
+
+                        <tr class="text-uppercase text-muted" style="font-size:.75rem;
+                         letter-spacing:.05em;
+                         background:var(--surface-hover);">
+
+                            <th class="ps-4 py-3 border-0">Producto</th>
+                            <th class="py-3 border-0">Descripción</th>
+                            <th class="py-3 border-0">Versión</th>
+                            <th class="py-3 border-0">Tiempo</th>
+                            <th class="py-3 border-0">Estatus</th>
+                            <th class="pe-4 py-3 border-0 text-center">Acciones</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr *ngFor="let receta of recetas" class="cursor-pointer">
+
+                            <td class="ps-4 py-3">
+
+                                <span class="fw-bold">
+                                    {{receta.nombreProducto}}
+                                </span>
+
+                            </td>
+
+                            <td class="py-3">
+
+                                <span class="text-muted">
+                                    {{receta.descripcion || 'Sin descripción'}}
+                                </span>
+
+                            </td>
+
+                            <td class="py-3">
+
+                                <span class="badge rounded-pill bg-light text-secondary px-3 py-2 fw-semibold">
+                                    v{{receta.version}}
+                                </span>
+
+                            </td>
+
+                            <td class="py-3">
+
+                                <span class="fw-semibold" style="color:var(--primary-color);">
+
+                                    {{receta.tiempoEstimadoMinutos}} min
+
+                                </span>
+
+                            </td>
+
+                            <td class="py-3">
+                                <span class="badge rounded-pill px-3 py-2 fw-semibold" [ngStyle]="{
+                        'background-color': receta.activo ? '#e6f4ea' : '#fce8e6',
+                        'color': receta.activo ? '#137333' : '#c5221f',
+                        'cursor':'pointer'
+                      }" (click)="cambiarEstatus(receta)" title="Cambiar estatus">
+
+                                    <i class="fa-solid fa-circle me-1" style="font-size:7px;"></i>
+
+                                    {{receta.activo ? 'Activo' : 'Inactivo'}}
+
+                                </span>
+
+                            </td>
+
+                            <td class="pe-4 py-3">
+
+                                <div class="d-flex justify-content-center gap-2">
+
+                                    <!-- Editar -->
+                                    <button [routerLink]="['/recetas/editar', receta.id]"
+                                        class="btn btn-sm rounded-circle btn-outline-warning shadow-sm btn-action"
+                                        style="width:38px;height:38px;" title="Editar">
+
+                                        <i class="fa-solid fa-pen"></i>
+
+                                    </button>
+
+                                    <button (click)="cambiarEstatus(receta)"
+                                        class="btn btn-sm rounded-circle shadow-sm btn-action"
+                                        [ngClass]="receta.activo ? 'btn-outline-danger' : 'btn-outline-success'"
+                                        style="width:38px;height:38px;"
+                                        [title]="receta.activo ? 'Desactivar' : 'Activar'">
+
+                                        <i class="fa-solid" [ngClass]="receta.activo ? 'fa-ban' : 'fa-check'"></i>
+
+                                    </button>
+
+                                </div>
+
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="recetas.length==0">
+                            <td colspan="6" class="text-center py-5">
+
+                                <i class="fa-solid fa-book-open fs-1 text-muted" style="opacity:.20;"></i>
+
+                                <h5 class="fw-bold text-secondary mt-3">
+                                    No hay recetas registradas
+                                </h5>
+
+                                <p class="text-muted small mb-0">
+                                    Cuando agregues una receta aparecerá aquí.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .btn-action {
+        transition: .25s;
+    }
+
+    .btn-action:hover {
+        transform: scale(1.08);
+    }
+
+    .table tbody tr {
+        transition: .2s;
+    }
+
+    .table tbody tr:hover {
+        background: #f8fafc !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, .05);
+    }
+</style>

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, HostListener, OnInit } from '@a
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { routes } from '../../../app.routes';
 
 @Component({
   selector: 'app-sidebar',
@@ -36,6 +37,7 @@ export class SidebarComponent implements OnInit {
       //  { name: 'Terminal IoT', icon: 'fa-solid fa-cube', route: '/panel/reciclaje' },
         { name: 'Catálogo', icon: 'fa-solid fa-box', route: '/admin/catalogo' },
         { name: 'Recompensas', icon: 'fa-solid fa-layer-group', route: '/admin/historial-recompensas' }
+      //  {name: 'recetas', icon: 'fa-solid fa-cube', route: '/admin/recetas'}
       ]
     },
     {
@@ -44,6 +46,7 @@ export class SidebarComponent implements OnInit {
         { name: 'Proveedores', icon: 'fa-solid fa-truck', route: '/admin/proveedores' },
         { name: 'Compras a Proveedores', icon: 'fa-solid fa-cart-shopping', route: '/admin/compras-proveedores' },
         { name: 'Materia Prima', icon: 'fa-solid fa-warehouse', route: '/admin/materia-prima' },
+        { name: 'Productos y recetas', icon: 'fa-solid fa-warehouse', route: '/admin/admin-productos' },
         
       ]
     },
@@ -51,7 +54,8 @@ export class SidebarComponent implements OnInit {
       section: 'Análisis',
       items: [
         { name: 'Comentarios', icon: 'fa-solid fa-chart-column', route: '/admin/comentarios' },
-        { name: 'Compras y cotizaciones', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
+        { name: 'Ordenes', icon: 'fa-solid fa-shopping-bag', route: '/admin/compras' },
+        { name: 'Cotizaciones', icon: 'fa-solid fa-file-pdf', route: '/admin/cotizaciones' },
         { name: 'Reportes del Sistema', icon: 'fa-solid fa-file-pdf', route: '/admin/reportes-sistema' }
       ]
     }

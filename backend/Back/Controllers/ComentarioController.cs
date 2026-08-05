@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+
 using Microsoft.AspNetCore.Mvc;
 using Back.Models;
 using Back.Models.DTOs.Request;
@@ -14,20 +16,20 @@ namespace Back.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ComentariosController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private readonly IComentariosRepository _comentariosRepository; // 🎯 Usamos el plural de tu interfaz
+        private readonly IComentariosRepository _comentariosRepository; 
         private readonly IEmailService _emailService;
 
-        // 🎯 CORREGIDO: El nombre del constructor ahora coincide perfectamente con la clase
         public ComentariosController(
             IUsuarioRepository usuarioRepository,
-            IComentariosRepository comentariosRepository, // 🎯 Corregido a plural
+            IComentariosRepository comentariosRepository, 
             IEmailService emailService)
         {
             _usuarioRepository = usuarioRepository;
-            _comentariosRepository = comentariosRepository; // 🎯 Corregido a plural
+            _comentariosRepository = comentariosRepository; 
             _emailService = emailService;
         }
 
@@ -37,7 +39,6 @@ namespace Back.Controllers
                    ?? throw new InvalidOperationException("No se pudo encontrar el ID de usuario en los claims del token.");
         }
 
-        // POST: api/comentarios
         [HttpPost]
         public async Task<ActionResult<CrearComentarioResponse>> CrearComentario(
             [FromBody] CrearComentarioRequest request)
@@ -84,6 +85,7 @@ namespace Back.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet("publicos")]
         public async Task<ActionResult<List<ComentarioResponse>>> ObtenerComentariosPublicos()
         {

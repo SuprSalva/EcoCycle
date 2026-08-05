@@ -20,23 +20,21 @@ export class BarComponent implements AfterViewInit, OnInit {
   private heroHeight = 0;
   isLightTheme = false;
 
-  ngOnInit() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      this.isLightTheme = true;
-      document.body.classList.add('light-theme');
-    }
+  ngOnInit(): void {
+
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    this.isLightTheme = savedTheme === 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  
   }
 
-  toggleTheme() {
-    if (this.isLightTheme) {
-      document.body.classList.add('light-theme');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.body.classList.remove('light-theme');
-      localStorage.setItem('theme', 'dark');
-    }
-  }    
+  toggleTheme(): void {
+
+    this.isLightTheme = !this.isLightTheme;
+    const theme = this.isLightTheme ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
 
   ngAfterViewInit(): void {
     
