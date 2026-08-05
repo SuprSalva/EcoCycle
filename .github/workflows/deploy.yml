@@ -28,7 +28,13 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            echo '>> Build del frontend Angular (producción)'
+            cd /var/ecocycle/EcoCycle/frontend/front
+            npm install --no-audit --no-fund 2>&1 | tail -1
+            npm run build -- --configuration production
+
             echo '>> Rebuild + up de Docker'
+            cd /var/ecocycle/EcoCycle
             docker-compose up -d --build
 
             echo '>> Recargando nginx'
