@@ -29,7 +29,7 @@ jobs:
             git reset --hard origin/main
 
             echo '>> Rebuild + up de Docker'
-            docker compose up -d --build
+            docker-compose up -d --build
 
             echo '>> Recargando nginx'
             sudo systemctl restart nginx
