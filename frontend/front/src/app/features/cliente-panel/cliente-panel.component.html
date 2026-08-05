@@ -1,1 +1,16 @@
-<router-outlet></router-outlet>
+<div class="mi-cuenta">
+  <nav class="mi-cuenta__tabs">
+    <a routerLink="perfil" routerLinkActive="activo" class="tab">
+      <i class="fa-solid fa-user"></i>
+      <span>Perfil</span>
+    </a>
+    <a routerLink="mis-compras" routerLinkActive="activo" class="tab">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Mis compras</span>
+    </a>
+  </nav>
+
+  <div class="mi-cuenta__contenido">
+    <router-outlet></router-outlet>
+  </div>
+</div>

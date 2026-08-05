@@ -63,6 +63,7 @@ namespace Back.Controllers
                 Id = p.Id,
                 Nombre = p.Nombre,
                 Descripcion = p.Descripcion,
+                ImagenUrl = p.ImagenUrl,
                 Activo = p.Activo,
             }).ToList();
 
@@ -89,6 +90,7 @@ namespace Back.Controllers
                 Id = producto.Id,
                 Nombre = producto.Nombre,
                 Descripcion = producto.Descripcion,
+                ImagenUrl = producto.ImagenUrl,
                 Activo = producto.Activo,
             });
         }
@@ -244,7 +246,8 @@ namespace Back.Controllers
                 });
             }
 
-            await _productosRepository.ActualizarEstatusActivoAsync(id, request.Activo);
+            // Cambia el estatus del producto Y de su receta asociada de forma atómica.
+            await _productosService.ActualizarEstatusProductoAsync(id, request.Activo);
 
             return Ok(new
             {

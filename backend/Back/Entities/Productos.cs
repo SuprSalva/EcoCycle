@@ -17,6 +17,9 @@ namespace Back.Entities
         public string Descripcion { get; set; }
 
         [FirestoreProperty]
+        public string? ImagenUrl { get; set; }
+
+        [FirestoreProperty]
         public bool Activo { get; set; }
 }
 }

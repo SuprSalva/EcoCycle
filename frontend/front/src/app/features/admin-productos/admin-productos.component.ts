@@ -76,7 +76,9 @@ export class AdminProductosComponent implements OnInit {
                 <div class="detalle-header">
             
                   <div class="icon-producto">
-                    <i class="fa-solid fa-box-open"></i>
+                    ${producto.imagenUrl
+                      ? `<img src="${producto.imagenUrl}" alt="${producto.nombre}">`
+                      : `<i class="fa-solid fa-box-open"></i>`}
                   </div>
             
             
@@ -342,18 +344,26 @@ export class AdminProductosComponent implements OnInit {
             
                   border-radius:18px;
             
-                  background:#2563eb;
+                  background:#10B981;
             
                   color:white;
             
                   display:flex;
             
                   align-items:center;
-            
+
                   justify-content:center;
-            
+
                   font-size:28px;
-            
+
+                  overflow:hidden;
+
+                }
+
+                .icon-producto img{
+                  width:100%;
+                  height:100%;
+                  object-fit:cover;
                 }
             
             
@@ -443,7 +453,7 @@ export class AdminProductosComponent implements OnInit {
             
                 .detalle-card h5 i{
             
-                  color:#2563eb;
+                  color:#10B981;
             
                   margin-right:8px;
             
@@ -539,8 +549,8 @@ export class AdminProductosComponent implements OnInit {
             
             
                 .tabla-insumos th{
-            
-                  background:#eff6ff;
+
+                  background:#ecfdf5;
             
                   padding:12px;
             
@@ -567,7 +577,7 @@ export class AdminProductosComponent implements OnInit {
             
                 .btn-cerrar-modal{
             
-                  background:#2563eb!important;
+                  background:#10B981!important;
             
                   color:white!important;
             
@@ -732,9 +742,10 @@ export class AdminProductosComponent implements OnInit {
 
       cancelButtonText: 'Cancelar',
 
-      confirmButtonColor: '#2563eb',
+      // Verde para activar, rojo para desactivar; gris neutro para cancelar.
+      confirmButtonColor: nuevoEstado ? '#10B981' : '#dc3545',
 
-      cancelButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
 
       reverseButtons: true
 

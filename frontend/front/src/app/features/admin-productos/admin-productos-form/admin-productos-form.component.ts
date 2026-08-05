@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { ProductosService } from '../../../core/services/productos.service';
 import { MateriaPrimaService } from '../../../core/services/materia-prima.service';
-import { 
-  CrearProductoCompletoRequest, 
+import {
+  CrearProductoCompletoRequest,
   DetalleRecetaInput,
   ProductoCompletoResponse
 } from '../../../models/producto.model';
+import { Storage, ref, uploadBytes, getDownloadURL } from '@angular/fire/storage';
 
 import Swal from 'sweetalert2';
 
@@ -36,12 +37,17 @@ export class ProductoCompletaComponent implements OnInit {
   productoId: string | null = null;
 modoEdicion = false;
 
+  // Imagen del producto (se sube a Firebase Storage, igual que los avatares).
+  imagenPreviewUrl: string | null = null;
+  archivoSeleccionado: File | null = null;
+
   constructor(
     private fb: FormBuilder,
     private productosService: ProductosService,
     private materiaPrimaService: MateriaPrimaService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private storage: Storage
   ) {
 
     this.formProducto = this.fb.group({
@@ -116,9 +122,12 @@ modoEdicion = false;
           });
   
   
+          this.imagenPreviewUrl = res.imagenUrl || null;
+
+
           this.insumos = res.insumos;
-  
-  
+
+
         },
 
         error:(err)=>{
@@ -161,13 +170,35 @@ modoEdicion = false;
   }
 
   siguientePaso(): void {
-    
+
     if (this.formProducto.invalid) {
       this.formProducto.markAllAsTouched();
       return;
     }
     this.pasoActual = 2;
 
+  }
+
+  onImagenSeleccionada(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      Swal.fire('Archivo inválido', 'Selecciona un archivo de imagen.', 'warning');
+      return;
+    }
+
+    this.archivoSeleccionado = file;
+
+    const reader = new FileReader();
+    reader.onload = (e: any) => this.imagenPreviewUrl = e.target.result;
+    reader.readAsDataURL(file);
+  }
+
+  quitarImagen(): void {
+    this.archivoSeleccionado = null;
+    this.imagenPreviewUrl = null;
   }
 
   pasoAnterior(): void {
@@ -224,7 +255,7 @@ modoEdicion = false;
 
   }
 
-  finalizarRegistro(): void {
+  async finalizarRegistro(): Promise<void> {
     if (this.formReceta.invalid) {
 
       this.formReceta.markAllAsTouched();
@@ -246,18 +277,37 @@ modoEdicion = false;
 
     this.guardando = true;
 
+    // Si se seleccionó una imagen nueva, subirla a Firebase Storage.
+    // En edición sin cambio, imagenPreviewUrl ya es la URL existente.
+    let imagenUrl: string | null = this.imagenPreviewUrl;
+    try {
+      if (this.archivoSeleccionado) {
+        const filePath = `productos/${Date.now()}_${this.archivoSeleccionado.name}`;
+        const storageRef = ref(this.storage, filePath);
+        const uploadTask = await uploadBytes(storageRef, this.archivoSeleccionado);
+        imagenUrl = await getDownloadURL(uploadTask.ref);
+      }
+    } catch (err) {
+      this.guardando = false;
+      console.error('Error subiendo imagen del producto:', err);
+      Swal.fire('Error', 'No se pudo subir la imagen del producto.', 'error');
+      return;
+    }
+
     const payload: CrearProductoCompletoRequest = {
 
       nombre: this.formProducto.value.nombre,
-    
+
       descripcion:
         this.formProducto.value.descripcion || '',
-    
+
+      imagenUrl: imagenUrl ?? undefined,
+
       tiempoEstimadoMinutos:
         Number(this.formReceta.value.tiempoEstimadoMinutos),
-    
+
       insumos: this.insumos
-    
+
     };
     
     

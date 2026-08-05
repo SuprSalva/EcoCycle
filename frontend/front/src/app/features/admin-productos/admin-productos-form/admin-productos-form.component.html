@@ -56,6 +56,25 @@
                             <textarea class="form-control" formControlName="descripcion" rows="3"
                                 placeholder="Descripción opcional del producto..."></textarea>
                         </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label">Imagen del Producto</label>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="producto-img-preview">
+                                    <img *ngIf="imagenPreviewUrl" [src]="imagenPreviewUrl" alt="Imagen del producto">
+                                    <i *ngIf="!imagenPreviewUrl" class="fa-solid fa-image"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input type="file" accept="image/*" class="form-control"
+                                        (change)="onImagenSeleccionada($event)">
+                                    <button *ngIf="imagenPreviewUrl" type="button"
+                                        class="btn btn-sm btn-link text-danger p-0 mt-1"
+                                        (click)="quitarImagen()">
+                                        <i class="fa-solid fa-trash me-1"></i>Quitar imagen
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -186,15 +205,22 @@
                     </div>
                 </div>
             </div>
-            <button *ngIf="pasoActual < 2" type="button" class="btn btn-primary" (click)="siguientePaso()">
-                Siguiente
-            </button>
+            <div class="d-flex justify-content-end gap-2 mt-4">
+                <button *ngIf="pasoActual === 2" type="button" class="btn btn-outline-secondary"
+                    (click)="pasoAnterior()">
+                    Anterior
+                </button>
 
-            <button *ngIf="pasoActual === 2" type="button" class="btn btn-success"
-                [disabled]="insumos.length === 0 || guardando" (click)="finalizarRegistro()">
-                <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
-                Guardar Producto
-            </button>
+                <button *ngIf="pasoActual < 2" type="button" class="btn btn-primary" (click)="siguientePaso()">
+                    Siguiente
+                </button>
+
+                <button *ngIf="pasoActual === 2" type="button" class="btn btn-success"
+                    [disabled]="insumos.length === 0 || guardando" (click)="finalizarRegistro()">
+                    <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+                    Guardar Producto
+                </button>
+            </div>
 
         </div>
     </div>

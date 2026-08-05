@@ -75,6 +75,7 @@ builder.Services.AddScoped<ICotizacionRepository, CotizacionRepository>();
 builder.Services.AddScoped<IProductosRepository, ProductosRepository>();
 builder.Services.AddScoped<IRecetasRepository, RecetasRepository>();
 builder.Services.AddScoped<IRecetasDetalleRepository, RecetasDetalleRepository>();
+builder.Services.AddScoped<IProduccionRepository, ProduccionRepository>();
 builder.Services.AddScoped<INotificacionRepository, NotificacionRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaRepository, Back.Repositories.MateriaPrimaRepository>();
 builder.Services.AddScoped<Back.Repositories.Interfaces.IMateriaPrimaTransaccionRepository, Back.Repositories.MateriaPrimaTransaccionRepository>();
@@ -95,6 +96,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPdfGeneratorService, PdfGeneratorService>();
 builder.Services.AddScoped<IFirebaseAuthService, FirebaseAuthService>();
 builder.Services.AddScoped<ProductosService>();
+builder.Services.AddScoped<ProduccionService>();
 
 // Orígenes permitidos configurables (appsettings/variable de entorno, separados por coma)
 var allowedOrigins = (builder.Configuration["AllowedOrigins"] ?? "http://localhost:4200")
