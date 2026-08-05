@@ -6,4 +6,5 @@ public class ActualizarPerfilRequest
     public string Apellidos { get; set; } = string.Empty;
     public string Telefono { get; set; } = string.Empty;
     public string? Direccion { get; set; }
+    public string? AvatarUrl { get; set; }
 }

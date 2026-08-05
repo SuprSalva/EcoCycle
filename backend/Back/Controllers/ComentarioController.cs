@@ -1,147 +1,245 @@
+using Microsoft.AspNetCore.Authorization;
+
+using Microsoft.AspNetCore.Mvc;
+using Back.Models;
+using Back.Models.DTOs.Request;
+using Back.Models.DTOs.Response;
+using Back.Entities;
+using Back.Services;
+using Back.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
-using Back.Wrappers;
-using Google.Cloud.Firestore;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Back.Models.DTOs.Request;
-namespace Back.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-[Authorize] // Protegido para que solo usuarios autenticados accedan
-public class ComentarioController : ControllerBase
+namespace Back.Controllers
 {
-    private readonly FirestoreDb _firestoreDb;
-
-    public ComentarioController(FirestoreDb firestoreDb)
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class ComentariosController : ControllerBase
     {
-        _firestoreDb = firestoreDb;
-    }
+        private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IComentariosRepository _comentariosRepository; 
+        private readonly IEmailService _emailService;
 
-    /// <summary>
-    /// POST: api/Comentario/crear
-    /// Crea un nuevo comentario (cualquier usuario autenticado puede hacerlo)
-    /// </summary>
-    [HttpPost("crear")]
-    public async Task<IActionResult> CrearComentario([FromBody] ComentarioRequest request)
-    {
-        try
+        public ComentariosController(
+            IUsuarioRepository usuarioRepository,
+            IComentariosRepository comentariosRepository, 
+            IEmailService emailService)
         {
-            // Obtener el email del usuario autenticado
-            var email = User.FindFirst("email")?.Value ?? User.FindFirst(ClaimTypes.Email)?.Value;
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value;
+            _usuarioRepository = usuarioRepository;
+            _comentariosRepository = comentariosRepository; 
+            _emailService = emailService;
+        }
 
-            if (string.IsNullOrEmpty(email))
-            {
-                return Unauthorized(ApiResponse<object>.Fail("Usuario no autenticado correctamente."));
-            }
+        private string GetUserId()
+        {
+            return User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value
+                   ?? throw new InvalidOperationException("No se pudo encontrar el ID de usuario en los claims del token.");
+        }
 
-            // Crear el documento en Firestore
-            var comentario = new Dictionary<string, object>
+        [HttpPost]
+        public async Task<ActionResult<CrearComentarioResponse>> CrearComentario(
+            [FromBody] CrearComentarioRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            Comentarios comentario = new Comentarios
             {
-                ["asunto"] = request.Asunto,
-                ["mensaje"] = request.Mensaje,
-                ["categoria"] = request.Categoria ?? "Sugerencia",
-                ["email"] = email,
-                ["usuarioId"] = userId ?? "desconocido",
-                ["estatus"] = "Recibido",
-                ["fecha"] = DateTime.Now.ToString("dd 'de' MMMM 'de' yyyy 'a las' hh:mm:ss tt 'UTC-6'")
+                Mensaje = request.Mensaje,
+                Email = request.Email,
+                Estrellas = request.Estrellas,
+                Estatus = "Recibido",
+                EsPublico = false,
+                Fecha = DateTime.UtcNow
             };
 
-            DocumentReference docRef = await _firestoreDb.Collection("comentarios").AddAsync(comentario);
+            string id = await _comentariosRepository.CrearComentarioAsync(comentario);
 
-            return Ok(ApiResponse<object>.Ok(
-                new { id = docRef.Id }, 
-                "Comentario enviado correctamente. Gracias por tu retroalimentación."
-            ));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ApiResponse<object>.Fail($"Error al guardar el comentario: {ex.Message}"));
-        }
-    }
-
-    /// <summary>
-    /// GET: api/Comentario/todos
-    /// SOLO ADMINISTRADORES - Trae el listado completo de valoraciones y comentarios
-    /// </summary>
-    [HttpGet("todos")]
-    public async Task<IActionResult> ObtenerTodos()
-    {
-        try
-        {
-            // Verificar si el usuario es administrador
-            var rol = User.FindFirst("rol")?.Value ?? User.FindFirst(ClaimTypes.Role)?.Value;
-            if (string.IsNullOrEmpty(rol) || !rol.Equals("admin", StringComparison.OrdinalIgnoreCase))
+            return Ok(new CrearComentarioResponse
             {
-                return Forbid("Acceso denegado. Solo administradores pueden ver todos los comentarios.");
-            }
+                Exito = true,
+                Mensaje = "Comentario enviado correctamente.",
+                IdComentario = id
+            });
+        }
 
-            CollectionReference colRef = _firestoreDb.Collection("comentarios");
-            Query query = colRef.OrderByDescending("fecha");
-            QuerySnapshot snapshot = await query.GetSnapshotAsync();
+        [HttpGet]
+        public async Task<ActionResult<List<ComentarioResponse>>> ObtenerComentarios()
+        {
+            var comentarios = await _comentariosRepository.ObtenerComentariosAsync();
 
-            var listaComentarios = new List<object>();
-            foreach (DocumentSnapshot doc in snapshot.Documents)
+            var response = comentarios.Select(c => new ComentarioResponse
             {
-                if (doc.Exists)
+                Id = c.Id,
+                Mensaje = c.Mensaje,
+                Email = c.Email,
+                Estrellas = c.Estrellas,
+                Estatus = c.Estatus,
+                EsPublico = c.EsPublico,
+                Fecha = c.Fecha
+            }).ToList();
+
+            return Ok(response);
+        }
+
+        [AllowAnonymous]
+        [HttpGet("publicos")]
+        public async Task<ActionResult<List<ComentarioResponse>>> ObtenerComentariosPublicos()
+        {
+            var comentarios = await _comentariosRepository.ObtenerComentariosPublicosAsync();
+
+            var response = comentarios.Select(c => new ComentarioResponse
+            {
+                Id = c.Id,
+                Mensaje = c.Mensaje,
+                Email = c.Email,
+                Estrellas = c.Estrellas,
+                Estatus = c.Estatus,
+                EsPublico = c.EsPublico,
+                Fecha = c.Fecha
+            }).ToList();
+
+            return Ok(response);
+        }
+
+        // GET: api/comentarios/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ComentarioResponse>> ObtenerComentarioPorId(string id)
+        {
+            var comentario = await _comentariosRepository.ObtenerComentarioPorIdAsync(id);
+
+            if (comentario == null)
+                return NotFound();
+
+            return Ok(new ComentarioResponse
+            {
+                Id = comentario.Id,
+                Mensaje = comentario.Mensaje,
+                Email = comentario.Email,
+                Estrellas = comentario.Estrellas,
+                Estatus = comentario.Estatus,
+                EsPublico = comentario.EsPublico,
+                Fecha = comentario.Fecha
+            });
+        }
+
+        [HttpPut("{id}/responder")]
+        public async Task<IActionResult> ResponderComentario(string id, [FromBody] ResponderComentarioRequest request)
+        {
+            try
+            {
+                Console.WriteLine($"[Comentarios] Intentando responder al comentario ID: {id}");
+
+                var adminId = GetUserId();
+                var admin = await _usuarioRepository.ObtenerPorIdAsync(adminId);
+                if (admin?.Rol?.ToLower() != "admin")
+                    return Forbid("Acceso denegado. Solo administradores pueden responder comentarios.");
+
+                var comentario = await _comentariosRepository.ObtenerComentarioPorIdAsync(id);
+                if (comentario == null)
+                    return NotFound(ApiResponse<object>.Fail("El comentario no existe."));
+
+                comentario.RespuestaAdmin = request.RespuestaAdmin;
+                comentario.Estatus = "Resuelto";
+
+                await _comentariosRepository.ActualizarComentarioAsync(comentario);
+                Console.WriteLine($"Comentario {id} actualizado en Firestore con la resolución.");
+
+                Console.WriteLine($"Enviando correo de notificación a: {comentario.Email}");
+                bool correoEnviado = await _emailService.EnviarRespuestaComentarioAsync(
+                    comentario.Email,
+                    request.NombreCliente,
+                    comentario.Mensaje, // Usamos la propiedad del objeto recuperado
+                    request.RespuestaAdmin
+                );
+
+                if (correoEnviado)
                 {
-                    var data = doc.ToDictionary();
-                    data["id"] = doc.Id;
-                    listaComentarios.Add(data);
+                    Console.WriteLine($"Correo enviado exitosamente a {comentario.Email}");
                 }
-            }
-            
-            return Ok(ApiResponse<List<object>>.Ok(listaComentarios, "Lista global de comentarios obtenida correctamente."));
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ApiResponse<List<object>>.Fail($"Error al recuperar el historial: {ex.Message}"));
-        }
-    }
-
-    /// <summary>
-    /// GET: api/Comentario/mis-comentarios
-    /// Obtiene solo los comentarios del usuario autenticado
-    /// </summary>
-    [HttpGet("mis-comentarios")]
-    public async Task<IActionResult> ObtenerMisComentarios()
-    {
-        try
-        {
-            var email = User.FindFirst("email")?.Value ?? User.FindFirst(ClaimTypes.Email)?.Value;
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? User.FindFirst("user_id")?.Value;
-
-            if (string.IsNullOrEmpty(email))
-            {
-                return Unauthorized(ApiResponse<object>.Fail("Usuario no autenticado."));
-            }
-
-            CollectionReference colRef = _firestoreDb.Collection("comentarios");
-            
-            // Filtrar por email o userId
-            Query query = colRef.WhereEqualTo("email", email);
-            QuerySnapshot snapshot = await query.GetSnapshotAsync();
-
-            var misComentarios = new List<object>();
-            foreach (DocumentSnapshot doc in snapshot.Documents)
-            {
-                if (doc.Exists)
+                else
                 {
-                    var data = doc.ToDictionary();
-                    data["id"] = doc.Id;
-                    misComentarios.Add(data);
+                    Console.WriteLine($"Firestore se actualizó, pero falló el envío del correo a {comentario.Email}");
                 }
+
+                return Ok(new
+                {
+                    Exito = true,
+                    Mensaje = "Respuesta registrada y notificación enviada por correo.",
+                    Datos = new
+                    {
+                        comentario.Id,
+                        comentario.Estatus,
+                        CorreoEnviado = correoEnviado
+                    }
+                });
             }
-            
-            return Ok(ApiResponse<List<object>>.Ok(misComentarios, "Tus comentarios obtenidos correctamente."));
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al responder comentario: {ex.Message}");
+                return StatusCode(500, new { Exito = false, Mensaje = $"Error al registrar la respuesta: {ex.Message}" });
+            }
         }
-        catch (Exception ex)
+
+        // PUT: api/comentarios/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActualizarComentario(
+            string id,
+            [FromBody] ActualizarComentarioRequest request)
         {
-            return StatusCode(500, ApiResponse<List<object>>.Fail($"Error al recuperar tus comentarios: {ex.Message}"));
+            var comentario = await _comentariosRepository.ObtenerComentarioPorIdAsync(id);
+
+            if (comentario == null)
+                return NotFound();
+
+            comentario.Mensaje = request.Mensaje;
+            comentario.Estrellas = request.Estrellas;
+            comentario.Estatus = request.Estatus;
+            comentario.EsPublico = request.EsPublico;
+
+            await _comentariosRepository.ActualizarComentarioAsync(comentario);
+
+            return Ok(new
+            {
+                mensaje = "Comentario actualizado correctamente."
+            });
+        }
+
+        // PATCH: api/comentarios/{id}/visibilidad
+        [HttpPatch("{id}/visibilidad")]
+        public async Task<IActionResult> CambiarVisibilidad(string id, [FromBody] bool esPublico)
+        {
+            var comentario = await _comentariosRepository.ObtenerComentarioPorIdAsync(id);
+
+            if (comentario == null)
+                return NotFound();
+
+            await _comentariosRepository.CambiarVisibilidadAsync(id, esPublico);
+
+            return Ok(new
+            {
+                mensaje = $"Visibilidad del comentario modificada a: {(esPublico ? "Público" : "Oculto")}."
+            });
+        }
+
+        // DELETE: api/comentarios/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> EliminarComentario(string id)
+        {
+            var comentario = await _comentariosRepository.ObtenerComentarioPorIdAsync(id);
+
+            if (comentario == null)
+                return NotFound();
+
+            await _comentariosRepository.EliminarComentarioAsync(id);
+
+            return Ok(new
+            {
+                mensaje = "Comentario eliminado correctamente."
+            });
         }
     }
 }

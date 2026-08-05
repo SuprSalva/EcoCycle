@@ -1,0 +1,10 @@
+.list-group-item.active {
+  background-color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: var(--on-primary-color) !important;
+}
+.list-group-item {
+  border-radius: 0.5rem !important;
+  margin-bottom: 4px;
+  cursor: pointer;
+}

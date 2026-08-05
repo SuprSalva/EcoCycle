@@ -1,83 +1,305 @@
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-primary fw-bold">{{ isEdit ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h2>
-    <a routerLink="/panel/proveedores" class="btn btn-outline-secondary rounded-pill px-4">
-      <i class="bi bi-arrow-left me-2"></i>Volver
-    </a>
-  </div>
+<div class="container-fluid min-vh-100" style="background-color: var(--background-color);">
 
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body p-4 p-md-5">
-      
-      <form [formGroup]="form" (ngSubmit)="guardar()">
-        <div class="row g-4">
-          
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Nombre del Contacto</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
-              <input type="text" class="form-control border-start-0" formControlName="nombre" placeholder="Ej. Juan Pérez">
-            </div>
-            <div class="text-danger small mt-1" *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
-              Requerido
-            </div>
-          </div>
+  <!-- ENCABEZADO -->
+  <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+    <div>
+      <h2 class="fw-bold m-0"
+          style="font-size:1.75rem;color:var(--on-background-color)!important;letter-spacing:-0.02em;">
+        {{ isEdit ? 'Editar Proveedor' : 'Nuevo Proveedor' }}
+      </h2>
 
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Empresa</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-building text-muted"></i></span>
-              <input type="text" class="form-control border-start-0" formControlName="empresa" placeholder="Nombre de la empresa">
-            </div>
-            <div class="text-danger small mt-1" *ngIf="form.get('empresa')?.invalid && form.get('empresa')?.touched">
-              Requerido
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Teléfono</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone text-muted"></i></span>
-              <input type="text" class="form-control border-start-0" formControlName="telefono" placeholder="Ej. 555-1234">
-            </div>
-            <div class="text-danger small mt-1" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
-              Requerido
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <label class="form-label fw-medium">Email</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-              <input type="email" class="form-control border-start-0" formControlName="email" placeholder="correo@ejemplo.com">
-            </div>
-            <div class="text-danger small mt-1" *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
-              Email válido requerido
-            </div>
-          </div>
-
-          <div class="col-12">
-            <label class="form-label fw-medium">Dirección</label>
-            <div class="input-group">
-              <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-muted"></i></span>
-              <textarea class="form-control border-start-0" formControlName="direccion" rows="3" placeholder="Dirección completa"></textarea>
-            </div>
-            <div class="text-danger small mt-1" *ngIf="form.get('direccion')?.invalid && form.get('direccion')?.touched">
-              Requerido
-            </div>
-          </div>
-
-        </div>
-
-        <div class="mt-5 d-flex justify-content-end gap-3">
-          <button type="button" routerLink="/panel/proveedores" class="btn btn-light px-4">Cancelar</button>
-          <button type="submit" class="btn btn-success px-5 shadow-sm" [disabled]="form.invalid || guardando">
-            <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
-            {{ isEdit ? 'Guardar Cambios' : 'Registrar Proveedor' }}
-          </button>
-        </div>
-      </form>
-
+      <p class="text-muted small m-0 mt-1" style="font-size:.9rem;">
+        {{ isEdit
+          ? 'Modifica la información del proveedor.'
+          : 'Completa la información para registrar un nuevo proveedor.' }}
+      </p>
     </div>
+
+    <button
+      type="button"
+      routerLink="/admin/proveedores"
+      class="btn btn-light d-flex align-items-center gap-2 px-3 py-2 shadow-sm rounded-3"
+      style="background-color:var(--surface-color);border:1px solid var(--surface-variant-color);">
+
+      <span class="material-symbols-outlined fs-5">arrow_back</span>
+      <span class="fw-semibold"
+            style="color:var(--on-surface-color);">
+        Regresar
+      </span>
+    </button>
   </div>
+
+  <!-- CARD -->
+  <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 p-4"
+       style="background-color:var(--surface-color);">
+
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+
+      <div class="row g-4">
+
+        <!-- NOMBRE -->
+        <div class="col-md-6">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            NOMBRE DEL CONTACTO
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text border-end-0 rounded-start-3"
+                  style="background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined fs-5">
+                person
+              </span>
+
+            </span>
+
+            <input
+              type="text"
+              formControlName="nombre"
+              class="form-control rounded-end-3 border-start-0 px-3 py-2 shadow-none fs-6"
+              style="border:1px solid var(--surface-variant-color);
+              background-color:var(--background-color);
+              color:var(--on-surface-color);
+              font-weight:500;"
+              placeholder="Ej. Juan Pérez">
+
+          </div>
+
+          <div class="text-danger small mt-1"
+               *ngIf="form.get('nombre')?.invalid && form.get('nombre')?.touched">
+            El nombre es obligatorio
+          </div>
+
+        </div>
+
+        <!-- EMPRESA -->
+        <div class="col-md-6">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            EMPRESA
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text border-end-0 rounded-start-3"
+                  style="background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined fs-5">
+                apartment
+              </span>
+
+            </span>
+
+            <input
+              type="text"
+              formControlName="empresa"
+              class="form-control rounded-end-3 border-start-0 px-3 py-2 shadow-none fs-6"
+              style="border:1px solid var(--surface-variant-color);
+              background-color:var(--background-color);
+              color:var(--on-surface-color);
+              font-weight:500;"
+              placeholder="Nombre de la empresa">
+
+          </div>
+
+          <div class="text-danger small mt-1"
+               *ngIf="form.get('empresa')?.invalid && form.get('empresa')?.touched">
+            La empresa es obligatoria
+          </div>
+
+        </div>
+
+        <!-- TELEFONO -->
+        <div class="col-md-6">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            TELÉFONO
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text border-end-0 rounded-start-3"
+                  style="background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined fs-5">
+                call
+              </span>
+
+            </span>
+
+            <input
+              type="text"
+              formControlName="telefono"
+              class="form-control rounded-end-3 border-start-0 px-3 py-2 shadow-none fs-6"
+              style="border:1px solid var(--surface-variant-color);
+              background-color:var(--background-color);
+              color:var(--on-surface-color);
+              font-weight:500;"
+              placeholder="Ej. 5551234567">
+
+          </div>
+
+          <div class="text-danger small mt-1"
+               *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched">
+            El teléfono es obligatorio
+          </div>
+
+        </div>
+
+        <!-- EMAIL -->
+        <div class="col-md-6">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            CORREO ELECTRÓNICO
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text border-end-0 rounded-start-3"
+                  style="background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined fs-5">
+                mail
+              </span>
+
+            </span>
+
+            <input
+              type="email"
+              formControlName="email"
+              class="form-control rounded-end-3 border-start-0 px-3 py-2 shadow-none fs-6"
+              style="border:1px solid var(--surface-variant-color);
+              background-color:var(--background-color);
+              color:var(--on-surface-color);
+              font-weight:500;"
+              placeholder="correo@empresa.com">
+
+          </div>
+
+          <div class="text-danger small mt-1"
+               *ngIf="form.get('email')?.invalid && form.get('email')?.touched">
+            Ingresa un correo válido
+          </div>
+
+        </div>
+
+        <!-- DIRECCION -->
+        <div class="col-12">
+
+          <label class="form-label fw-bold mb-1"
+                 style="color:var(--on-surface-color);
+                 font-size:.85rem;
+                 letter-spacing:.03em;">
+
+            DIRECCIÓN
+            <span class="text-danger">*</span>
+
+          </label>
+
+          <div class="input-group">
+
+            <span class="input-group-text border-end-0 rounded-start-3 align-items-start pt-3"
+                  style="background-color:var(--surface-variant-color);
+                  border:1px solid var(--surface-variant-color);">
+
+              <span class="material-symbols-outlined fs-5">
+                location_on
+              </span>
+
+            </span>
+
+            <textarea
+              rows="3"
+              formControlName="direccion"
+              class="form-control rounded-end-3 border-start-0 px-3 py-2 shadow-none fs-6"
+              style="border:1px solid var(--surface-variant-color);
+              background-color:var(--background-color);
+              color:var(--on-surface-color);
+              font-weight:500;"
+              placeholder="Dirección completa"></textarea>
+
+          </div>
+
+          <div class="text-danger small mt-1"
+               *ngIf="form.get('direccion')?.invalid && form.get('direccion')?.touched">
+            La dirección es obligatoria
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- BOTONES -->
+      <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top"
+           style="border-top:1px solid var(--surface-variant-color)!important;">
+
+        <button
+          type="button"
+          routerLink="/admin/proveedores"
+          class="btn btn-light fw-semibold px-4 py-2 shadow-sm rounded-3"
+          style="background-color:var(--background-color);
+          border:1px solid var(--surface-variant-color);
+          color:var(--on-background-color);">
+
+          Cancelar
+
+        </button>
+
+        <button
+          type="submit"
+          class="btn d-flex align-items-center gap-2 px-4 py-2 shadow-sm rounded-3 border-0 fw-semibold"
+          style="background-color:#0D631B;color:#fff;"
+          [disabled]="form.invalid || guardando">
+
+          <span *ngIf="guardando"
+                class="spinner-border spinner-border-sm">
+          </span>
+
+          <span class="material-symbols-outlined"
+                *ngIf="!guardando">
+            check_circle
+          </span>
+
+          <span>
+            {{ isEdit ? 'Guardar Cambios' : 'Registrar Proveedor' }}
+          </span>
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
 </div>

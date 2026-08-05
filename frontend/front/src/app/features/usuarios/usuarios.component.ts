@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { UsuarioService } from '../../core/services/usuario.service';
 import { UsuarioFormComponent } from './usuario-form/usuario-form.component';
 import { NotificationService } from '../../core/services/notification.service';
 
@@ -20,14 +21,13 @@ export class UsuariosComponent implements OnInit {
   usuarios: any[] = [];
   cargando: boolean = true;
   
-  // Paginación y búsqueda
   private _searchTerm: string = '';
   get searchTerm(): string {
     return this._searchTerm;
   }
   set searchTerm(value: string) {
     this._searchTerm = value;
-    this.currentPage = 1; // Resetear la página al buscar
+    this.currentPage = 1;
   }
 
   currentPage: number = 1;
@@ -39,6 +39,7 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private usuarioService: UsuarioService,
     private notificationService: NotificationService
   ) {}
 
@@ -49,16 +50,17 @@ export class UsuariosComponent implements OnInit {
   obtenerLista(): void {
     this.cargando = true;
     this.notificationService.showLoading('Cargando usuarios...', 'Sincronizando usuarios con el servidor');
-    this.authService.obtenerTodosLosUsuarios().subscribe({
-      next: (data) => {
-        this.usuarios = data;
+    this.usuarioService.obtenerTodos().subscribe({
+      next: (response: any) => {
+        this.usuarios = response.data || [];
         this.cargando = false;
         this.notificationService.hideLoading();
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al listar usuarios:', err);
         this.cargando = false;
         this.notificationService.hideLoading();
+        this.notificationService.error('Error', 'No se pudieron cargar los usuarios.');
       }
     });
   }
@@ -85,6 +87,7 @@ export class UsuariosComponent implements OnInit {
     return Math.ceil(this.usuariosFiltrados.length / this.itemsPerPage) || 1;
   }
 
+  // ✅ MÉTODO PARA CAMBIAR DE PÁGINA
   cambiarPagina(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
@@ -97,6 +100,13 @@ export class UsuariosComponent implements OnInit {
     this.currentPage = 1;
   }
 
+  // ✅ MÉTODO PARA VOLVER DEL FORMULARIO
+  volverDeFormulario(): void {
+    this.vistaActual = 'lista';
+    this.idEdicion = null;
+    this.obtenerLista();
+  }
+
   exportToExcel(): void {
     const datosBase = this.usuariosFiltrados.map(u => ({
       'Nombre Completo': `${u.nombre} ${u.apellidos}`,
@@ -106,36 +116,30 @@ export class UsuariosComponent implements OnInit {
       'Estatus': u.rol !== 'suspendido' ? 'ACTIVO' : 'INACTIVO'
     }));
 
-    // Crear un libro y una hoja de trabajo vacía
     const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
     
-    // Configurar título y fecha en la parte superior
     XLSX.utils.sheet_add_aoa(worksheet, [
       ['Reporte Maestro de Usuarios - EcoCycle'],
       [`Fecha de generación: ${new Date().toLocaleDateString()} a las ${new Date().toLocaleTimeString()}`],
       [`Total de registros: ${this.usuariosFiltrados.length}`],
-      [] // Fila en blanco de separación
+      []
     ], { origin: 'A1' });
 
-    // Agregar la tabla de datos a partir de la fila 5 (A5)
     XLSX.utils.sheet_add_json(worksheet, datosBase, { origin: 'A5' });
 
-    // Combinar celdas para el título y la información para que abarquen toda la tabla
     worksheet['!merges'] = [
-      { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }, // Título principal
-      { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } }, // Fecha
-      { s: { r: 2, c: 0 }, e: { r: 2, c: 4 } }  // Total registros
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 4 } },
+      { s: { r: 1, c: 0 }, e: { r: 1, c: 4 } },
+      { s: { r: 2, c: 0 }, e: { r: 2, c: 4 } }
     ];
 
-    // Ajustar los anchos de las columnas para mayor legibilidad
-    const columnWidths = [
-      { wch: 35 }, // Nombre
-      { wch: 40 }, // Correo
-      { wch: 18 }, // Puntos
-      { wch: 22 }, // Rol
-      { wch: 15 }  // Estatus
+    worksheet['!cols'] = [
+      { wch: 35 },
+      { wch: 40 },
+      { wch: 18 },
+      { wch: 22 },
+      { wch: 15 }
     ];
-    worksheet['!cols'] = columnWidths;
 
     const workbook: XLSX.WorkBook = { Sheets: { 'Usuarios': worksheet }, SheetNames: ['Usuarios'] };
     XLSX.writeFile(workbook, 'Reporte_Usuarios_EcoCycle.xlsx');
@@ -145,24 +149,19 @@ export class UsuariosComponent implements OnInit {
     const doc = new jsPDF();
     const fecha = new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString();
 
-    // Diseño de Cabecera
-    // Título Principal
     doc.setFontSize(24);
-    doc.setTextColor(13, 99, 27); // Verde principal EcoCycle #0D631B
+    doc.setTextColor(13, 99, 27);
     doc.text('EcoCycle', 14, 22);
 
-    // Subtítulo
     doc.setFontSize(16);
-    doc.setTextColor(26, 28, 28); // Gris oscuro #1A1C1C
+    doc.setTextColor(26, 28, 28);
     doc.text('Reporte Maestro de Usuarios', 14, 32);
     
-    // Información secundaria (Fecha y cantidad)
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     doc.text(`Fecha de generación: ${fecha}`, 14, 40);
     doc.text(`Total de registros listados: ${this.usuariosFiltrados.length}`, 14, 45);
 
-    // Preparar datos para la tabla
     const bodyData = this.usuariosFiltrados.map(u => [
       `${u.nombre} ${u.apellidos}`,
       u.email,
@@ -171,23 +170,22 @@ export class UsuariosComponent implements OnInit {
       u.rol !== 'suspendido' ? 'ACTIVO' : 'INACTIVO'
     ]);
 
-    // Generar la tabla con estilos
     autoTable(doc, {
       startY: 50,
       head: [['Nombre Completo', 'Correo', 'Puntos', 'Rol', 'Estatus']],
       body: bodyData,
       theme: 'grid',
       headStyles: { 
-        fillColor: [13, 99, 27], // Fondo Verde Principal #0D631B
-        textColor: [255, 255, 255], // Letras blancas
+        fillColor: [13, 99, 27],
+        textColor: [255, 255, 255],
         fontStyle: 'bold',
         halign: 'center'
       },
       bodyStyles: {
-        textColor: [40, 40, 40] // Letras oscuras para la vista
+        textColor: [40, 40, 40]
       },
       alternateRowStyles: { 
-        fillColor: [249, 249, 249] // Fondo variante sutil
+        fillColor: [249, 249, 249]
       },
       columnStyles: {
         0: { cellWidth: 45 },
@@ -197,7 +195,6 @@ export class UsuariosComponent implements OnInit {
         4: { cellWidth: 25, halign: 'center' }
       },
       didDrawPage: (data) => {
-        // Pie de página (Footer) con número de página
         const pageSize = doc.internal.pageSize;
         const pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
         const text = `Página ${data.pageNumber}`;
@@ -221,20 +218,13 @@ export class UsuariosComponent implements OnInit {
     this.vistaActual = 'formulario';
   }
 
-  volverDeFormulario(): void {
-    this.vistaActual = 'lista';
-    this.idEdicion = null;
-    this.obtenerLista(); // Refrescar lista al regresar
-  }
-
   alternarEstado(usuario: any, event: Event): void {
-    event.stopPropagation(); // Evitar que el click se propague a la fila y abra editar
+    event.stopPropagation();
     const esSuspendido = usuario.rol === 'suspendido';
     const nuevoRol = esSuspendido ? 'usuario' : 'suspendido';
-    const tituloAction = esSuspendido ? '¿Deseas reactivar esta cuenta?' : '¿Seguro que deseas desactivar al usuario?';
 
     this.notificationService.confirmAction(
-      tituloAction,
+      esSuspendido ? '¿Deseas reactivar esta cuenta?' : '¿Seguro que deseas desactivar al usuario?',
       esSuspendido ? 'Volverá a tener acceso normal.' : 'Se le denegará el acceso a los módulos operativos.',
       esSuspendido ? 'Sí, reactivar' : 'Sí, desactivar',
       esSuspendido ? '#0D631B' : '#ef233c'
@@ -243,11 +233,13 @@ export class UsuariosComponent implements OnInit {
         const bodyActualizado = {
           nombre: usuario.nombre,
           apellidos: usuario.apellidos,
+          telefono: usuario.telefono || '',
+          direccion: usuario.direccion || '',
           rol: nuevoRol
         };
 
         this.notificationService.showLoading('Actualizando...', 'Modificando estatus del usuario');
-        this.authService.actualizarUsuario(usuario.id, bodyActualizado).subscribe({
+        this.usuarioService.actualizar(usuario.id, bodyActualizado).subscribe({
           next: () => {
             this.notificationService.hideLoading();
             this.notificationService.toastSuccess('Estatus modificado exitosamente.');

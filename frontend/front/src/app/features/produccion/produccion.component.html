@@ -1,0 +1,185 @@
+<div class="container-fluid min-vh-100" style="padding: 3rem; background-color: var(--background-color);">
+
+  <div class="fade-in-up">
+
+    <!-- Encabezado -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
+      <div>
+        <h2 class="fw-bold m-0" style="font-size:1.75rem;color:var(--text);">
+          Producción
+        </h2>
+        <p class="text-muted small m-0 mt-1">
+          Registra corridas de producción; se descuenta la materia prima según la receta.
+        </p>
+      </div>
+
+      <button class="btn btn-primary btn-sm shadow-sm fw-semibold d-flex align-items-center gap-2"
+        (click)="abrirModal()">
+        <i class="fa-solid fa-plus"></i>
+        Nueva Producción
+      </button>
+    </div>
+
+    <!-- Buscador -->
+    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="input-group" style="max-width:400px;">
+          <span class="input-group-text border-end-0 rounded-start-pill">
+            <i class="fa-solid fa-search"></i>
+          </span>
+          <input type="text" class="form-control border-start-0 rounded-end-pill" placeholder="Buscar producto..."
+            [(ngModel)]="searchTerm">
+        </div>
+        <span class="text-muted small fw-semibold">
+          {{producciones.length}} producciones registradas
+        </span>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 p-0 overflow-hidden mb-4">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr class="text-uppercase text-muted"
+              style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: var(--surface-hover);">
+              <th class="ps-4 py-3 fw-bold border-bottom-0">Producto</th>
+              <th class="py-3 fw-bold border-bottom-0">Cantidad</th>
+              <th class="py-3 fw-bold border-bottom-0">Costo total</th>
+              <th class="py-3 fw-bold border-bottom-0">Fecha</th>
+              <th class="pe-4 py-3 fw-bold border-bottom-0">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of produccionesFiltradas" class="border-bottom fila-clickable"
+              role="button" (click)="verDetalle(p)" title="Ver detalle">
+              <td class="ps-4 py-3 fw-bold">{{p.nombreProducto}}</td>
+              <td class="py-3">{{p.cantidad}}</td>
+              <td class="py-3">${{p.costoTotal | number:'1.2-2'}}</td>
+              <td class="py-3 text-muted">{{p.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+              <td class="py-3 pe-4">
+                <button type="button" class="badge-estado"
+                  [ngStyle]="{'background-color': estadoEstilo(p.estado).bg, 'color': estadoEstilo(p.estado).color}"
+                  (click)="toggleEstadoMenu(p, $event)" title="Cambiar estado">
+                  <i class="fa-solid fa-circle" style="font-size:7px;"></i>
+                  {{p.estado}}
+                  <i class="fa-solid fa-chevron-down" style="font-size:9px;"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr *ngIf="produccionesFiltradas.length === 0">
+              <td colspan="5" class="text-center py-5 text-muted">
+                <i class="fa-solid fa-industry fs-1 mb-3" style="opacity: 0.2;"></i>
+                <h5 class="fw-bold text-secondary">No hay producciones registradas</h5>
+                <p class="small mb-0">Haz clic en "Nueva Producción" para registrar la primera.</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Spinner -->
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Cierra el menú de estado al hacer clic fuera -->
+<div class="estado-backdrop" *ngIf="estadoMenuAbiertoId" (click)="cerrarEstadoMenu()"></div>
+
+<!-- Menú flotante de cambio de estado (fuera de la tabla para que no se recorte) -->
+<div class="estado-menu" *ngIf="estadoMenuProd as prod"
+  [style.top.px]="estadoMenuPos.top" [style.left.px]="estadoMenuPos.left">
+  <button type="button" class="estado-opcion" *ngFor="let e of estados"
+    [class.activa]="e === prod.estado" (click)="cambiarEstado(prod, e, $event)">
+    <i class="fa-solid fa-circle" [ngStyle]="{'color': estadoEstilo(e).color}" style="font-size:7px;"></i>
+    {{e}}
+    <i *ngIf="e === prod.estado" class="fa-solid fa-check ms-auto"></i>
+  </button>
+</div>
+
+<!-- Modal: Nueva Producción -->
+<div class="prod-modal-backdrop" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="prod-modal-card" (click)="$event.stopPropagation()">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4 class="fw-bold m-0">
+        <i class="fa-solid fa-industry me-2" style="color:var(--primary-color);"></i>
+        Nueva Producción
+      </h4>
+      <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Producto</label>
+      <select class="form-select rounded-3" [(ngModel)]="productoId" (ngModelChange)="onProductoChange()">
+        <option value="">Seleccione...</option>
+        <option *ngFor="let p of productos" [value]="p.id">{{p.nombre}}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Cantidad a producir</label>
+      <input type="number" min="1" step="1" class="form-control rounded-3" [(ngModel)]="cantidad">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label fw-semibold">
+        Observaciones <span class="text-muted small">(opcional)</span>
+      </label>
+      <textarea class="form-control rounded-3" rows="2" [(ngModel)]="observaciones"></textarea>
+    </div>
+
+    <!-- Preview de materia prima a consumir -->
+    <div *ngIf="cargandoReceta" class="text-center py-3">
+      <div class="spinner-border spinner-border-sm text-primary"></div>
+    </div>
+
+    <div *ngIf="detalleProducto && !cargandoReceta" class="card border-0 rounded-4 p-3 mb-3"
+      style="background:var(--surface-hover);">
+      <h6 class="fw-bold mb-2">
+        <i class="fa-solid fa-list-check me-2" style="color:var(--primary-color);"></i>
+        Materia prima a consumir
+      </h6>
+      <div class="table-responsive">
+        <table class="table table-sm mb-0">
+          <thead>
+            <tr class="text-muted small">
+              <th>Material</th>
+              <th class="text-end">Requerido</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of materialesRequeridos">
+              <td>{{m.nombre}}</td>
+              <td class="text-end fw-semibold">{{m.cantidad}} {{m.unidad}}</td>
+            </tr>
+            <tr *ngIf="materialesRequeridos.length === 0">
+              <td colspan="2" class="text-muted small">Este producto no tiene ingredientes en su receta.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div *ngIf="productoId && !detalleProducto && !cargandoReceta" class="alert alert-warning small rounded-3">
+      El producto seleccionado no tiene una receta activa; no se puede producir.
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-2">
+      <button type="button" class="btn btn-outline-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button type="button" class="btn btn-success" [disabled]="guardando || !detalleProducto"
+        (click)="registrarProduccion()">
+        <span *ngIf="guardando" class="spinner-border spinner-border-sm me-2"></span>
+        Registrar Producción
+      </button>
+    </div>
+
+  </div>
+</div>

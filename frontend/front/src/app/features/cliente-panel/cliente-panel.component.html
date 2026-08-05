@@ -1,47 +1,16 @@
-<div class="d-flex min-vh-100" style="background-color: var(--background-color);">
-  <!-- Sidebar del cliente -->
-  <aside class="sidebar bg-white shadow-sm p-4 d-flex flex-column" style="width: 260px; border-right: 1px solid var(--border-neutral-color);">
-    <div class="mb-5 d-flex align-items-center gap-3">
-      <div class="d-flex justify-content-center align-items-center rounded-circle" style="width: 40px; height: 40px; background-color: var(--primary-container-color); color: var(--primary-color); font-size: 1.2rem;">
-        <i class="fa-solid fa-leaf"></i>
-      </div>
-      <div>
-        <h5 class="fw-bold m-0" style="color: var(--primary-dark);">EcoCycle</h5>
-        <span class="text-muted small" style="font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase;">Portal Cliente</span>
-      </div>
-    </div>
+<div class="mi-cuenta">
+  <nav class="mi-cuenta__tabs">
+    <a routerLink="perfil" routerLinkActive="activo" class="tab">
+      <i class="fa-solid fa-user"></i>
+      <span>Perfil</span>
+    </a>
+    <a routerLink="mis-compras" routerLinkActive="activo" class="tab">
+      <i class="fa-solid fa-receipt"></i>
+      <span>Mis compras</span>
+    </a>
+  </nav>
 
-    <ul class="nav flex-column gap-2 mt-2">
-      <li class="nav-item">
-        <a class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 fw-medium nav-hover" 
-           routerLink="perfil" routerLinkActive="active-link">
-          <i class="fa-solid fa-user" style="width: 20px; text-align: center;"></i> Mi Perfil
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 fw-medium nav-hover" 
-           routerLink="mis-compras" routerLinkActive="active-link">
-          <i class="fa-solid fa-box-open" style="width: 20px; text-align: center;"></i> Mis Compras
-        </a>
-      </li>
-    </ul>
-
-    <div class="mt-auto">
-      <hr class="text-muted mb-3">
-      <a routerLink="/panel/dashboard" class="nav-link rounded-3 px-3 py-2 d-flex align-items-center gap-3 text-secondary fw-medium nav-hover">
-        <i class="fa-solid fa-arrow-left" style="width: 20px; text-align: center;"></i> Volver al Inicio
-      </a>
-    </div>
-  </aside>
-
-  <!-- Contenido Principal -->
-  <main class="flex-grow-1 p-4" style="overflow-y: auto; height: 100vh;">
+  <div class="mi-cuenta__contenido">
     <router-outlet></router-outlet>
-  </main>
+  </div>
 </div>
-
-<style>
-  .nav-link { color: var(--text-secondary-color); transition: all 0.2s ease; }
-  .nav-hover:hover { background-color: var(--primary-container-color); color: var(--primary-color) !important; }
-  .active-link { background-color: var(--primary-color) !important; color: white !important; font-weight: 600 !important; box-shadow: var(--shadow-sm); }
-</style>

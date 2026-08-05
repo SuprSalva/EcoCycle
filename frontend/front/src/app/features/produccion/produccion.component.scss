@@ -1,0 +1,102 @@
+.btn-action {
+  transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+/* Fila clickeable: abre el detalle */
+.fila-clickable {
+  cursor: pointer;
+}
+
+/* Badge/menú para cambiar el estado */
+.badge-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.badge-estado:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+.estado-menu {
+  position: fixed;
+  z-index: 1001;
+  min-width: 190px;
+  background: var(--surface-color, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  padding: 6px;
+  animation: estadoMenuIn 0.14s ease;
+}
+
+@keyframes estadoMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.estado-opcion {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text, #1f2937);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.estado-opcion:hover {
+  background: var(--surface-hover, #f1f5f9);
+}
+
+.estado-opcion.activa {
+  font-weight: 700;
+}
+
+/* Capa invisible que cierra el menú al hacer clic fuera */
+.estado-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: transparent;
+}
+
+.prod-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1055;
+  padding: 1rem;
+}
+
+.prod-modal-card {
+  background: var(--surface-color, #ffffff);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}

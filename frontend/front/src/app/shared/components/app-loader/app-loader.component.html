@@ -1,7 +1,7 @@
 <div class="loader-overlay fade-in-fast" *ngIf="isLoading$ | async">
   <div class="loader-content">
-    <div class="logo-container pulse-animation">
-      <img src="bottles_only.svg" alt="EcoCycle Logo" class="loader-logo">
+    <div class="logo-loader-container">
+      <img src="/logo_esmeralda.png" alt="EcoCycle Logo" class="logo-png-animated" />
     </div>
     <div class="loader-text mt-4">
       <h5 class="fw-bold m-0" style="color: var(--primary-color);">{{ message$ | async }}</h5>
@@ -10,5 +10,6 @@
     <div class="loading-bar mt-3">
       <div class="loading-bar-progress"></div>
     </div>
+
   </div>
 </div>

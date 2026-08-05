@@ -3,6 +3,20 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
+import { UsuarioService } from '../../../core/services/usuario.service';
+
+// Interface para tipado
+export interface UsuarioData {
+  id?: string;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  rol: string;
+  telefono: string;
+  direccion: string;
+  saldoPuntos?: number;
+  activo?: boolean;
+}
 
 @Component({
   selector: 'app-usuario-form',
@@ -22,7 +36,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
   constructor(
     private authService: AuthService,
     private notificationService: NotificationService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +56,8 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
           this.usuarioForm.reset({ rol: 'usuario' });
           this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
           this.usuarioForm.get('password')?.updateValueAndValidity();
+          this.usuarioForm.get('confirmarPassword')?.setValidators([Validators.required]);
+          this.usuarioForm.get('confirmarPassword')?.updateValueAndValidity();
         }
       }
     }
@@ -48,33 +65,32 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
 
   initForm(): void {
     this.usuarioForm = this.fb.group({
-      nombre: ['', [Validators.required]],
+      nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellidos: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       rol: ['usuario', [Validators.required]],
       telefono: [''],
       direccion: [''],
       saldoPuntos: [0],
-      password: [''],
-      confirmarPassword: ['']
+      password: ['', [Validators.required, Validators.minLength(6)]], // ✅ REQUERIDO
+      confirmarPassword: ['', [Validators.required]] // ✅ REQUERIDO
     });
-
-    if (!this.idSeleccionado) {
-      this.usuarioForm.get('password')?.setValidators([Validators.required, Validators.minLength(6)]);
-      this.usuarioForm.get('password')?.updateValueAndValidity();
-    }
   }
 
   cargarUsuario(id: string): void {
     this.cargando = true;
+    this.notificationService.showLoading('Cargando...', 'Obteniendo datos del usuario');
+    
     this.authService.obtenerUsuarioPorId(id).subscribe({
-      next: (usuario) => {
+      next: (usuario: UsuarioData | null) => {
         this.cargando = false;
+        this.notificationService.hideLoading();
+        
         if (usuario) {
           this.usuarioForm.patchValue({
-            nombre: usuario.nombre,
+            nombre: usuario.nombre || '',
             apellidos: usuario.apellidos || '',
-            email: usuario.email,
+            email: usuario.email || '',
             telefono: usuario.telefono || '',
             direccion: usuario.direccion || '',
             saldoPuntos: usuario.saldoPuntos || 0,
@@ -82,20 +98,27 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
             password: '', 
             confirmarPassword: ''
           });
-          this.usuarioForm.get('password')?.clearValidators();
-          this.usuarioForm.get('password')?.updateValueAndValidity();
-          // Desactivar solo los campos que no se pueden editar
+          
+          // Deshabilitar campos que no deben editarse
           this.usuarioForm.get('email')?.disable();
           this.usuarioForm.get('password')?.disable();
           this.usuarioForm.get('confirmarPassword')?.disable();
+          this.usuarioForm.get('saldoPuntos')?.disable();
+          
+          // Remover validaciones de password en edición
+          this.usuarioForm.get('password')?.clearValidators();
+          this.usuarioForm.get('password')?.updateValueAndValidity();
+          this.usuarioForm.get('confirmarPassword')?.clearValidators();
+          this.usuarioForm.get('confirmarPassword')?.updateValueAndValidity();
         } else {
           this.notificationService.error('Error', 'Usuario no encontrado.');
           this.volver();
         }
       },
-      error: (err) => {
+      error: (err: any) => {
         this.cargando = false;
-        console.error(err);
+        this.notificationService.hideLoading();
+        console.error('Error al cargar usuario:', err);
         this.notificationService.error('Error', 'No se pudo cargar la información del usuario.');
         this.volver();
       }
@@ -108,67 +131,137 @@ export class UsuarioFormComponent implements OnInit, OnChanges {
       return;
     }
 
-    const valores = this.usuarioForm.value;
+    const valores = this.usuarioForm.getRawValue();
 
-    if (!this.esEdicion || valores.password) {
+    if (!this.esEdicion) {
       if (valores.password !== valores.confirmarPassword) {
         this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
+        return;
+      }
+      
+      if (valores.password.length < 6) {
+        this.notificationService.error('Error de Seguridad', 'La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
+    }
+
+    if (this.esEdicion && valores.password) {
+      if (valores.password !== valores.confirmarPassword) {
+        this.notificationService.error('Error de Seguridad', 'Las contraseñas ingresadas no coinciden.');
+        return;
+      }
+      
+      if (valores.password.length < 6) {
+        this.notificationService.error('Error de Seguridad', 'La contraseña debe tener al menos 6 caracteres.');
         return;
       }
     }
 
     if (this.esEdicion) {
-      const payloadActualizar = {
-        nombre: valores.nombre,
-        apellidos: valores.apellidos,
-        telefono: valores.telefono,
-        direccion: valores.direccion,
-        rol: valores.rol
-      };
-
-      this.notificationService.showLoading('Actualizando...', 'Guardando los cambios del usuario');
-      this.authService.actualizarUsuario(this.idSeleccionado!, payloadActualizar).subscribe({
-        next: () => {
-          this.notificationService.hideLoading();
-          this.notificationService.success('¡Actualizado!', 'El usuario ha sido modificado con éxito.');
-          this.volver();
-        },
-        error: (err: any) => {
-          this.notificationService.hideLoading();
-          console.error(err);
-          const errorMsg = err.error?.message || err.message || 'Error desconocido';
-          this.notificationService.error('Error al Actualizar', errorMsg);
-        }
-      });
+      this.actualizarUsuario(valores);
     } else {
-      const payloadNuevo = {
-        nombre: valores.nombre,
-        apellidos: valores.apellidos,
-        email: valores.email,
-        telefono: valores.telefono,
-        direccion: valores.direccion,
-        password: valores.password,
-        rol: valores.rol
-      };
-
-      this.notificationService.showLoading('Guardando...', 'Registrando al nuevo usuario');
-      this.authService.registrarDesdeAdmin(payloadNuevo).subscribe({
-        next: () => {
-          this.notificationService.hideLoading();
-          this.notificationService.success('¡Creado!', 'El usuario ha sido insertado con éxito en el sistema.');
-          this.volver();
-        },
-        error: (err: any) => {
-          this.notificationService.hideLoading();
-          console.error(err);
-          const errorMsg = err.error?.message || err.message || 'Error desconocido';
-          this.notificationService.error('Error en el Registro', errorMsg);
-        }
-      });
+      this.crearUsuario(valores);
     }
+  }
+
+  private actualizarUsuario(valores: any): void {
+    const payloadActualizar = {
+      nombre: valores.nombre,
+      apellidos: valores.apellidos,
+      telefono: valores.telefono || '',
+      direccion: valores.direccion || '',
+      rol: valores.rol
+    };
+
+    this.cargando = true;
+    this.notificationService.showLoading('Actualizando...', 'Guardando los cambios del usuario');
+
+    this.authService.actualizarUsuario(this.idSeleccionado!, payloadActualizar).subscribe({
+      next: () => {
+        this.cargando = false;
+        this.notificationService.hideLoading();
+        this.notificationService.success('¡Actualizado!', 'El usuario ha sido modificado con éxito.');
+        this.volver();
+      },
+      error: (err: any) => {
+        this.cargando = false;
+        this.notificationService.hideLoading();
+        console.error('Error al actualizar:', err);
+        const errorMsg = err.error?.message || err.message || 'Error desconocido';
+        this.notificationService.error('Error al Actualizar', errorMsg);
+      }
+    });
+  }
+
+  // ✅ CREAR USUARIO CON CONTRASEÑA (FRONTEND LA MANEJA)
+  private crearUsuario(valores: any): void {
+    // ✅ ENVIAR CONTRASEÑA AL BACKEND PARA EL CORREO
+    const payloadNuevo = {
+      nombre: valores.nombre,
+      apellidos: valores.apellidos,
+      email: valores.email,
+      telefono: valores.telefono || '',
+      direccion: valores.direccion || '',
+      rol: valores.rol
+    };
+
+    this.cargando = true;
+    this.notificationService.showLoading('Guardando...', 'Registrando al nuevo usuario');
+
+    // ✅ PASO 1: Crear en Firebase Auth (frontend) y enviar al backend
+    this.authService.registro(valores.email, valores.password, payloadNuevo).subscribe({
+      next: (respuesta: any) => {
+        this.cargando = false;
+        this.notificationService.hideLoading();
+        
+        if (respuesta.suceso) {
+          this.notificationService.success('¡Creado!', 'Usuario creado exitosamente. Se enviaron las credenciales al correo.');
+          this.volver();
+        } else {
+          this.notificationService.error('Error', respuesta.message || 'No se pudo crear el usuario.');
+        }
+      },
+      error: (err: any) => {
+        this.cargando = false;
+        this.notificationService.hideLoading();
+        console.error('Error al crear usuario:', err);
+        
+        let mensaje = 'Error al crear usuario.';
+        if (err.error?.message) {
+          mensaje = err.error.message;
+        } else if (err.message) {
+          mensaje = err.message;
+        }
+        
+        this.notificationService.error('Error en el Registro', mensaje);
+      }
+    });
   }
 
   volver(): void {
     this.finalizar.emit();
+  }
+
+  hasError(campo: string, error: string): boolean {
+    const control = this.usuarioForm.get(campo);
+    return control ? control.hasError(error) && control.touched : false;
+  }
+
+  getErrorMessage(campo: string): string {
+    const control = this.usuarioForm.get(campo);
+    if (!control) return '';
+    
+    if (control.hasError('required')) {
+      const nombreCampo = campo.charAt(0).toUpperCase() + campo.slice(1);
+      return `${nombreCampo} es obligatorio`;
+    }
+    if (control.hasError('email')) {
+      return 'Ingresa un correo electrónico válido';
+    }
+    if (control.hasError('minlength')) {
+      const minLength = control.errors?.['minlength']?.requiredLength || 0;
+      return `Mínimo ${minLength} caracteres`;
+    }
+    return '';
   }
 }

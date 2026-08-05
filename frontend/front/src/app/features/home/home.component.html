@@ -1,0 +1,212 @@
+<app-bar></app-bar>
+
+<section class="hero">
+    <div class="hero__carousel">
+        <div class="hero__slide" *ngFor="let slide of slides; let i = index"
+            [class.hero__slide--active]="i === currentIndex">
+
+            <img [src]="slide" [alt]="'Slide ' + (i + 1)" class="hero__image">
+        </div>
+    </div>
+
+    <div class="hero__overlay"></div>
+
+    <button class="hero__arrow hero__arrow--prev" (click)="prevSlide()" aria-label="Anterior">&#10094;</button>
+    <button class="hero__arrow hero__arrow--next" (click)="nextSlide()" aria-label="Siguiente">&#10095;</button>
+
+    <div class="hero__dots">
+        <button *ngFor="let slide of slides; let i = index" class="hero__dot"
+            [class.hero__dot--active]="i === currentIndex" (click)="goToSlide(i)"
+            [attr.aria-label]="'Ir al slide ' + (i + 1)"></button>
+    </div>
+
+    <div class="hero__container container">
+        <div class="hero__content">
+            <h1 class="hero__title">Construye ideas increíbles para tu negocio</h1>
+            <p class="hero__description">
+                Una plataforma moderna y flexible diseñada para ayudarte a hacer crecer tus proyectos de forma rápida y
+                eficiente.
+            </p>
+            <div class="hero__buttons">
+                <a href="#" class="btn btn--primary">Empezar Ahora</a>
+                <a href="#" class="btn btn--secondary">Saber Más</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="campaigns" class="campaigns">
+    <div class="container">
+
+        <div class="campaigns__header">
+            <h2 class="section-title">Nuestras Campañas Ecológicas</h2>
+            <p class="section-subtitle">
+                Sumamos esfuerzos para crear un impacto ambiental positivo y promover un futuro más sostenible.
+            </p>
+        </div>
+
+        <div class="campaigns__grid">
+            <article class="campaign-card" *ngFor="let campaign of campaigns">
+
+                <div class="campaign-card__image-wrapper">
+                    <img [src]="campaign.imageUrl" [alt]="campaign.title" class="campaign-card__image">
+                   
+                </div>
+                <div class="campaign-card__body">
+                    <h3 class="campaign-card__title">{{ campaign.title }}</h3>
+                    <p class="campaign-card__text">{{ campaign.description }}</p>
+
+                    <div class="campaign-card__progress-container">
+                        <div class="campaign-card__progress-info">
+                            <span>Meta de la campaña</span>
+                            <span class="campaign-card__percentage">{{ campaign.progress }}%</span>
+                        </div>
+                        <div class="campaign-card__progress-bar">
+                            <div class="campaign-card__progress-fill" [style.width.%]="campaign.progress"></div>
+                        </div>
+                        <span class="campaign-card__goal">{{ campaign.goalText }}</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+    </div>
+</section>
+
+
+<section id="features" class="features">
+    <div class="container">
+
+        <div class="features__header">
+            <h2 class="section-title">¿Por qué elegir nuestra plataforma?</h2>
+            <p class="section-subtitle">
+                Diseñamos cada detalle para ofrecerte una experiencia rápida, segura y accesible desde cualquier lugar.
+            </p>
+        </div>
+
+        <div class="features__carousel-wrapper">
+
+            <button class="carousel-nav carousel-nav--prev" (click)="scrollFeatures('left')"
+                aria-label="Anterior característica">
+                &#10094;
+            </button>
+
+            <div class="features__grid" #featuresGrid>
+                <article class="card" *ngFor="let item of features">
+                    <div class="card__icon-wrapper">
+                        <svg class="card__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="item.iconPath" />
+                        </svg>
+                    </div>
+                    <h3 class="card__title">{{ item.title }}</h3>
+                    <p class="card__text">{{ item.text }}</p>
+                </article>
+            </div>
+
+            <button class="carousel-nav carousel-nav--next" (click)="scrollFeatures('right')"
+                aria-label="Siguiente característica">
+                &#10095;
+            </button>
+
+        </div>
+
+    </div>
+</section>
+
+<section id="how-it-works" class="how-it-works">
+    <div class="container">
+      
+      <div class="how-it-works__header">
+        <span class="badge">Paso a Paso</span>
+        <h2 class="section-title">¿Cómo funciona <span class="verde">nuestra plataforma?</span></h2>
+         
+        <p class="section-subtitle">
+          Aprende cómo transformar tus residuos en un impacto ecológico real en 3 sencillos pasos.
+        </p>
+      </div>
+  
+      <div class="steps-timeline">
+        <div class="step-item" *ngFor="let step of steps; let last = last">
+  
+            <div class="step-item__image-preview">
+            <img [src]="step.imageUrl" [alt]="step.title" />
+          </div>
+  
+          <div class="step-item__marker">
+            <div class="step-item__icon-box">
+              <svg class="step-item__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="step.iconPath" />
+              </svg>
+              <span class="step-item__number">{{ step.number }}</span>
+            </div>
+            <div *ngIf="!last" class="step-item__connector"></div>
+          </div>
+  
+          <div class="step-item__content">
+            <h3 class="step-item__title">{{ step.title }}</h3>
+            <p class="step-item__text">{{ step.description }}</p>
+          </div>
+  
+        </div>
+      </div>
+  
+    </div>
+  </section>
+
+<footer class="footer">
+
+    <div class="footer-container">
+
+        <div class="footer-logo">
+            <h2>EcoCycle</h2>
+            <p>
+                Resguardando y cuidando el medio ambiente.
+            </p>
+        </div>
+
+        <div class="footer-links">
+
+            <h3>Enlaces</h3>
+
+            <a href="index.html">Inicio</a>
+            <a href="productos.html">Productos</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="contacto.html">Contacto</a>
+
+        </div>
+
+        <div class="footer-contacto">
+
+            <h3>Contacto</h3>
+
+            <p><i class="fa-solid fa-location-dot"></i> Ciudad, México</p>
+            <p><i class="fa-solid fa-phone"></i>+52 123 456 7890</p>
+            <p><i class="fa-solid fa-envelope"></i> contactoEcocycle.com</p>
+
+        </div>
+
+        <div class="footer-social">
+
+            <h3>Síguenos</h3>
+
+            <div class="social-icons">
+
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                <a href="#"><i class="fab fa-instagram"></i></a>
+
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 EcoCycle| Todos los derechos reservados.
+    </div>
+
+</footer>

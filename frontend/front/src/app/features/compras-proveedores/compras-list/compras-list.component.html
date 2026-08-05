@@ -1,58 +1,151 @@
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-primary fw-bold">Historial de Compras</h2>
-    <a routerLink="/panel/compras-proveedores/nueva" class="btn btn-success shadow-sm">
-      <i class="bi bi-cart-plus me-2"></i>Registrar Compra
-    </a>
+<div class="container-fluid min-vh-100" style="padding: 3rem; background-color: var(--background-color);">
+
+  <!-- Encabezado -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
+    <div>
+      <h2 class="fw-bold m-0"
+        style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
+        Historial de Compras
+      </h2>
+      <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
+        Gestiona y revisa los abastecimientos y compras a proveedores.
+      </p>
+    </div>
+
+    <!-- Botón de Registro Estilizado -->
+    <div>
+      <a routerLink="/admin/compras-proveedores/nueva"
+        class="btn btn-sm text-white fw-bold px-4 py-2 rounded-pill shadow-sm"
+        style="background-color: var(--primary-color, #10b981); font-size: 0.85rem; transition: all 0.2s;">
+        <i class="fa-solid fa-cart-plus me-2"></i>Registrar Compra
+      </a>
+    </div>
   </div>
 
-  <div class="card card-modern border-0 fade-in-up">
-    <div class="card-body p-4">
-      
-      <div *ngIf="cargando" class="text-center py-5">
-        <div class="spinner-border text-success" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
-      </div>
+  <!-- Barra de Herramientas Superior: Filtro y Búsqueda -->
+  <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch align-items-md-center gap-3">
 
-      <div *ngIf="!cargando && compras.length === 0" class="text-center py-5 text-muted">
-        <i class="bi bi-bag-x display-1"></i>
-        <p class="mt-3 fs-5">No hay compras registradas aún.</p>
-      </div>
-
-      <div class="table-responsive" *ngIf="!cargando && compras.length > 0">
-        <table class="table table-dark table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Proveedor</th>
-              <th>Fecha</th>
-              <th>Estado</th>
-              <th>Total</th>
-              <th class="text-center">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let c of compras">
-              <td class="fw-medium">
-                <i class="bi bi-building me-2 text-secondary"></i>
-                {{ c.proveedorNombre }}
-              </td>
-              <td>{{ c.fechaCompra | date:'medium' }}</td>
-              <td>
-                <span class="badge rounded-pill" style="background-color: var(--primary); color: #000;" *ngIf="c.estado === 'Completado'">{{ c.estado }}</span>
-                <span class="badge rounded-pill" style="background-color: var(--accent); color: #000;" *ngIf="c.estado !== 'Completado'">{{ c.estado }}</span>
-              </td>
-              <td class="fw-bold text-success">${{ c.total | number:'1.2-2' }}</td>
-              <td class="text-center">
-                <button (click)="verDetalles(c)" class="btn btn-sm btn-outline-info rounded-pill px-3">
-                  <i class="bi bi-eye me-1"></i> Ver Detalles
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Buscador de Proveedores -->
+      <div class="input-group flex-grow-1" style="max-width: 360px;">
+        <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill"
+          style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+          <i class="fa-solid fa-search"></i>
+        </span>
+        <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill"
+          placeholder="Buscar por proveedor..." style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+          [(ngModel)]="searchTerm" (keyup)="currentPage = 1">
       </div>
 
     </div>
+  </div>
+
+  <!-- Contenedor Principal de la Tabla -->
+  <div class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden mb-4">
+
+    <!-- Estado de Carga (Spinner Rediseñado) -->
+    <div *ngIf="cargando" class="text-center py-5">
+      <div class="spinner-border text-success" role="status" style="color: var(--primary-color) !important;">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <!-- Tabla de Resultados -->
+    <div class="table-responsive" *ngIf="!cargando && comprasFiltradas.length > 0">
+      <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+        <thead style="background-color: #f8fafc;">
+          <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+            <th class="ps-4 py-3 fw-bold border-bottom-0">Proveedor</th>
+            <th class="py-3 fw-bold border-bottom-0">Fecha</th>
+            <th class="py-3 fw-bold border-bottom-0">Estado</th>
+            <th class="py-3 fw-bold border-bottom-0">Total</th>
+            <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of comprasPaginadas" class="bg-white border-bottom cursor-pointer"
+            style="transition: all 0.2s ease;">
+
+            <!-- Proveedor -->
+            <td class="ps-4 py-3 fw-semibold" style="font-size: 0.95rem; color: var(--on-surface-color);">
+
+              <div class="d-flex align-items-center gap-2">
+
+                <span>
+                  {{ c.proveedorNombre }}
+                </span>
+
+              </div>
+
+            </td>
+            <!-- Fecha -->
+            <td class="py-3 text-muted" style="font-size: 0.9rem;">
+              {{ c.fechaCompra | date:'dd MMM yyyy, h:mm a' }}
+            </td>
+
+            <!-- Estado -->
+            <td class="py-3">
+              <span class="fw-bold px-3 py-1 rounded-pill"
+                [style.background-color]="c.estado === 'Completado' ? '#f0fdf4' : '#fffbeb'"
+                [style.color]="c.estado === 'Completado' ? '#16a34a' : '#d97706'" style="font-size: 0.8rem;">
+                <i class="fa-solid" [class.fa-check-circle]="c.estado === 'Completado'"
+                  [class.fa-clock]="c.estado !== 'Completado'"></i>
+                {{ c.estado }}
+              </span>
+            </td>
+
+            <!-- Total -->
+            <td class="py-3 fw-bold text-dark" style="font-size: 0.95rem;">
+              ${{ c.total | number:'1.2-2' }}
+            </td>
+
+            <!-- Acciones -->
+            <td class="pe-4 py-3 text-center">
+              <button (click)="verDetalles(c)" class="btn btn-sm rounded-pill px-3 py-1"
+                style="border: 1px solid var(--primary-color); color: var(--primary-color); background-color: transparent; font-weight: 500; font-size: 0.75rem; transition: all 0.2s;"
+                onmouseover="this.style.backgroundColor='var(--primary-color)'; this.style.color='white';"
+                onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary-color)';">
+                <i class="fa-solid fa-eye me-1"></i> Ver Detalles
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State Uniforme -->
+    <div *ngIf="!cargando && comprasFiltradas.length === 0" class="text-center py-5 text-muted">
+      <i class="fa-solid fa-box-open fs-1 mb-3" style="opacity: 0.2;"></i>
+      <h5 class="fw-bold text-secondary">No hay compras registradas</h5>
+      <p class="small mb-0">No se encontraron registros de compras en este momento.</p>
+    </div>
+
+    <!-- Paginador Inferior Sincronizado -->
+    <div *ngIf="!cargando && totalPages > 0" class="d-flex justify-content-between align-items-center p-3 border-top"
+      style="border-color: #edf2f7 !important; background-color: #ffffff;">
+
+      <!-- Info registros -->
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small fw-medium">
+          Mostrando página {{ currentPage }} de {{ totalPages }}
+        </span>
+      </div>
+
+      <!-- Botones de Control de Páginas -->
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="anteriorPagina()" [disabled]="currentPage === 1">
+          <i class="fa-solid fa-chevron-left text-muted"></i>
+        </button>
+        <button class="btn btn-sm text-white fw-bold shadow-sm"
+          style="background-color: var(--primary-color, #10b981); min-width: 28px;">
+          {{ currentPage }}
+        </button>
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="siguientePagina()"
+          [disabled]="currentPage === totalPages">
+          <i class="fa-solid fa-chevron-right text-muted"></i>
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>

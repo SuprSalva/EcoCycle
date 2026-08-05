@@ -1,21 +1,15 @@
+<!-- sidebar.component.html -->
 <aside class="sidebar" [class.collapsed]="isCollapsed">
 
   <div class="sidebar-header">
     <div class="logo-seccion">
-      <img src="/logofinalpng.png" alt="EcoCycle Logo">
+      <img src="/logoo_blanco.png" alt="EcoCycle Logo">
       <div class="logo-text">
         <h2>EcoCycle</h2>
         <span>Panel</span>
       </div>
     </div>
     
-    <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isLightTheme ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'">
-      <i class="fa-solid" [ngClass]="isLightTheme ? 'fa-moon' : 'fa-sun'"></i>
-    </button>
-
-    <button class="btn-logout" (click)="onLogout()">
-      <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
-    </button>
 
     <button class="menu-btn" type="button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
       <i class="fa-solid fa-bars"></i>
@@ -47,28 +41,58 @@
     </div>
   </nav>
 
-  <!-- Parte inferior -->
   <div class="sidebar-bottom">
 
-    <a class="item-menu">
-      <i class="fa-solid fa-circle-question"></i>
-      <span>Soporte</span>
-    </a>
-
-    <a class="item-menu">
-      <i class="fa-solid fa-gear"></i>
-      <span>Configuración</span>
-    </a>
-
-    <div class="usuario" *ngIf="perfil">
-      <img src="/usuario.png">
-      <div>
+    <div class="usuario"
+         *ngIf="perfil"
+         (click)="toggleUserMenu($event)">
+  
+      <div class="avatar position-relative" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%; margin-right: 10px;">
+        <ng-container *ngIf="perfil?.avatarUrl; else avatarPorDefecto">
+          <img [src]="perfil.avatarUrl" alt="Avatar" class="w-100 h-100 object-fit-cover m-0">
+        </ng-container>
+        <ng-template #avatarPorDefecto>
+          <a class="btn-theme-toggle">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        </ng-template>
+      </div>
+  
+      <div class="user-info">
         <strong>{{ perfil.nombre || 'Eco Admin' }}</strong>
         <span>{{ perfil.correo || 'admin@ecocycle.com' }}</span>
       </div>
-      <i class="fa-solid fa-ellipsis-vertical"></i>
+  
+      <i class="fa-solid fa-chevron-right"></i>
+  
     </div>
 
+    <div class="user-dropdown" *ngIf="showUserMenu" (click)="$event.stopPropagation()">
+   
+      <button class="dropdown-item" routerLink='/admin/mi-perfil/perfil'>
+        <i class="fa-solid fa-user" ></i>
+        Perfil
+      </button>
+  
+      <button class="dropdown-item" routerLink='/admin/configuracion'>
+        <i class="fa-solid fa-gear"></i>
+        Configuración
+      </button>
+  
+      <button class="dropdown-item" routerLink='/admin/quejas'>
+        <i class="fa-solid fa-circle-question"></i>
+        Buzón de Quejas
+      </button>
+
+      <hr>
+  
+      <button class="dropdown-item danger" (click)="onLogout()">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Cerrar sesión
+      </button>
+  
+    </div>
+  
   </div>
 
 </aside>

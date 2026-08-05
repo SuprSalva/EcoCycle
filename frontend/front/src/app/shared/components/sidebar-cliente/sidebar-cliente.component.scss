@@ -1,0 +1,363 @@
+:host { display: contents; }
+
+.sidebar {
+  width: 320px;
+  height: 100vh;
+  background: #092C1D; /* Verde Esmeralda Muy Oscuro (Súper elegante) */
+  color: #FFFFFF; /* Texto principal en blanco puro */
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-seccion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-seccion img {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+}
+
+.separador {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15); /* Divisor sutil */
+  opacity: .6;
+  margin: 18px 0;
+}
+
+.logo-text h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.logo-text span {
+  font-size: 12px;
+  color: #fafafa; /* Un toque de verde esmeralda brillante */
+}
+
+.menu-btn {
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: transparent;
+  color: #FFFFFF;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: .3s;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-box {
+  height: 40px;
+  margin: 25px 0;
+  background: rgba(255, 255, 255, 0.08); /* Fondo de input integrado */
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.search-box i {
+  color: #A3D9C9; /* Tono menta suave para los iconos secundarios */
+  font-size: 14px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: none;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.search-box input::placeholder {
+  color: #A3D9C9;
+}
+
+.menu-section {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #61A48F; /* Títulos de sección discretos en verde apagado */
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-left: 14px;
+  font-weight: 600;
+}
+
+.menu-navegacion {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.menu-navegacion::-webkit-scrollbar {
+  width: 4px;
+}
+
+.menu-navegacion::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.item-menu {
+  height: 44px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-radius: 10px;
+  border-left: 4px solid transparent;
+  color: #A3D9C9; /* Pestañas inactivas en un menta pastel apagado */
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  flex-shrink: 0;
+  transition: all .25s ease;
+}
+
+.item-menu i {
+  width: 18px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.item-menu span {
+  white-space: nowrap;
+}
+
+.item-menu:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.item-menu.activo {
+  background: #00A86B; /* Esmeralda Vivo para resaltar la selección */
+  color: #FFFFFF;
+  font-weight: 600;
+  border-left: 4px solid #50C878; /* Detalle de borde más claro */
+}
+
+.item-menu.activo i {
+  color: #FFFFFF;
+}
+
+.sidebar-bottom {
+  position: relative;
+  margin-top: auto;
+}
+
+.sidebar-bottom .item-menu {
+  margin-bottom: 8px;
+}
+
+.sidebar-bottom small {
+  margin-left: auto;
+  background: #50C878; /* Badge verde esmeralda brillante */
+  color: #04140D;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 6px;
+}
+
+.usuario {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+  transition: .2s;
+}
+
+.usuario:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.usuario img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info strong {
+  color: #FFFFFF;
+  font-size: 14px;
+}
+
+.user-info span {
+  color: #A3D9C9;
+  font-size: 12px;
+}
+
+.usuario i {
+  color: #A3D9C9;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.sidebar.collapsed {
+  width: 80px;
+  padding: 20px 12px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar.collapsed .logo-seccion {
+  display: none;
+}
+
+.sidebar.collapsed .menu-section {
+  display: none;
+}
+
+.sidebar.collapsed .item-menu {
+  justify-content: center;
+  padding: 0;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.sidebar.collapsed .item-menu.activo {
+  border-left: none;
+}
+
+.sidebar.collapsed .item-menu i {
+  font-size: 18px;
+  margin: 0;
+}
+
+.sidebar.collapsed .usuario {
+  justify-content: center;
+  padding: 10px;
+}
+
+.sidebar.collapsed .usuario img {
+  margin: 0;
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .search-box,
+.sidebar.collapsed .item-menu span,
+.sidebar.collapsed .item-menu small,
+.sidebar.collapsed .user-info,
+.sidebar.collapsed .usuario i {
+  display: none;
+}
+
+/* Dropdown del usuario (Fondo esmeralda oscuro a juego con el sidebar) */
+.user-dropdown {
+  position: absolute;
+  bottom: 75px;
+  left: 0;
+  width: 270px;
+  background: #0D3E29; 
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, .4);
+  padding: 10px;
+  z-index: 100;
+}
+
+.dropdown-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: none;
+  background: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  color: #E2F3EE;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+}
+
+.dropdown-item i {
+  width: 20px;
+}
+
+.dropdown-item.danger {
+  color: #FF6B6B; /* Rojo pastel que resalta bien sobre verde sin ser chillón */
+}
+
+.user-dropdown hr {
+  margin: 8px 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.btn-theme-toggle {
+  background-color: transparent;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}

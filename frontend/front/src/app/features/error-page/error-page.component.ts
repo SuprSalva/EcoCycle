@@ -47,6 +47,6 @@ export class ErrorPageComponent implements OnInit {
   }
 
   volverAlInicio(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 }

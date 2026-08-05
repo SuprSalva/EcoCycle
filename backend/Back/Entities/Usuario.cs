@@ -37,4 +37,7 @@ public class Usuario
 
     [FirestoreProperty("creado_en")]
     public DateTime CreadoEn { get; set; } = DateTime.UtcNow;
+
+    [FirestoreProperty("avatar_url")]
+    public string? AvatarUrl { get; set; }
 }

@@ -1,0 +1,131 @@
+<div class="container-fluid" style="padding: 3rem">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2>¡Bienvenido, {{ perfil?.nombre || 'Cliente' }}!</h2>
+      <p class="text-muted">Aquí puedes ver tu actividad y estadísticas personales.</p>
+    </div>
+  </div>
+
+<section class="tarjetas-grid">
+
+  <div class="tarjeta verde">
+    <p>TOTAL BOTELLAS RECICLADAS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalBotellas | number }}
+      <span>uds</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Actividad general
+    </small>
+
+  </div>
+
+  <div class="tarjeta azul">
+
+    <p>PUNTOS TOTALES EMITIDOS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalPuntosEmitidos | number:'1.2-2' }}
+      <span>pts</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-arrow-trend-up"></i>
+      Recompensas entregadas
+    </small>
+
+  </div>
+
+
+  <div class="tarjeta naranja">
+
+    <p>CANJES COMPLETADOS</p>
+
+    <h3 *ngIf="cargando">...</h3>
+
+    <h3 *ngIf="!cargando">
+      {{ resumen.totalCanjes }}
+      <span>éxitos</span>
+    </h3>
+
+    <small class="indicador positivo">
+      <i class="fa-solid fa-circle-check"></i>
+      Canjes exitosos
+    </small>
+
+  </div>
+
+</section>
+
+<section class="dashboard">
+
+
+  <div class="card-dashboard grafica-principal">
+
+    <div class="card-header">
+
+      <h3>Monitoreo de Reciclaje</h3>
+
+      <span>Actividad registrada durante los últimos días</span>
+
+    </div>
+
+    <div class="chart-container">
+    <canvas #areaChart></canvas>
+    </div>
+  </div>
+
+
+
+  <div class="card-dashboard tabla-card">
+
+    <div class="card-header">
+
+      <h3>Últimas sesiones</h3>
+
+      <span>Reciclajes registrados recientemente</span>
+
+    </div>
+
+    <div class="tabla-responsive">
+
+      <table>
+
+        <thead>
+
+          <tr>
+          
+          <th>Fecha</th>
+          
+          <th>Máquina</th>
+              
+          </tr>
+          
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let s of ultimasSesiones">
+            
+            <td>{{ s.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
+            
+            <td>{{ s.maquinaId }}</td>  
+      
+            </tr>
+            
+            </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</section>
+
+</div>

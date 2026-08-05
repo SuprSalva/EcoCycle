@@ -129,6 +129,17 @@ export class NotificationService {
       buttonsStyling: false
     });
   }
+  info(titulo: string, mensaje: string): void {
+  // Implementación según tu librería de notificaciones
+  // Ejemplo con SweetAlert2:
+  Swal.fire({
+    icon: 'info',
+    title: titulo,
+    text: mensaje,
+    confirmButtonColor: '#0D631B',
+    confirmButtonText: 'Entendido'
+  });
+}
 
   // Pantalla de carga (bloquea la interfaz)
   showLoading(title: string = 'Cargando...', text: string = 'Por favor espera un momento') {

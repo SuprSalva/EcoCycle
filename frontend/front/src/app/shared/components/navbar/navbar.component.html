@@ -7,8 +7,13 @@
 
   <div class="acciones-header">
     <div class="perfil-info" *ngIf="perfil">
-      <div class="avatar">
-        {{ (perfil?.nombre ? perfil.nombre.charAt(0) : 'U') | uppercase }}
+      <div class="avatar position-relative" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 50%;">
+        <ng-container *ngIf="perfil?.avatarUrl; else iniciales">
+          <img [src]="perfil.avatarUrl" alt="Avatar" class="w-100 h-100 object-fit-cover">
+        </ng-container>
+        <ng-template #iniciales>
+          {{ (perfil?.nombre ? perfil.nombre.charAt(0) : 'U') | uppercase }}
+        </ng-template>
       </div>
       <div class="detalles">
         <span class="email">{{ perfil?.email || 'Sin correo' }}</span>

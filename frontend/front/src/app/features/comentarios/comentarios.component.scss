@@ -1,0 +1,118 @@
+
+.cursor-pointer{
+    cursor:pointer;
+ }
+ 
+ .card-modern{
+    background:#fff;
+ }
+ 
+ .hover-lift{
+    transition:.25s ease;
+ }
+ 
+ .hover-lift:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(0,0,0,.08)!important;
+ }
+ 
+ .btn-action{
+    transition:.2s ease;
+ }
+ 
+ .btn-action:hover{
+    transform:scale(1.08);
+ }
+ 
+ .table tbody tr{
+    transition:.2s ease;
+ }
+ 
+ .table tbody tr:hover{
+    background:#f8fafc;
+ }
+ 
+ .modal-content{
+    animation:fadeIn .25s ease;
+ }
+ 
+ .tarjetas-grid {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 22px;
+   margin-bottom: 24px;
+ }
+ 
+ .tarjeta {
+   background: #ffffff;
+   border-radius: 16px; /* Ajustado para consistencia visual */
+   padding: 24px;
+   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+   border-top: 4px solid transparent;
+   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+ }
+ 
+ .tarjeta:hover {
+   transform: translateY(-4px);
+ }
+ 
+ .tarjeta.verde       { border-color: #10b981; }
+ .tarjeta.azul        { border-color: #2196f3; }
+ .tarjeta.verde-claro { border-color: #34d399; }
+ .tarjeta.naranja     { border-color: #f59e0b; }
+ 
+ .tarjeta p {
+   margin: 0;
+   font-size: 0.78rem;
+   color: #8a94a6;
+   text-transform: uppercase;
+   letter-spacing: 0.6px;
+   font-weight: 600;
+ }
+ 
+ .tarjeta h3 {
+   margin: 16px 0 6px;
+   font-size: 2.1rem;
+   font-weight: 700;
+   color: #18233d;
+   display: flex;
+   align-items: baseline;
+   gap: 6px;
+ }
+ 
+ .tarjeta span {
+   font-size: 0.9rem;
+   color: #8a94a6;
+   font-weight: 400;
+ }
+ 
+ .tarjeta .indicador {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 0.88rem;
+   font-weight: 500;
+   margin-top: 4px;
+ }
+ 
+ .tarjeta .indicador.positivo {
+   color: #16a34a;
+ }
+ 
+ 
+ @keyframes fadeIn{
+ 
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+ 
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+ 
+ }

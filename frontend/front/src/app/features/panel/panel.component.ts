@@ -1,5 +1,5 @@
+// panel.component.ts
 import { Component, OnInit } from '@angular/core';
-// 1. IMPORTAMOS LAS HERRAMIENTAS DE ENRUTAMIENTO
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
@@ -8,13 +8,13 @@ import { NavbarComponent } from '../../shared/components/navbar/navbar.component
 
 @Component({
   selector: 'app-panel',
-  standalone: true, // Asegúrate de que tenga esta línea si es un componente Standalone
+  standalone: true,
   imports: [
-    RouterOutlet, 
+    RouterOutlet,
     RouterModule,
     CommonModule,
     SidebarComponent,
-    NavbarComponent
+    NavbarComponent  // ✅ Asegurar que esté importado
   ],
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.scss'
@@ -31,7 +31,6 @@ export class PanelComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al obtener perfil', err);
-        // Fallback para evitar que se quede en "Cargando perfil..." si el usuario no está en la BD
         this.perfil = {
           nombre: 'Usuario',
           apellidos: 'No Registrado',

@@ -1,225 +1,184 @@
-<div class="container-fluid p-4 min-vh-100 fade-in-up" style="background-color: var(--background-color);">
+<div class="container-fluid min-vh-100" style="padding: 3rem; background-color: var(--background-color);">
 
-  <!-- Encabezado y Herramientas -->
-  <div class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center mb-4 gap-4 px-2">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
     <div>
-      <h2 class="fw-bold mb-1" style="color: var(--primary-dark); font-size: 1.85rem; letter-spacing: -0.02em;">Historial de Recompensas</h2>
-      <p class="text-muted mb-0" style="font-size: 0.95rem;">Explora los canjes realizados por la comunidad EcoCycle</p>
+      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
+        Historial de Recompensas
+      </h2>
+      <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
+        Explora los canjes realizados por la comunidad EcoCycle.
+      </p>
     </div>
-    
-    <!-- Tarjeta de Controles -->
-    <div class="card-modern p-3 rounded-4 shadow-sm border-0 d-flex flex-wrap align-items-center gap-3">
+
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <button class="btn btn-outline-danger btn-sm fw-semibold shadow-sm d-flex align-items-center gap-2" (click)="exportarPDF()">
+        <i class="fa-solid fa-file-pdf"></i> PDF
+      </button>
+
+      <button class="btn btn-outline-success btn-sm fw-semibold shadow-sm d-flex align-items-center gap-2" (click)="exportarExcel()">
+        <i class="fa-solid fa-file-excel"></i> Excel
+      </button>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+    <div class="d-flex flex-column flex-xl-row justify-content-between align-items-stretch align-items-xl-center gap-3">
       
-      <!-- Búsqueda -->
-      <div class="position-relative d-flex align-items-center">
-        <i class="fa-solid fa-search position-absolute text-muted" style="left: 12px; font-size: 0.85rem;"></i>
-        <input type="text" class="form-control form-control-sm border-secondary shadow-none text-dark ps-4" 
-               style="height: 38px; border-radius: 8px; min-width: 180px;" 
-               placeholder="Buscar código..." 
-               [(ngModel)]="busquedaCodigo" 
-               (keyup)="aplicarFiltrosYOrden()">
-      </div>
-
-      <!-- Filtros de fecha -->
-      <div class="d-flex align-items-center gap-2">
-        <div class="position-relative">
-          <label class="form-label position-absolute px-1 text-muted" style="top: -8px; left: 10px; background: var(--card-bg); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Desde</label>
-          <input type="text" appFlatpickr class="form-control form-control-sm border-secondary shadow-none text-dark" style="height: 38px; border-radius: 8px; cursor: pointer; min-width: 140px;" placeholder="Selecciona fecha..." [(ngModel)]="fechaInicio">
+      <div class="d-flex flex-wrap align-items-center gap-3 flex-grow-1">
+        <div class="input-group" style="max-width: 320px; min-width: 220px;">
+          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+            <i class="fa-solid fa-search"></i>
+          </span>
+          <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill" 
+                 placeholder="Buscar por código..." 
+                 style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+                 [(ngModel)]="busquedaCodigo" 
+                 (keyup)="aplicarFiltrosYOrden()">
         </div>
-        <div class="position-relative">
-          <label class="form-label position-absolute px-1 text-muted" style="top: -8px; left: 10px; background: var(--card-bg); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">Hasta</label>
-          <input type="text" appFlatpickr class="form-control form-control-sm border-secondary shadow-none text-dark" style="height: 38px; border-radius: 8px; cursor: pointer; min-width: 140px;" placeholder="Selecciona fecha..." [(ngModel)]="fechaFin">
-        </div>
-        
-        <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-3 shadow-sm hover-lift" (click)="filtrarPorFechas()" style="height: 38px; width: 38px;" title="Aplicar Filtros">
-          <i class="fa-solid fa-search"></i>
-        </button>
-        <button class="btn btn-light border-light-subtle d-flex align-items-center justify-content-center rounded-3 hover-lift" (click)="limpiarFiltros()" style="height: 38px; width: 38px;" title="Limpiar Filtros">
-          <i class="fa-solid fa-rotate-left text-muted"></i>
-        </button>
-      </div>
 
-      <div class="vr mx-1 d-none d-md-block" style="opacity: 0.1;"></div>
-
-      <!-- Exportaciones -->
-      <div class="d-flex gap-2">
-        <button class="btn btn-outline-danger btn-sm d-flex align-items-center gap-2 shadow-sm rounded-3 hover-lift" 
-                style="height: 38px; padding: 0 16px;"
-                (click)="exportarPDF()">
-          <i class="fa-solid fa-file-pdf"></i>
-          <span class="fw-semibold" style="font-size: 0.85rem;">PDF</span>
-        </button>
-
-        <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2 shadow-sm rounded-3 hover-lift" 
-                style="height: 38px; padding: 0 16px;"
-                (click)="exportarExcel()">
-          <i class="fa-solid fa-file-excel"></i>
-          <span class="fw-semibold" style="font-size: 0.85rem;">Excel</span>
-        </button>
       </div>
     </div>
   </div>
 
-  <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 card-modern p-0 overflow-hidden mb-4 hover-lift">
+  <div *ngIf="!cargando" class="card shadow-sm border-0 rounded-4 bg-white p-0 overflow-hidden mb-4 hover-lift">
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
-        <thead>
-          <tr style="background-color: var(--surface-hover);">
-            <th class="ps-4 py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Usuario</th>
-            <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Recompensa Canjeada</th>
-            <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Puntos Costo</th>
-            <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Fecha y Hora</th>
-            <th class="py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Código</th>
-            <th class="pe-4 py-3 text-uppercase text-muted" style="font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; border-bottom: 2px solid #e2e8f0;">Estado</th>
+        <thead style="background-color: #f8fafc;">
+          <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+            <th class="ps-4 py-3 fw-bold border-bottom-0">Usuario</th>
+            <th class="py-3 fw-bold border-bottom-0">Recompensa Canjeada</th>
+            <th class="py-3 fw-bold border-bottom-0">Puntos Costo</th>
+            <th class="py-3 fw-bold border-bottom-0">Fecha y Hora</th>
+            <th class="py-3 fw-bold border-bottom-0">Código</th>
+            <th class="pe-4 py-3 fw-bold border-bottom-0 text-center">Estado</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let c of paginados">
+          <tr *ngFor="let c of paginados" class="bg-white border-bottom cursor-pointer" style="transition: all 0.2s ease;">
+            
             <td class="ps-4 py-3">
               <div class="d-flex align-items-center">
-                <div class="text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" 
-                     style="width: 42px; height: 42px; font-size: 1.15rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));">
+                <div class="text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" 
+                     style="width: 38px; height: 38px; font-size: 1rem; background: linear-gradient(135deg, var(--primary-color), var(--primary-color)); opacity: 0.85;">
                   {{ c.usuarioNombre.charAt(0) | uppercase }}
                 </div>
                 <div class="ms-3">
-                  <h6 class="mb-0 fw-bold" style="font-size: 0.95rem;">{{ c.usuarioNombre }}</h6>
-                  <span class="text-muted" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i>{{ c.usuarioEmail }}</span>
+                  <span class="fw-bold d-block" style="color: #1e293b; font-size: 0.95rem;">{{ c.usuarioNombre }}</span>
+                  <span class="text-muted d-block" style="font-size: 0.8rem;"><i class="fa-regular fa-envelope me-1"></i>{{ c.usuarioEmail }}</span>
                 </div>
               </div>
             </td>
             
             <td class="py-3">
-              <span class="fw-medium">{{ c.recompensaNombre }}</span>
+              <span class="fw-semibold text-dark" style="font-size: 0.95rem;">{{ c.recompensaNombre }}</span>
             </td>
             
             <td class="py-3">
-              <span class="badge rounded-pill" style="background-color: #fee2e2; color: #b91c1c; font-weight: 600; padding: 6px 12px; font-size: 0.8rem;">
+              <span class="fw-bold px-2 py-1 rounded-2" style="background-color: #fef2f2; color: #ef4444; font-size: 0.85rem;">
                 <i class="fa-solid fa-minus me-1"></i>{{ c.puntosUsados }} Pts
               </span>
             </td>
 
             <td class="py-3">
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-column text-dark" style="font-size: 0.9rem;">
                 <span class="fw-medium">{{ c.fecha | date:'dd MMM yyyy' }}</span>
-                <span class="text-muted small">{{ c.fecha | date:'shortTime' }}</span>
+                <span class="text-muted small" style="font-size: 0.8rem;">{{ c.fecha | date:'shortTime' }}</span>
               </div>
             </td>
 
             <td class="py-3">
-              <div *ngIf="c.codigoCanje" class="fw-bold text-dark" style="font-family: monospace; font-size: 1rem; letter-spacing: 1px; background: #f8f9fa; padding: 4px 8px; border-radius: 6px; border: 1px solid #dee2e6; display: inline-block;">
+              <div *ngIf="c.codigoCanje" class="fw-bold text-secondary" style="font-family: monospace; font-size: 0.95rem; letter-spacing: 0.5px; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0; display: inline-block;">
                 {{ c.codigoCanje }}
               </div>
               <span *ngIf="!c.codigoCanje" class="text-muted">-</span>
             </td>
 
-            <td class="pe-4 py-3">
-              <div *ngIf="c.reclamado">
-                <span class="badge rounded-pill bg-success" style="padding: 6px 12px; font-size: 0.8rem;">
+            <td class="pe-4 py-3 text-center">
+              <div *ngIf="c.reclamado" class="d-inline-block">
+                <span class="fw-bold px-3 py-1 rounded-pill" style="background-color: #f0fdf4; color: #16a34a; font-size: 0.8rem;">
                   <i class="fa-solid fa-check me-1"></i> Reclamado
                 </span>
-                <div *ngIf="c.fechaReclamado" class="small text-muted mt-1">{{ c.fechaReclamado | date:'dd MMM yyyy, h:mm a' }}</div>
+                <div *ngIf="c.fechaReclamado" class="text-muted mt-1" style="font-size: 0.75rem;">{{ c.fechaReclamado | date:'dd MMM, h:mm a' }}</div>
               </div>
-              <div *ngIf="!c.reclamado" class="d-flex flex-column align-items-start">
-                <span class="badge rounded-pill bg-warning text-dark mb-2" style="padding: 6px 12px; font-size: 0.8rem;">
+              
+              <div *ngIf="!c.reclamado" class="d-flex flex-column align-items-center gap-1">
+                <span class="fw-bold px-3 py-1 rounded-pill mb-1" style="background-color: #fffbeb; color: #d97706; font-size: 0.8rem;">
                   <i class="fa-regular fa-clock me-1"></i> Pendiente
                 </span>
-                <button class="btn btn-sm btn-outline-primary shadow-sm rounded-3 hover-lift fw-medium" (click)="abrirModalReclamar(c.id)" style="font-size: 0.75rem; padding: 4px 10px;">
-                  <i class="fa-solid fa-clipboard-check me-1"></i> Marcar Entregado
+                <button class="btn btn-sm rounded-pill px-3 py-1" 
+                        style="border: 1px solid var(--primary-color); color: var(--primary-color); background-color: transparent; font-weight: 500; font-size: 0.75rem; transition: all 0.2s;"
+                        onmouseover="this.style.backgroundColor='var(--primary-color)'; this.style.color='white';"
+                        onmouseout="this.style.backgroundColor='transparent'; this.style.color='var(--primary-color)';"
+                        (click)="abrirModalReclamar(c.id)">
+                  <i class="fa-solid fa-clipboard-check me-1"></i> Entregar
                 </button>
               </div>
             </td>
           </tr>
 
-          <!-- Estado Vacío -->
           <tr *ngIf="paginados.length === 0">
-            <td colspan="6" class="text-center py-5">
-              <div class="d-flex flex-column align-items-center fade-in-up">
-                <div class="rounded-circle d-flex align-items-center justify-content-center mb-3 pulse-animation" 
-                     style="width: 80px; height: 80px; background-color: #f1f5f9; box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);">
-                  <i class="fa-solid fa-box-open text-muted" style="font-size: 2rem; color: #94a3b8 !important;"></i>
-                </div>
-                <h5 class="fw-bold text-dark mb-2" style="font-size: 1.25rem;">Sin canjes registrados</h5>
-                <p class="text-muted mb-0" style="max-width: 300px;">No se encontraron recompensas canjeadas en las fechas que seleccionaste.</p>
-                <button *ngIf="fechaInicio || fechaFin" class="btn btn-outline-primary mt-4 rounded-pill px-4 fw-semibold shadow-sm" (click)="limpiarFiltros()">
-                  <i class="fa-solid fa-rotate-left me-2"></i> Limpiar Filtros
-                </button>
-              </div>
+            <td colspan="6" class="text-center py-5 text-muted">
+              <i class="fa-solid fa-box-open fs-1 mb-3" style="opacity: 0.2;"></i>
+              <h5 class="fw-bold text-secondary">Sin canjes registrados</h5>
+              <p class="small mb-0">No se encontraron recompensas canjeadas en el rango de búsqueda seleccionado.</p>
+              <button *ngIf="fechaInicio || fechaFin || busquedaCodigo" class="btn btn-sm btn-light border rounded-pill px-4 py-2 fw-semibold mt-3 shadow-sm text-secondary" (click)="limpiarFiltros()">
+                <i class="fa-solid fa-rotate-left me-2"></i> Restablecer Filtros
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
 
-  <!-- Paginación Modernizada -->
-  <div *ngIf="!cargando && totalPaginas > 0" class="d-flex flex-column flex-md-row justify-content-between align-items-center card-modern p-3 rounded-4 shadow-sm border-0">
-    <div class="text-muted small mb-3 mb-md-0 fw-medium">
-      Mostrando <span class="text-dark">{{ resumenPaginacion }}</span>
-    </div>
-    
-    <div class="d-flex align-items-center gap-3">
-      <div class="d-flex align-items-center gap-2">
-        <label class="text-muted small fw-medium mb-0">Filas:</label>
-        <select class="form-select form-select-sm border-0 text-dark fw-medium rounded-pill shadow-sm cursor-pointer" 
-                style="padding-top: 0.4rem; padding-bottom: 0.4rem;"
-                (change)="cambiarItemsPorPagina($event)">
-          <option value="5" class="text-dark">5</option>
-          <option value="10" selected class="text-dark">10</option>
-          <option value="20" class="text-dark">20</option>
-          <option value="50" class="text-dark">50</option>
-        </select>
-      </div>
-
-      <nav>
-        <ul class="pagination pagination-sm mb-0 gap-1">
-          <li class="page-item" [class.disabled]="paginaActual === 1">
-            <button class="page-link border-0 rounded-3 text-dark hover-bg-light" 
-                    (click)="irAPagina(paginaActual - 1)"
-                    style="cursor: pointer; padding: 6px 12px;">
-              <i class="fa-solid fa-chevron-left small"></i>
-            </button>
-          </li>
-          
-          <li class="page-item active">
-            <button class="page-link border-0 rounded-3 bg-primary text-white shadow-sm fw-medium" 
-                    style="padding: 6px 14px;">
-              {{ paginaActual }}
-            </button>
-          </li>
-          
-          <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
-            <button class="page-link border-0 rounded-3 text-dark hover-bg-light" 
-                    (click)="irAPagina(paginaActual + 1)"
-                    style="cursor: pointer; padding: 6px 12px;">
-              <i class="fa-solid fa-chevron-right small"></i>
-            </button>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </div>
-
-  <!-- Modal de Confirmación para Reclamar -->
-  <div class="modal fade" [class.show]="mostrarModalReclamar" [style.display]="mostrarModalReclamar ? 'block' : 'none'" tabindex="-1" style="background: rgba(0,0,0,0.5);">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-        <div class="modal-header border-0 bg-light pb-0">
-          <button type="button" class="btn-close" (click)="cerrarModalReclamar()" aria-label="Close"></button>
+    <div *ngIf="totalPaginas > 0" class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: #edf2f7 !important; background-color: #ffffff;">
+      
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small fw-medium">Mostrando {{ resumenPaginacion }}</span>
+        <div class="d-flex align-items-center gap-2 d-none d-md-flex">
+          <span class="text-muted small">Filas:</span>
+          <select class="form-select form-select-sm border-0 text-dark fw-bold rounded-pill shadow-sm cursor-pointer" 
+                  style="padding-top: 0.25rem; padding-bottom: 0.25rem; background-color: #f1f5f9; width: auto; padding-right: 1.8rem; font-size: 0.8rem;" 
+                  (change)="cambiarItemsPorPagina($event)">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
         </div>
-        <div class="modal-body text-center pt-0 pb-4 px-4">
-          <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
-               style="width: 80px; height: 80px; background-color: #e0f2fe; color: #0284c7;">
-            <i class="fa-solid fa-box-open" style="font-size: 2.5rem;"></i>
+      </div>
+      
+      <div class="d-flex gap-1">
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="irAPagina(paginaActual - 1)" [disabled]="paginaActual === 1">
+          <i class="fa-solid fa-chevron-left text-muted"></i>
+        </button>
+        <button class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: var(--primary-color, #10b981); min-width: 28px;">
+          {{ paginaActual }}
+        </button>
+        <button class="btn btn-sm btn-light border shadow-sm" (click)="irAPagina(paginaActual + 1)" [disabled]="paginaActual === totalPaginas">
+          <i class="fa-solid fa-chevron-right text-muted"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="modal fade" [class.show]="mostrarModalReclamar" [style.display]="mostrarModalReclamar ? 'block' : 'none'" tabindex="-1" style="background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(2px);">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 450px;">
+      <div class="modal-content border-0 shadow rounded-4 overflow-hidden bg-white">
+        <div class="modal-body text-center p-4">
+          <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+               style="width: 64px; height: 64px; background-color: var(--primary-container-color); color: var(--primary-color);">
+            <i class="fa-solid fa-box-open" style="font-size: 1.75rem;"></i>
           </div>
-          <h4 class="fw-bold text-dark mb-3">¿Marcar como Entregado?</h4>
-          <p class="text-muted mb-4">Estás a punto de registrar que el usuario ya recibió físicamente su premio. Esta acción no se puede deshacer.</p>
+          <h4 class="fw-bold text-dark mb-2" style="letter-spacing: -0.01em;">¿Marcar como Entregado?</h4>
+          <p class="text-muted small mb-4 px-2">Estás a punto de registrar que el usuario ya recibió físicamente su premio. Esta acción guardará la hora actual y no se puede deshacer.</p>
           
-          <div class="d-flex gap-3 justify-content-center">
-            <button type="button" class="btn btn-light border fw-semibold px-4 rounded-pill hover-bg-light shadow-sm" (click)="cerrarModalReclamar()">
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-light px-4 py-2 rounded-3 fw-medium text-secondary" style="font-size: 0.9rem;" (click)="cerrarModalReclamar()">
               Cancelar
             </button>
-            <button type="button" class="btn btn-primary fw-semibold px-4 rounded-pill shadow-sm hover-lift" (click)="confirmarReclamar()">
-              Sí, marcar entregado
+            <button type="button" class="btn text-white px-4 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color); font-size: 0.9rem;" (click)="confirmarReclamar()">
+              Confirmar Entrega
             </button>
           </div>
         </div>
@@ -228,3 +187,11 @@
   </div>
 
 </div>
+
+<style>
+  .fade-in-up { animation: fadeInUp 0.4s ease-out; }
+  .cursor-pointer { cursor: pointer; }
+  .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  tr.cursor-pointer:hover { background-color: #f8fafc !important; }
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>

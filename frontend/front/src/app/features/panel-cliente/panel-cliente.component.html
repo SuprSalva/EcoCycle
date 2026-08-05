@@ -1,0 +1,10 @@
+<div class="dashboard-container">
+  <app-sidebar-cliente [perfil]="perfil" (logout)="logout()"></app-sidebar-cliente>
+
+  <main class="contenido-principal">
+
+    <div class="contenido-router">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

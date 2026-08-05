@@ -25,7 +25,11 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarNotificaciones();
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+    //  this.isLightTheme = true;
+      document.body.classList.add('light-theme');
+    }
   }
 
   cargarNotificaciones() {

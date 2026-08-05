@@ -1,289 +1,250 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+$primary-green: #00be84;    
+$secondary-teal: #149c9a;   
+$dark-brown: #311c11;
+$white: #ffffff;
+$text-muted: #9b9b9b;
+$border-color: #d0d5dd;
+$dark-green: #0d2312;
 
-.contenedor-login {
-  width: 100%;
-  height: 100vh;
-  display: flex;
-}
-
-/* =====================================
-   PANEL IZQUIERDO
-===================================== */
-
-.panel-formulario {
-  width: 30%;
-  min-width: 400px;
-  background: #ffffff;
-  color: #0f172a;
-  --placeholder-color: #94a3b8;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 50px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.logo img {
-  width: 65px;
-}
-
-.logo span {
-  font-size: 33px;
-  font-weight: 800;
-}
-
-.avatar {
-  width: 110px;
-  height: 110px;
-  margin: 0 auto 20px;
-
-  border-radius: 50%;
-
-  background: #0d631b;
-
+.login-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.avatar i {
-  color: white;
-  font-size: 50px;
-}
-
-
-.encabezado-login {
-  text-align: center;
-  margin-bottom: 35px;
-}
-
-.encabezado-login h2 {
-  font-size: 32px;
-  color: #0d631b;
-  margin-bottom: 10px;
-}
-
-.encabezado-login p {
-  color: #64748b;
-  font-size: 15px;
-}
-
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.input-group {
-  position: relative;
-}
-
-.input-group i {
-  position: absolute;
-  top: 50%;
-  left: 18px;
-  transform: translateY(-50%);
-  color: #0d631b;
-}
-
-.input-group input {
+  min-height: 100vh;
   width: 100%;
-  box-sizing: border-box;
-
-  padding: 18px 18px 18px 55px;
-
-  border-radius: 15px  !important;
-
-  border: 2px solid #E4F0E6;
-
-  background: #F9FFFA;
-
-  font-size: 15px;
-  color: #0f172a;
-}
-
-.input-group input:focus {
-  outline: none;
-  border-color: #18912e;
-  background: white;
-  box-shadow:
-    0 0 0 4px rgba(24,145,46,.15);
-}
-
-button {
-  margin-top: 15px;
-  padding: 15px;
-  border: none;
-  border-radius: 30px;
-  background: #0d631b;
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-
-  cursor: pointer;
-  transition: .3s;
-}
-
-button:hover {
-  background: #18912e;
-}
-
-/* =====================================
-   PANEL DERECHO
-===================================== */
-.panel-imagen {
-  position: relative;
+  background: url('/ecologia_portada.jpg') no-repeat center center/cover;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   overflow: hidden;
+  padding-top: 100px; /* Evitar que el menu superior lo tape */
+  padding-bottom: 40px;
+  box-sizing: border-box;
 }
 
-.imagen-fondo {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.05);
-}
-
-.overlay {
+.background-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,.3);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(20, 20, 20, 0.55) 100%
+  );
   z-index: 1;
 }
 
-.navbar-login {
-  position: absolute;
-  top: 35px;
-  right: 60px;
+// Tarjeta Central (Horizontal)
+.horizontal-card {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 900px;
   display: flex;
-  gap: 50px;
-  z-index: 3;
-}
+  overflow: hidden;
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.2), 0px 8px 8px -4px rgba(16, 24, 40, 0.04);
+  animation: fadeIn 0.5s ease-out;
 
-.navbar-login a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: .5px;
-  transition: .3s;
-}
+  .login-card-left {
+    flex: 1;
+    background: rgba(255,255,255,.08);
+    backdrop-filter: blur(36px);
+    -webkit-backdrop-filter: blur(36px);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    color: $white;
 
-.navbar-login a:hover {
-  color: #3CBD3D;
-}
+    .branding-content {
+      text-align: center;
+      max-width: 320px;
 
-.contenido-panel {
-  position: absolute;
-  left: 60px;
-  bottom: 90px;
-  z-index: 3;
-  color: white;
-}
+      .logo-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
 
-.contenido-panel h1 {
-  font-size: 72px;
-  font-weight: 800;
-  margin-bottom: 15px;
-}
+        .logo-img {
+          height: 190px; 
+          width: auto;
+          object-fit: contain;
+        }
 
-.descripcion {
-  font-size: 18px;
-  line-height: 1.6;
-  margin-bottom: 50px;
-}
+        .brand-name {
+          font-size: 2.5rem;
+          font-weight: 700;
+          color: $white;
+          margin: 0;
+        }
+      }
 
-.caracteristicas {
+      .subtitle {
+        font-size: 1.3rem;
+        color: rgba($white, 0.85);
+        margin: 0 0 2rem 0;
+      }
+
+      .eco-messaging {
+        font-size: 1.05rem;
+        line-height: 1.5;
+        color: rgba($white, 0.95);
+        border-left: 4px solid rgba($white, 0.3);
+        padding-left: 1rem;
+        text-align: left;
+        
+        p { margin-bottom: 0.5rem; }
+      }
+    }
+  }
+
+.login-card-right {
+  flex: 1.1;
+  background: $white;
+  padding: 3.5rem 3rem;
   display: flex;
-  gap: 55px;
-}
-
-.item {
-  max-width: 180px;
-}
-
-.item i {
-  width: 70px;
-  height: 70px;
-
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
 
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.5);
+  .encabezado-login {
+    margin-bottom: 2rem;
+    text-align: center;
 
-  background: rgba(255,255,255,.08);
-  backdrop-filter: blur(5px);
+    h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #0c6342;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.3px;
+    }
 
-  font-size: 28px;
+    p {
+      font-size: 17px;
+      color: #8a8989;
+      margin: 0;
+    }
+  }
 
-  margin-bottom: 15px;
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #003621;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        .input-icon {
+          position: absolute;
+          left: 14px;
+          color: #14A36D; 
+          font-size: 1rem;
+          z-index: 3;
+          transition: color 0.2s ease;
+        }
+
+        input {
+          width: 100%;
+          padding: 0.65rem 1rem 0.65rem 2.5rem;
+          border: 1.5px solid $border-color;
+          border-radius: 8px;
+          font-size: 0.9rem;
+          background-color: $white;
+          color: $dark-brown;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+          &:focus {
+            outline: none;
+            border-color: #0E754E; 
+            box-shadow: 0px 0px 0px 3px rgba(0, 190, 132, 0.15);
+
+            & ~ .input-icon,
+            & + .input-icon {
+              color: #0E754E;
+            }
+          }
+
+          &:-webkit-autofill,
+          &:-webkit-autofill:hover, 
+          &:-webkit-autofill:focus {
+            -webkit-text-fill-color: $dark-brown !important;
+            box-shadow: 0 0 0px 1000px $white inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+          }
+        }
+      }
+    }
+  }
+
+  .opciones-extra {
+    margin-top: -0.1rem;
+    font-size: 0.8rem;
+
+    a {
+      color: $secondary-teal;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $primary-green;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    background-color: #14A36D; 
+    color: $white;
+    padding: 0.75rem; 
+    border: none;
+    border-radius: 12px; 
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 190, 132, 0.25);
+
+    &:hover {
+      background-color: #0E754E; 
+    }
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 6px rgba(0, 190, 132, 0.2);
+    }
+  }
+
+  .login-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: $text-muted;
+    border-top: 1px solid #eaecf0;
+    padding-top: 0.85rem;
+    letter-spacing: 0.5px;
+
+    span {
+      font-weight: 600;
+      color: rgba($dark-brown, 0.8);
+    }
+  }
 }
-
-.item h4 {
-  font-size: 17px;
-  margin-bottom: 8px;
-  font-weight: 700;
-}
-
-.item span {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.curva {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.curva-1 {
-  width: 120%;
-  height: 220px;
-  background: rgba(13, 99, 27, .70);
-  border-radius: 60% 40% 0 0;
-  transform: translateX(-10%);
-}
-
-.curva-2 {
-  width: 100%;
-  height: 140px;
-  background: rgba(95, 185, 73, .45);
-  border-radius: 70% 30% 0 0;
-  bottom: -40px;
-}
-
-.texto-bienvenida {
-  position: absolute;
-  bottom: 80px;
-  left: 80px;
-
-  z-index: 2;
-
-  color: white;
-}
-
-.texto-bienvenida h1 {
-  font-size: 80px;
-  font-weight: 800;
-}
-
-.texto-bienvenida p {
-  margin-top: 15px;
-  font-size: 24px;
-  max-width: 500px;
 }

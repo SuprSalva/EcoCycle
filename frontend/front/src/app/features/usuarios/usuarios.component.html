@@ -1,8 +1,7 @@
-<div class="container-fluid p-4 min-vh-100" style="background-color: var(--background-color);">
+<div class="container-fluid min-vh-100" style="padding: 3rem; background-color: var(--background-color);">
 
-  <!-- LISTA DE USUARIOS -->
   <div *ngIf="vistaActual === 'lista'" class="fade-in-up">
-    <!-- Encabezado y Botón Agregar -->
+
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3 px-2">
       <div>
         <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--text) !important; letter-spacing: -0.02em;">
@@ -118,7 +117,7 @@
               </td>
             </tr>
 
-            <!-- Empty State -->
+        
             <tr *ngIf="paginatedUsuarios.length === 0 && !cargando">
               <td colspan="6" class="text-center py-5 text-muted">
                 <i class="fa-solid fa-users fs-1 mb-3" style="opacity: 0.2;"></i>
@@ -130,7 +129,6 @@
         </table>
       </div>
 
-      <!-- Paginador Footer -->
       <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border) !important;" *ngIf="paginatedUsuarios.length > 0">
         <span class="text-muted small fw-medium">Página {{ currentPage }} de {{ totalPages }}</span>
         
@@ -155,7 +153,6 @@
     </div>
   </div>
 
-  <!-- VISTA FORMULARIO -->
   <div *ngIf="vistaActual === 'formulario'" class="fade-in-up">
     <app-usuario-form 
       [idSeleccionado]="idEdicion" 
@@ -165,7 +162,6 @@
 
 </div>
 
-<!-- Estilos extra para la tabla interactiva -->
 <style>
   .cursor-pointer { cursor: pointer; }
   .btn-action { transition: all 0.2s ease; }
