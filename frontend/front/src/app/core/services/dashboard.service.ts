@@ -24,6 +24,15 @@ export interface UltimaSesion{
 
 }
 
+export interface TerminalIoT{
+
+  maquinaId:string;
+  totalSesiones:number;
+  totalBotellas:number;
+  ultimaActividad:string | null;
+
+}
+
 export interface DashboardResumen{
 
   totalBotellas:number;
@@ -33,6 +42,7 @@ export interface DashboardResumen{
   grafica:DashboardGrafica[];
   stockMateriaPrima:StockMateriaPrima[];
   ultimasSesiones:UltimaSesion[];
+  terminales:TerminalIoT[];
 
 }
 

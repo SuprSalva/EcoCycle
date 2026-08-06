@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 
-import {DashboardService,DashboardResumen,UltimaSesion} from '../../core/services/dashboard.service';
+import {DashboardService,DashboardResumen,UltimaSesion,TerminalIoT} from '../../core/services/dashboard.service';
 
 import { NotificationService } from '../../core/services/notification.service';
 
@@ -28,12 +28,15 @@ export class DashboardGlobalComponent implements OnInit, AfterViewInit {
     totalCanjes: 0,
     grafica: [],
     stockMateriaPrima: [],
-    ultimasSesiones: []
+    ultimasSesiones: [],
+    terminales: []
   };
 
   cargando = true;
 
   ultimasSesiones: UltimaSesion[] = [];
+
+  terminales: TerminalIoT[] = [];
 
   chart?: Chart;
   pieChartInstance?: Chart;
@@ -58,6 +61,7 @@ export class DashboardGlobalComponent implements OnInit, AfterViewInit {
         console.log("Dashboard:", data);
         this.resumen = data;
         this.ultimasSesiones = data.ultimasSesiones;
+        this.terminales = data.terminales ?? [];
         this.cargando = false;
         setTimeout(() => {
           this.crearGrafica();

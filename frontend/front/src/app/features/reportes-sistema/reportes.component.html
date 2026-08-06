@@ -2,7 +2,7 @@
   
   <div class="d-flex justify-content-between align-items-center mb-4 px-2">
     <div>
-      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--on-background-color) !important; letter-spacing: -0.02em;">
+      <h2 class="fw-bold m-0" style="font-size: 1.75rem; color: var(--text) !important; letter-spacing: -0.02em;">
         Reportes de Ingesta y Reciclaje
       </h2>
       <p class="text-muted small m-0 mt-1" style="font-size: 0.9rem;">
@@ -60,23 +60,23 @@
 
   <div *ngIf="tabActiva === 'sesiones'" class="fade-in-up">
 
-    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: #ffffff;">
+    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" style="background-color: var(--surface-color);">
       <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
         
         <div class="input-group" style="max-width: 400px;">
-          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: #f8fafc !important; border-color: #e2e8f0;">
+          <span class="input-group-text bg-light border-end-0 text-muted px-3 rounded-start-pill" style="background-color: var(--hover-bg) !important; border-color: var(--border);">
             <i class="fa-solid fa-search"></i>
           </span>
           <input type="text" class="form-control bg-light border-start-0 ps-0 text-dark rounded-end-pill" 
                  placeholder="Buscar por ID, máquina, usuario..." 
-                 style="background-color: #f8fafc !important; border-color: #e2e8f0;"
+                 style="background-color: var(--hover-bg) !important; border-color: var(--border);"
                  [(ngModel)]="searchTerm">
         </div>
         
         <div class="d-flex align-items-center gap-2">
           <span class="text-muted small fw-semibold">Mostrar:</span>
           <select class="form-select form-select-sm border-0 text-dark fw-bold rounded-pill shadow-sm cursor-pointer" 
-                  style="padding-top: 0.4rem; padding-bottom: 0.4rem; background-color: #f1f5f9; width: auto; padding-right: 2rem;" 
+                  style="padding-top: 0.4rem; padding-bottom: 0.4rem; background-color: var(--hover-bg); width: auto; padding-right: 2rem;" 
                   (change)="cambiarItemsPorPagina($event)">
             <option *ngFor="let option of itemsPerPageOptions" [value]="option" [selected]="option === itemsPerPage" class="text-dark">
               {{ option }}
@@ -89,12 +89,12 @@
     </div>
 
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4" style="background-color: var(--surface-color);">
-      <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--surface-variant-color);">
+      <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--hover-bg);">
         <h6 class="m-0 fw-bold" style="color: var(--on-surface-color);">
           <span class="material-symbols-outlined align-middle me-1 fs-5" style="color: var(--primary-color);">history</span>
           Historial Global de Operaciones
         </h6>
-        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--on-background-color); border: 1px solid #dee2e6;">
+        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--text); border: 1px solid var(--border);">
           {{ sesiones.length }} Registros Encontrados
         </span>
       </div>
@@ -108,7 +108,7 @@
       <div class="table-responsive" *ngIf="!cargando && sesiones.length > 0">
         <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
           <thead>
-            <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: #f8fafc;">
+            <tr class="text-uppercase text-muted" style="font-size: 0.75rem; letter-spacing: 0.05em; background-color: var(--hover-bg);">
               <th class="ps-4 py-3 border-bottom-0 fw-bold">ID Sesión</th>
               <th class="py-3 border-bottom-0 fw-bold">Fecha y Hora</th>
               <th class="py-3 border-bottom-0 fw-bold">Máquina (Nodo)</th>
@@ -122,13 +122,13 @@
                 <span class="text-secondary" style="font-family: monospace; font-size: 0.85rem;">{{ sesion.id }}</span>
               </td>
               <td class="py-3">
-                <div class="fw-semibold" style="color: #18233d;">{{ sesion.fecha | date:'dd MMM yyyy' }}</div>
+                <div class="fw-semibold" style="color: var(--on-surface-color);">{{ sesion.fecha | date:'dd MMM yyyy' }}</div>
                 <div class="text-muted small">{{ sesion.fecha | date:'hh:mm a' }}</div>
               </td>
               <td class="py-3">
                 <div class="d-flex align-items-center gap-2">
                   <span class="material-symbols-outlined fs-5" style="color: var(--primary-color);">precision_manufacturing</span>
-                  <span class="fw-medium" style="color: #18233d;">{{ sesion.maquinaId || 'MÁQUINA-01' }}</span>
+                  <span class="fw-medium" style="color: var(--on-surface-color);">{{ sesion.maquinaId || 'MÁQUINA-01' }}</span>
                 </div>
               </td>
               <td class="py-3 text-center">
@@ -146,7 +146,7 @@
         </table>
       </div>
 
-      <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border, #edf2f7) !important; background-color: #ffffff;">
+      <div class="d-flex justify-content-between align-items-center p-3 border-top" style="border-color: var(--border, #edf2f7) !important; background-color: var(--surface-color);">
         <span class="text-muted small fw-medium">Página {{ currentPage }} de {{ totalPages }}</span>
         
         <div class="d-flex gap-1">
@@ -355,12 +355,12 @@
     </div>
 
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden" style="background-color: var(--surface-color);" *ngIf="metricasUsuarios.length > 0">
-      <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--surface-variant-color);">
+      <div class="p-3 border-bottom d-flex justify-content-between align-items-center" style="background-color: var(--hover-bg);">
         <h6 class="m-0 fw-bold" style="color: var(--on-surface-color);">
           <span class="material-symbols-outlined align-middle me-1 fs-5" style="color: var(--primary-color);">format_list_numbered</span>
           Tabla de Clasificación (Leaderboard)
         </h6>
-        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--on-background-color); border: 1px solid #dee2e6;">
+        <span class="badge rounded-pill px-3 py-2" style="background-color: var(--background-color); color: var(--text); border: 1px solid var(--border);">
           {{ metricasUsuarios.length }} Recicladores
         </span>
       </div>

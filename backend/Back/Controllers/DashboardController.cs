@@ -23,6 +23,17 @@ public class UltimaSesionDto
     public long Puntos { get; set; }
 }
 
+public class TerminalIoTDto
+{
+    public string MaquinaId { get; set; } = "";
+
+    public long TotalSesiones { get; set; }
+
+    public long TotalBotellas { get; set; }
+
+    public DateTime? UltimaActividad { get; set; }
+}
+
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
@@ -46,6 +57,9 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
         // Para la gráfica (Agrupamos por día en los últimos 4 días que haya actividad)
         var agrupadoPorDia = new Dictionary<string, long>();
 
+        // Para las terminales IoT (agregamos por máquina real vista en las sesiones)
+        var terminalesMap = new Dictionary<string, TerminalIoTDto>();
+
         foreach (var doc in sesionesSnap.Documents)
         {
             if (doc.TryGetValue("botellas", out long botellas)) totalBotellas += botellas;
@@ -60,7 +74,29 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
                     else agrupadoPorDia[dateStr] = botellasDelDia;
                 }
             }
+
+            // Agregación de terminales IoT reales
+            if (doc.TryGetValue("maquina_id", out string maquinaId) && !string.IsNullOrWhiteSpace(maquinaId))
+            {
+                if (!terminalesMap.TryGetValue(maquinaId, out var terminal))
+                {
+                    terminal = new TerminalIoTDto { MaquinaId = maquinaId };
+                    terminalesMap[maquinaId] = terminal;
+                }
+
+                terminal.TotalSesiones++;
+                if (doc.TryGetValue("botellas", out long botellasTerminal)) terminal.TotalBotellas += botellasTerminal;
+                if (doc.TryGetValue("fecha", out Google.Cloud.Firestore.Timestamp fechaTerminal))
+                {
+                    var fecha = fechaTerminal.ToDateTime();
+                    if (terminal.UltimaActividad == null || fecha > terminal.UltimaActividad) terminal.UltimaActividad = fecha;
+                }
+            }
         }
+
+        var terminales = terminalesMap.Values
+            .OrderByDescending(t => t.TotalBotellas)
+            .ToList();
 
         // Tomar los últimos 4 días con actividad
         var graficaDatos = agrupadoPorDia
@@ -140,7 +176,9 @@ public class DashboardController(FirestoreDb firestoreDb) : ControllerBase
 
             stockMateriaPrima,
 
-            ultimasSesiones
+            ultimasSesiones,
+
+            terminales
 
         }));
     }

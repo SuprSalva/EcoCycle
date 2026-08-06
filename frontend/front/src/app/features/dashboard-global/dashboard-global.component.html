@@ -105,39 +105,25 @@
 
     <div class="iot-list">
 
-      <div class="iot-item">
+      <div class="iot-item" *ngFor="let t of terminales">
 
         <div>
 
-          <strong>MQ-01</strong>
+          <strong>{{ t.maquinaId }}</strong>
 
-          <small>Tecnológico</small>
+          <small>{{ t.totalSesiones }} sesiones · {{ t.totalBotellas | number }} botellas</small>
 
         </div>
 
-        <span class="badge estable">
-
-          ESTABLE
-
+        <span class="badge estable" *ngIf="t.ultimaActividad">
+          {{ t.ultimaActividad | date:'dd/MM/yyyy' }}
         </span>
 
       </div>
 
-      <div class="iot-item">
+      <div class="iot-empty" *ngIf="!cargando && terminales.length === 0">
 
-        <div>
-
-          <strong>MQ-02</strong>
-
-          <small>Plaza Principal</small>
-
-        </div>
-
-        <span class="badge estable">
-
-          ESTABLE
-
-        </span>
+        <small>Sin actividad de terminales registrada aún.</small>
 
       </div>
 
