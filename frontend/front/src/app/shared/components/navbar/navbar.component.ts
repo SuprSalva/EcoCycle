@@ -35,7 +35,7 @@ export class NavbarComponent implements OnInit {
   cargarNotificaciones() {
     this.notificacionesApi.getMisNotificaciones().subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.suceso) {
           // Sort notifications by date descending
           this.notificaciones = res.data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
           this.unreadCount = this.notificaciones.filter(n => !n.leida).length;

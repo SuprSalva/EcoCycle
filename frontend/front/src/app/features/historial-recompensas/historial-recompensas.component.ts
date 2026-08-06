@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RecompensaService } from '../../core/services/recompensa.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { FlatpickrDirective } from '../../shared/directives/flatpickr.directive';
@@ -36,7 +37,8 @@ export class HistorialRecompensasComponent implements OnInit {
   constructor(
     private recompensaService: RecompensaService,
     private notificationService: NotificationService,
-    private exportService: ExportService
+    private exportService: ExportService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,13 @@ export class HistorialRecompensasComponent implements OnInit {
       inicioIso = new Date(this.fechaInicio).toISOString();
     }
 
-    this.recompensaService.obtenerHistorialCanjesAdmin(inicioIso, finIso).subscribe({
+    const esAdmin = this.router.url.startsWith('/admin');
+
+    const observable = esAdmin
+      ? this.recompensaService.obtenerHistorialCanjesAdmin(inicioIso, finIso)
+      : this.recompensaService.obtenerMisCanjes();
+
+    observable.subscribe({
       next: (response: any) => {
         this.notificationService.hideLoading();
         if (response && response.suceso) {
