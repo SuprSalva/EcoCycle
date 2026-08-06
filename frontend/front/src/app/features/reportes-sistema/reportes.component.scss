@@ -1,3 +1,20 @@
+/*
+  Este módulo se muestra siempre en modo claro (fondo blanco), sin importar
+  el tema global. Sobrescribimos las variables de tema a nivel del :host para
+  que el componente no herede el tema oscuro (--background-color navy).
+*/
+:host {
+  display: block;
+
+  --background-color: #f8fafc;
+  --surface-color: #ffffff;
+  --hover-bg: #f1f5f9;
+  --on-surface-color: #0f172a;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+}
+
 .custom-tabs {
   .nav-link {
     color: var(--on-surface-color);
