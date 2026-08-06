@@ -42,6 +42,10 @@ export class RecompensaService {
     return this.http.get<any>(`${this.API_URL}/canjes/admin${queryString}`);
   }
 
+  obtenerMisCanjes(): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/mis-canjes`);
+  }
+
   crearRecompensa(datos: any): Observable<any> {
     return this.http.post<any>(this.API_URL, datos);
   }

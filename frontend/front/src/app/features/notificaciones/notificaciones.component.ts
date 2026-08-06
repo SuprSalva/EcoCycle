@@ -30,7 +30,7 @@ export class NotificacionesComponent implements OnInit {
     this.cargando = true;
     this.notificacionesApi.getMisNotificaciones().subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.suceso) {
           // Sort notifications by date descending
           this.notificaciones = res.data.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
         }
@@ -51,7 +51,7 @@ export class NotificacionesComponent implements OnInit {
 
     this.notificacionesApi.marcarComoLeidas().subscribe({
       next: (res) => {
-        if (res.success) {
+        if (res.suceso) {
           this.notificaciones.forEach(n => n.leida = true);
           this.notificationAlert.toastSuccess('Todas las notificaciones marcadas como leídas');
         }

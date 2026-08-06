@@ -14,7 +14,7 @@ export interface NotificacionResponse {
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
+  suceso: boolean;
   message: string;
   data: T;
 }

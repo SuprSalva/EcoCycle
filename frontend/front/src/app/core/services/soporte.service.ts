@@ -19,7 +19,7 @@ export interface ComentarioItem {
   providedIn: 'root'
 })
 export class SoporteService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/Comentarios`;
 
   constructor(private http: HttpClient) {}
 
@@ -30,36 +30,36 @@ export class SoporteService {
     }
 
     const payload = {
-      asunto: comentario.asunto.trim(),
-      mensaje: comentario.mensaje.trim(),
-      categoria: comentario.categoria || 'Sugerencia'
+      mensaje: `${comentario.asunto.trim()}${comentario.mensaje ? '\n\n' + comentario.mensaje.trim() : ''}`,
+      email: comentario.email || '',
+      estrellas: 5
     };
 
-    return this.http.post(`${this.apiUrl}/Comentario/crear`, payload);
+    return this.http.post(this.apiUrl, payload);
   }
 
   // ✅ OBTENER TODOS (SOLO ADMIN)
   obtenerTodosLosComentarios(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Comentario/todos`);
+    return this.http.get(this.apiUrl);
   }
 
   // ✅ OBTENER MIS COMENTARIOS (CLIENTE)
   obtenerMisComentarios(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/Comentario/mis-comentarios`);
+    return this.http.get(`${this.apiUrl}/publicos`);
   }
 
   // ✅ ACTUALIZAR COMENTARIO (SOLO ADMIN)
   actualizarComentario(id: string, datos: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/Comentario/${id}`, datos);
+    return this.http.put(`${this.apiUrl}/${id}`, datos);
   }
 
   // ✅ ELIMINAR COMENTARIO (SOLO ADMIN)
   eliminarComentario(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/Comentario/${id}`);
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
   // ✅ RESPONDER COMENTARIO (SOLO ADMIN)
   responderComentario(id: string, respuesta: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/Comentario/${id}/responder`, { respuesta });
+    return this.http.put(`${this.apiUrl}/${id}/responder`, { respuestaAdmin: respuesta });
   }
 }
