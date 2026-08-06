@@ -17,4 +17,4 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage())
   ]
-};
+};// main: prueba de trigger CI 1786046322
