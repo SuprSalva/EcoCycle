@@ -171,6 +171,96 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [HttpGet("historial")]
+    public async Task<IActionResult> GetHistorial()
+    {
+        try
+        {
+            var userId = GetUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+            var sesiones = await _sesionRepository.ObtenerPorUsuarioAsync(userId);
+            var canjes = await _recompensaRepository.ObtenerCanjesPorUsuarioAsync(userId);
+
+            var historial = new List<(DateTime Fecha, object Item)>();
+
+            foreach (var sesion in sesiones)
+            {
+                historial.Add((sesion.Fecha, new
+                {
+                    id = sesion.Id,
+                    titulo = "Reciclaje",
+                    subtitulo = $"{sesion.Botellas} botella(s) registrada(s)",
+                    puntos = $"+{sesion.Puntos.ToString("0.##")} pts",
+                    esPositivo = true,
+                    fecha = sesion.Fecha
+                }));
+            }
+
+            foreach (var canje in canjes)
+            {
+                var recompensa = await _recompensaRepository.ObtenerPorIdAsync(canje.RecompensaId);
+                historial.Add((canje.Fecha, new
+                {
+                    id = canje.Id,
+                    titulo = "Canje de recompensa",
+                    subtitulo = recompensa?.Nombre ?? "Recompensa",
+                    puntos = $"-{canje.PuntosUsados.ToString("0.##")}",
+                    esPositivo = false,
+                    fecha = canje.Fecha
+                }));
+            }
+
+            var ordenado = historial
+                .OrderByDescending(h => h.Fecha)
+                .Select(h => h.Item)
+                .ToList();
+
+            return Ok(ApiResponse<object>.Ok(ordenado));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error en GetHistorial: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+        }
+    }
+
+    [HttpPut("perfil")]
+    public async Task<IActionResult> ActualizarPerfil([FromBody] ActualizarPerfilRequest request)
+    {
+        try
+        {
+            var userId = GetUserId();
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(ApiResponse<object>.Fail("Token inválido."));
+
+            var usuario = await _usuarioRepository.ObtenerPorIdAsync(userId);
+            if (usuario == null)
+                return NotFound(ApiResponse<object>.Fail("Usuario no encontrado."));
+
+            if (!string.IsNullOrEmpty(request.Nombre))
+                usuario.Nombre = request.Nombre;
+            if (!string.IsNullOrEmpty(request.Apellidos))
+                usuario.Apellidos = request.Apellidos;
+            if (!string.IsNullOrEmpty(request.Telefono))
+                usuario.Telefono = request.Telefono;
+            if (request.Direccion != null)
+                usuario.Direccion = request.Direccion;
+            if (!string.IsNullOrEmpty(request.AvatarUrl))
+                usuario.AvatarUrl = request.AvatarUrl;
+
+            await _usuarioRepository.GuardarAsync(usuario);
+
+            return Ok(ApiResponse<object>.Ok(null, "Perfil actualizado correctamente."));
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error en ActualizarPerfil: {ex.Message}");
+            return StatusCode(500, ApiResponse<object>.Fail($"Error interno: {ex.Message}"));
+        }
+    }
+
     [HttpGet("todos")]
     public async Task<IActionResult> ObtenerTodos()
     {

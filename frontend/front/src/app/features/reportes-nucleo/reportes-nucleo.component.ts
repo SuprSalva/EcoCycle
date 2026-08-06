@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,7 +19,7 @@ export class ReportesNucleoComponent implements OnInit {
   historialEventos: any[] = [];
   cargando: boolean = false;
 
-  private readonly API_HISTORIAL = 'http://localhost:5171/api/Usuario/historial';
+  private readonly API_HISTORIAL = `${environment.apiUrl}/Usuario/historial`;
 
   constructor(private http: HttpClient) {}
 

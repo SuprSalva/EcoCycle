@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,8 +17,7 @@ export class SesionReciclajeComponent implements OnInit {
   puntosCalculados: number = 0;
   procesando: boolean = false;
   
-  // 🌟 CORREGIDO: Usamos el puerto real 5171 de tu backend en C#
-  private readonly API_URL = 'http://localhost:5171/api/SesionReciclaje';
+  private readonly API_URL = `${environment.apiUrl}/SesionReciclaje`;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 

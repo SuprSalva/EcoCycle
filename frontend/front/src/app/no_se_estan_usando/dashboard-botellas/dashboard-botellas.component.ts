@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 import Swal from 'sweetalert2';
 import { Chart, registerables } from 'chart.js';
 
@@ -30,7 +31,7 @@ export class DashboardBotellasComponent implements OnInit, AfterViewChecked {
   usuariosTabla: any[] = [];
   historialGlobalSimulado: any[] = [];
 
-  private readonly API_USUARIOS = 'http://localhost:5171/api/Usuario/todos';
+  private readonly API_USUARIOS = `${environment.apiUrl}/Usuario/todos`;
 
   constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
 
