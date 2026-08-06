@@ -29,7 +29,8 @@ export class DashboardClienteComponent implements OnInit, AfterViewInit {
     totalCanjes: 0,
     grafica: [],
     stockMateriaPrima: [],
-    ultimasSesiones: []
+    ultimasSesiones: [],
+    terminales: []
   };
 
   cargando = true;
